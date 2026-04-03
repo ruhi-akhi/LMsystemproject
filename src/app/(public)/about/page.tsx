@@ -2,195 +2,89 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 
 const About = () => {
-  const team = [
-    { 
-      name: "Akhi Akter", 
-      role: "Mern-Stack Developer", 
-      image: "https://i.ibb.co.com/qFkzk520/Chat-GPT-Image-Dec-17-2025-05-24-43-PM.png",
-      github: "https://github.com/akhiakter25556", 
-      linkedin: "https://www.linkedin.com/in/akhi-akter-578880396/" 
-    },
-    { 
-      name: "Juma Islam", 
-      role: "Frontend Developer", 
-      image: "https://i.ibb.co.com/krjgJw0/saree-removebg-preview.png",
-      github: "https://github.com/Juma-islam", 
-      linkedin: "https://www.linkedin.com/in/juma-islam" 
-    },
-    { 
-      name: "Sayma Ahmed Shimu", 
-      role: "Frontend Developer", 
-      image: "https://i.ibb.co.com/nND6Jbrz/mine-removebg-preview.png",
-      github: "https://github.com/Sayma-Shimu", 
-      linkedin: "https://linkedin.com/" 
-    },
-    { 
-      name: "Sakib Al Hasan", 
-      role: "Mern-Stack Developer", 
-      image: "https://i.ibb.co.com/RpFQKWTh/473419070-1296272228367678-2831504883843112837-n.jpg",
-      github: "https://github.com/Sadman-Sakib-12", 
-      linkedin: "https://www.linkedin.com/in/sakib-al-hasan-898a173a2" 
-    },
-    { 
-      name: "Bayjid Mia", 
-      role: "Frontend Developer", 
-      image: "https://i.ibb.co.com/8LdmVScp/1000072045-removebg-preview-1.png",
-      github: "https://github.com/bayjidmia", 
-      linkedin: "https://www.linkedin.com/in/md-bayjid-mia-275b823a3/" 
-    },
-    { 
-      name: "Masum Billah", 
-      role: "Mern-Stack Developer", 
-      image: "https://i.ibb.co.com/Fk1htvFj/Gemini-Generated-Image-iyhys1iyhys1iyhy.png",
-      github: "https://github.com/masumBillah-1", 
-      linkedin: "https://www.linkedin.com/in/masumamms/" 
-    },
+  const avatarUrls = [
+    'https://i.pravatar.cc/180?img=1',
+    'https://i.pravatar.cc/180?img=2',
+    'https://i.pravatar.cc/180?img=3',
+    'https://i.pravatar.cc/180?img=4',
+    'https://i.pravatar.cc/180?img=5',
+    'https://i.pravatar.cc/180?img=6',
+    'https://i.pravatar.cc/180?img=7',
+    'https://i.pravatar.cc/180?img=8',
+    'https://i.pravatar.cc/180?img=9',
+    'https://i.pravatar.cc/180?img=10',
+    'https://i.pravatar.cc/180?img=11',
+    'https://i.pravatar.cc/180?img=12',
+    'https://i.pravatar.cc/180?img=13',
+    'https://i.pravatar.cc/180?img=14',
+    'https://i.pravatar.cc/180?img=15',
+    'https://i.pravatar.cc/180?img=16',
   ];
 
+  const getShapeClass = (idx: number) => (idx % 4 === 0 ? 'rounded-full' : 'rounded-tl-3xl');
+
   return (
-    <div className="bg-[#020617] text-white min-h-screen py-24 relative overflow-hidden">
-      
-      {/* Dynamic Background Blobs */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-        <motion.div 
-          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute top-[-5%] left-[-5%] w-[50%] h-[50%] bg-purple-600/10 blur-[120px] rounded-full" 
-        />
-        <motion.div 
-          animate={{ x: [0, -40, 0], y: [0, 50, 0] }}
-          transition={{ duration: 12, repeat: Infinity, delay: 2 }}
-          className="absolute bottom-[-5%] right-[-5%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full" 
-        />
-      </div>
+    <div className="min-h-screen bg-white text-slate-900 overflow-hidden">
+      <div className="relative py-20 px-4 md:px-10 lg:px-16">
+        <div className="absolute inset-0 grid grid-cols-8 md:grid-cols-10 xl:grid-cols-12 gap-4 p-4 md:p-8">
+          {avatarUrls.map((url, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: index * 0.05 }}
+              className={`${getShapeClass(index)} overflow-hidden border border-slate-200 bg-slate-100`} 
+              style={{ width: '100%', height: index % 5 === 0 ? 90 : 70 }}
+            >
+              <img
+                src={url}
+                alt="avatar"
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          ))}
+        </div>
 
-      <div className="container mx-auto px-6 lg:px-16 max-w-10xl relative z-10">
-        
-        {/* Header Section */}
-        <div className="text-center mb-32">
+        <div className="relative z-10 mx-auto max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9 }}
+            className="relative rounded-3xl bg-white p-8 md:p-12 shadow-2xl border border-slate-200"
           >
-            <span className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-purple-400 font-bold tracking-[0.3em] text-xs uppercase">
-              Innovation & Passion
-            </span>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="text-6xl md:text-8xl font-black tracking-tighter mt-8 mb-6"
-          >
-            Meet the <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-orange-500">Visionaries_</span>
-          </motion.h1>
-          
-          <motion.div 
-            initial={{ width: 0 }}
-            whileInView={{ width: "120px" }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto rounded-full" 
-          />
-        </div>
-
-        {/* Team Grid */}
-<div className="flex flex-wrap items-center justify-center gap-6">
-  {team.map((member, index) => (
- <motion.div
-  key={index}
-  initial={{ opacity: 0, y: 50 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.5, delay: index * 0.08 }}
-  className="group relative h-[620px] w-[180px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/10 dark:bg-black/10 dark:border-black/30 shadow-2xl hover:w-[260px] duration-500"
->
-      {/* Image */}
-      <img
-        src={member.image}
-        alt={member.name}
-        className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
-      />
-
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-
-      {/* Social Icons Always Visible */}
-      <div className="absolute top-4 left-4 flex flex-col gap-3 z-30">
-        <motion.a
-          href={member.github}
-          target="_blank"
-          whileHover={{ scale: 1.2 }}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 dark:bg-black/30 text-white hover:bg-white hover:text-black transition"
-        >
-          <FaGithub className="text-lg" />
-        </motion.a>
-      </div>
-
-      <div className="absolute top-4 right-4 flex flex-col gap-3 z-30">
-        <motion.a
-          href={member.linkedin}
-          target="_blank"
-          whileHover={{ scale: 1.2 }}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 dark:bg-black/30 text-white hover:bg-blue-600 hover:text-white transition"
-        >
-          <FaLinkedinIn className="text-lg" />
-        </motion.a>
-      </div>
-
-      {/* Bottom Info */}
-      <div className="absolute bottom-7 left-1/2 z-20 -translate-x-1/2">
-        <div className="flex items-center rounded-full border border-white/30 bg-white/20 dark:bg-black/20 dark:border-black/30 px-3 py-2 backdrop-blur-md">
-          <img
-            src={member.image}
-            alt={member.name}
-            className="h-10 w-10 rounded-full border-2 border-white dark:border-black object-cover"
-          />
-          <div className="ml-3 w-0 overflow-hidden opacity-0 transition-all duration-500 group-hover:w-[120px] group-hover:opacity-100">
-            <h3 className="whitespace-nowrap text-sm font-bold text-white">
-              {member.name}
-            </h3>
-            <p className="whitespace-nowrap text-[10px] uppercase tracking-wider text-white/80">
-              {member.role}
+            <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight leading-tight text-center">
+              Join <span className="text-gradient bg-gradient-to-r from-[#FF6B35] via-[#C81D77] to-[#7B45D8] bg-clip-text text-transparent">15 million users</span>
+            </h1>
+            <p className="mt-4 text-lg md:text-xl text-slate-600 text-center">
+              who grow their business with Smart Inventory & Order Management.
             </p>
-          </div>
+            <div className="mt-6 flex justify-center gap-3">
+              <a href="#" className="px-8 py-3 rounded-full bg-[#7B45D8] text-white font-semibold shadow-lg hover:opacity-95 transition">Start now - It&apos;s free</a>
+            </div>
+            <p className="mt-3 text-sm text-slate-500 text-center">No credit card required · Instant access</p>
+          </motion.div>
         </div>
       </div>
-    </motion.div>
-  ))}
-</div>
 
-        {/* Bottom CTA - More Cinematic */}
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+      <section className="pb-24 px-4 md:px-10 lg:px-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-40 relative overflow-hidden p-16 rounded-[4rem] border border-white/5 bg-gradient-to-br from-slate-900/80 to-transparent backdrop-blur-3xl text-center"
+          transition={{ duration: 0.8 }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-          
-          <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight">ধন্যবাদ আমাদের সাথে থাকার জন্য</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed text-lg">
-            আমরা একটি স্বপ্ন নিয়ে কাজ করছি—সবাইকে দক্ষ করে গড়ে তোলা। <br className="hidden md:block" />
-            আমাদের এই যাত্রায় আপনার অংশগ্রহণ আমাদের মূল শক্তি।
-          </p>
-          
-          <motion.div 
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="mt-10 inline-block w-12 h-12 rounded-full bg-gradient-to-b from-purple-500 to-pink-600 blur-[20px] opacity-40"
-          />
+          <h2 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900">Unleash <span className="text-[#059b8f]">your growth potential</span></h2>
+          <p className="mt-5 text-slate-600 text-lg">Scale smarter with a unified inventory + orders system designed for real business impact.</p>
+          <div className="mt-8">
+            <a href="#" className="rounded-full bg-[#7B45D8] px-8 py-4 text-white font-semibold hover:bg-[#662fbd] transition">Get Started</a>
+          </div>
         </motion.div>
-      </div>
+      </section>
     </div>
   );
 };
 
 export default About;
-
-

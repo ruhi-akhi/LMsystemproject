@@ -164,9 +164,10 @@ const Navbar = () => {
     );
 
   const navLinks = [
+    { name: "Home", href: "/" },
     { name: "Menu", href: "/dashboard/inventory" },
     { name: "Product", href: "/dashboard/products" },
-    { name: "Blog", href: "/blog" },
+
     { name: "About", href: "/about" },
     { name: "Demo", href: "/demo" },
   ];
@@ -272,13 +273,8 @@ const Navbar = () => {
                     My Orders
                   </Link>
                 )}
-                {user && (
-                  <Link href="/help" className="nav-link-hover hover:text-[#FF6B35] transition-colors nav-link-animate" style={{ animationDelay: "0.50s" }}>
-                    Support
-                  </Link>
-                )}
-                
-                
+
+
               </div>
 
               <div className="flex items-center gap-5 border-l border-gray-200 dark:border-gray-700 pl-6 nav-link-animate" style={{ animationDelay: "0.55s" }}>

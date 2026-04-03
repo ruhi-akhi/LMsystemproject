@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ChatWidget from "@/components/Home/ChatWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -137,14 +138,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
 
         {/* FloatingChat — Login হলে সব page এ দেখাবে */}
-        {user && (
+        {/* {user && (
           <FloatingChat
             userId={user.id}
             userName={user.name}
             userRole={user.role}
             userAvatar={user.image}
           />
-        )}
+        )} */}
+
+        <ChatWidget></ChatWidget>
 
       </body>
     </html>

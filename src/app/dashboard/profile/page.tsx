@@ -14,49 +14,49 @@ interface UserData {
 
 const roleStats: Record<Role, { label: string; value: string; color: string }[]> = {
   student: [
-    { label: "Enrolled", value: "5", color: "#FF0F7B" },
-    { label: "Completed", value: "2", color: "#00C48C" },
-    { label: "Certificates", value: "2", color: "#F89B29" },
-    { label: "Avg Score", value: "82%", color: "#832388" },
+    { label: "Orders", value: "12", color: "#FF6B35" },
+    { label: "Completed", value: "8", color: "#00C48C" },
+    { label: "Pending", value: "4", color: "#F89B29" },
+    { label: "Total Spent", value: "৳15k", color: "#E55A2B" },
   ],
   instructor: [
-    { label: "Courses", value: "4", color: "#FF0F7B" },
-    { label: "Students", value: "320", color: "#832388" },
-    { label: "Rating", value: "4.8", color: "#F89B29" },
-    { label: "Earnings", value: "৳48k", color: "#00C48C" },
+    { label: "Products", value: "45", color: "#FF6B35" },
+    { label: "Orders", value: "320", color: "#E55A2B" },
+    { label: "Revenue", value: "৳48k", color: "#F89B29" },
+    { label: "Rating", value: "4.8", color: "#00C48C" },
   ],
   admin: [
-    { label: "Users", value: "1,278", color: "#FF0F7B" },
-    { label: "Courses", value: "94", color: "#832388" },
+    { label: "Users", value: "1,278", color: "#FF6B35" },
+    { label: "Products", value: "94", color: "#E55A2B" },
     { label: "Revenue", value: "৳4.8L", color: "#F89B29" },
-    { label: "Pending", value: "3", color: "#E3436B" },
+    { label: "Orders", value: "2,450", color: "#00C48C" },
   ],
 };
 
 const roleActivity: Record<Role, { text: string; time: string; color: string }[]> = {
   student: [
-    { text: "Scored 85% on HTML Basics Quiz", time: "2 days ago", color: "#832388" },
-    { text: "Submitted Todo App Assignment", time: "5 days ago", color: "#F89B29" },
-    { text: "Enrolled in Python for Beginners", time: "1 week ago", color: "#00C48C" },
-    { text: "Earned Web Fundamentals Certificate", time: "2 weeks ago", color: "#FF0F7B" },
+    { text: "Placed order for Office Supplies", time: "2 days ago", color: "#FF6B35" },
+    { text: "Updated delivery address", time: "5 days ago", color: "#F89B29" },
+    { text: "Reviewed purchased items", time: "1 week ago", color: "#00C48C" },
+    { text: "Completed payment for Order #1234", time: "2 weeks ago", color: "#E55A2B" },
   ],
   instructor: [
-    { text: "Rahim submitted Build a Todo App", time: "1 day ago", color: "#832388" },
-    { text: "New student enrolled in Web Dev Bootcamp", time: "3 days ago", color: "#F89B29" },
-    { text: "Published Python for Beginners course", time: "1 week ago", color: "#00C48C" },
-    { text: "Received payout of ৳5,000", time: "2 weeks ago", color: "#FF0F7B" },
+    { text: "Added new product: Wireless Mouse", time: "1 day ago", color: "#FF6B35" },
+    { text: "Updated inventory for Keyboards", time: "3 days ago", color: "#F89B29" },
+    { text: "Processed 15 orders", time: "1 week ago", color: "#00C48C" },
+    { text: "Received payment of ৳5,000", time: "2 weeks ago", color: "#E55A2B" },
   ],
   admin: [
-    { text: "Approved payout for Karim Hossain", time: "2 hours ago", color: "#00C48C" },
-    { text: "Approved course: React Advanced", time: "1 day ago", color: "#832388" },
-    { text: "Verified instructor: Sadia Islam", time: "2 days ago", color: "#F89B29" },
-    { text: "Blocked suspicious user account", time: "3 days ago", color: "#FF0F7B" },
+    { text: "Approved new supplier registration", time: "2 hours ago", color: "#00C48C" },
+    { text: "Updated product categories", time: "1 day ago", color: "#FF6B35" },
+    { text: "Processed bulk order import", time: "2 days ago", color: "#F89B29" },
+    { text: "Generated monthly inventory report", time: "3 days ago", color: "#E55A2B" },
   ],
 };
 
 const roleCfg: Record<Role, { accent: string; label: string; bg: string }> = {
-  student: { accent: "#FF0F7B", label: "Student", bg: "rgba(255,15,123,0.08)" },
-  instructor: { accent: "#832388", label: "Instructor", bg: "rgba(131,35,136,0.08)" },
+  student: { accent: "#FF6B35", label: "User", bg: "rgba(255,107,53,0.08)" },
+  instructor: { accent: "#E55A2B", label: "Manager", bg: "rgba(229,90,43,0.08)" },
   admin: { accent: "#F89B29", label: "Admin", bg: "rgba(248,155,41,0.08)" },
 };
 

@@ -136,7 +136,7 @@ const DashboardNavbar = () => {
                   {user?.name || "Manager"}
                 </p>
                 <p className="text-[10px] text-purple-500 font-bold uppercase tracking-widest">
-                  {user?.role || "Instructor"}
+                  {user?.role || "Manager"}
                 </p>
               </div>
               <FaChevronDown size={10} className={`text-gray-400 transition-transform duration-300 ${showProfileMenu ? 'rotate-180' : ''}`} />

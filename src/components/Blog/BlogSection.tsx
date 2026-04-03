@@ -13,7 +13,7 @@ const BlogSection = () => {
   const [visibleCount, setVisibleCount] = useState(6);
   const [authors, setAuthors] = useState<string[]>([]);
 
-  const categories = ["All", "Web Development", "Digital Marketing", "Graphics Design"];
+  const categories = ["All", "Inventory", "Order Management", "Analytics"];
 
   useEffect(() => {
     fetch('/data/blogs.json')
@@ -40,7 +40,7 @@ const BlogSection = () => {
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(blog => 
+      filtered = filtered.filter(blog =>
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -56,28 +56,27 @@ const BlogSection = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
-            Full Blog Section <span className="text-[#C81D77]">📚</span>
+            Smart Inventory Blog <span className="text-[#C81D77]">📘</span>
           </h2>
-          
+          <p className="text-sm text-gray-600 dark:text-gray-300">Read insights about inventory flow, order automation, and product lifecycle.</p>
+
           {/* View Mode Toggle */}
           <div className="flex gap-2 bg-white dark:bg-gray-800 rounded-xl p-1 border border-gray-200 dark:border-gray-700">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-lg transition-all ${
-                viewMode === 'grid' 
-                  ? 'bg-gradient-to-r from-[#C81D77] to-[#6710C2] text-white' 
+              className={`p-2 rounded-lg transition-all ${viewMode === 'grid'
+                  ? 'bg-gradient-to-r from-[#C81D77] to-[#6710C2] text-white'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
+                }`}
             >
               <FaTh />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition-all ${
-                viewMode === 'list' 
-                  ? 'bg-gradient-to-r from-[#C81D77] to-[#6710C2] text-white' 
+              className={`p-2 rounded-lg transition-all ${viewMode === 'list'
+                  ? 'bg-gradient-to-r from-[#C81D77] to-[#6710C2] text-white'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
+                }`}
             >
               <FaList />
             </button>
@@ -104,11 +103,10 @@ const BlogSection = () => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all ${
-                  selectedCategory === category
+                className={`px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all ${selectedCategory === category
                     ? 'bg-gradient-to-r from-[#C81D77] to-[#6710C2] text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-2 border-gray-200 dark:border-gray-700 hover:border-[#C81D77]'
-                }`}
+                  }`}
               >
                 {category}
               </button>
@@ -124,11 +122,10 @@ const BlogSection = () => {
               <button
                 key={author}
                 onClick={() => setSelectedAuthor(author)}
-                className={`px-4 py-2 rounded-lg font-bold whitespace-nowrap transition-all text-sm ${
-                  selectedAuthor === author
+                className={`px-4 py-2 rounded-lg font-bold whitespace-nowrap transition-all text-sm ${selectedAuthor === author
                     ? 'bg-purple-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-purple-900/30'
-                }`}
+                  }`}
               >
                 {author}
               </button>
@@ -142,24 +139,22 @@ const BlogSection = () => {
         </p>
 
         {/* Blog Grid/List */}
-        <div className={viewMode === 'grid' 
-          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
+        <div className={viewMode === 'grid'
+          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           : "flex flex-col gap-6"
         }>
           {filteredBlogs.slice(0, visibleCount).map((blog) => (
-            <div 
-              key={blog.id} 
-              className={`group bg-white dark:bg-[#161d2f] rounded-[24px] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${
-                viewMode === 'list' ? 'flex flex-row' : 'flex flex-col'
-              }`}
+            <div
+              key={blog.id}
+              className={`group bg-white dark:bg-[#161d2f] rounded-[24px] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${viewMode === 'list' ? 'flex flex-row' : 'flex flex-col'
+                }`}
             >
               {/* Image Container */}
-              <div className={`relative overflow-hidden ${
-                viewMode === 'list' ? 'w-64 h-48' : 'h-56 w-full'
-              }`}>
-                <img 
-                  src={blog.image} 
-                  alt={blog.title} 
+              <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-64 h-48' : 'h-56 w-full'
+                }`}>
+                <img
+                  src={blog.image}
+                  alt={blog.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
@@ -198,8 +193,8 @@ const BlogSection = () => {
                   ))}
                 </div>
 
-                <Link 
-                  href={`/blog/${blog.slug}`} 
+                <Link
+                  href={`/blog/${blog.slug}`}
                   className="text-[#C81D77] font-black text-sm uppercase border-b-2 border-transparent hover:border-[#C81D77] transition-all mt-auto w-fit"
                 >
                   Read More

@@ -17,7 +17,8 @@ type LoginFormData = { email: string; password: string; };
 const roleDashboard: Record<string, string> = {
   admin: "/dashboard/admin",
   instructor: "/dashboard/instructor",
-  student: "/dashboard/student",
+  // student direct to dashboard/orders as requested
+  student: "/dashboard/orders",
 };
 
 const GoogleIcon = () => (
@@ -257,7 +258,7 @@ const LoginPage = () => {
                 <span className="text-gray-600 dark:text-gray-400 text-xs font-medium">DEMO LOGIN</span>
                 <div className="flex-1 h-px bg-gray-300 dark:bg-white/10" />
               </div>
-              
+
               <div className="grid grid-cols-1 gap-2">
                 <button
                   onClick={() => {

@@ -20,7 +20,7 @@ const Hero = () => {
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          
+
           {/* Left Content */}
           <div className="text-center lg:text-left space-y-8">
             {/* Badge */}
@@ -38,9 +38,9 @@ const Hero = () => {
                   স্মার্ট ইনভেন্টরি সিস্টেম
                 </span>
               </h1>
-              
+
               <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
-                আপনার ব্যবসার জন্য সম্পূর্ণ ইনভেন্টরি ম্যানেজমেন্ট, অর্ডার ট্র্যাকিং এবং স্টক কন্ট্রোল সিস্টেম। 
+                আপনার ব্যবসার জন্য সম্পূর্ণ ইনভেন্টরি ম্যানেজমেন্ট, অর্ডার ট্র্যাকিং এবং স্টক কন্ট্রোল সিস্টেম।
                 রিয়েল-টাইম ড্যাশবোর্ড এবং স্মার্ট অ্যানালিটিক্স দিয়ে আপনার ব্যবসা পরিচালনা করুন।
               </p>
             </div>
@@ -82,7 +82,7 @@ const Hero = () => {
                 <span className="relative z-10">ড্যাশবোর্ড দেখুন</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#E55A2B] to-[#FF6B35] rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Link>
-              
+
               <Link
                 href="/register"
                 className="px-8 py-4 border-2 border-[#FF6B35] text-[#FF6B35] font-bold rounded-xl hover:bg-[#FF6B35] hover:text-white transition-all duration-300 hover:scale-105"
@@ -90,15 +90,36 @@ const Hero = () => {
                 ফ্রি শুরু করুন
               </Link>
             </div>
+
+            {/* New Video Message Section */}
+            <div className="mt-8 p-5 rounded-2xl bg-white/70 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 shadow-xl">
+              <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 dark:text-white text-center">
+                ব্যবসায় সমস্যা অনেক,
+                <br />
+                কিন্তু সমাধান মাত্র একটিই!
+              </h3>
+              <p className="mt-3 text-gray-600 dark:text-gray-300 text-center">Smart Inventory আপনার ইনভেন্টরি, অর্ডার এবং স্টক সবই একসঙ্গে নিয়ন্ত্রণ করে।</p>
+              <div className="mt-4 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                <video
+                  src="https://www.shutterstock.com/shutterstock/videos/3848861823/preview/stock-footage-vitamin-b-thiamine-icon-animates-in-with-rice-meat-and-grains-on-a-vibrant-green-background.webm"
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-56 object-cover"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Right Content - Video */}
           <div className="relative">
             <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#FF6B35]/10 to-[#E55A2B]/10 border border-[#FF6B35]/20">
-              
+
               {!isVideoPlaying ? (
                 // Video Thumbnail
-                <div 
+                <div
                   className="w-full h-full cursor-pointer group relative"
                   style={{
                     backgroundImage: 'url("https://i.ytimg.com/vi_webp/t6FfSSVxT7c/sddefault.webp")',
@@ -109,7 +130,7 @@ const Hero = () => {
                 >
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300" />
-                  
+
                   {/* Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-2xl">
