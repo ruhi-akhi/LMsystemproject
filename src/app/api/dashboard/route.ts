@@ -4,14 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { connectDB } from "@/db/connect";
 import User from "@/models/User";
-import Course from "@/models/Course";
-import Enrollment from "@/models/Enrollment";
+import Product from "@/models/Product";
+import Order from "@/models/Order";
 import Transaction from "@/models/Transaction";
 import Notification from "@/models/Notification";
-
-
-
-
 
 async function getAuthUser(req: NextRequest) {
   // cookie অথবা Authorization header দুটোই check করো
@@ -37,135 +33,72 @@ export async function GET(req: NextRequest) {
       .select("-password -resetToken -resetTokenExpiry");
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-    // ── STUDENT ──────────────────────────────────────────────
-    if (user.role === "student") {
-      const [enrollments, transactions, unreadCount] = await Promise.all([
-        Enrollment.find({ studentId: user._id })
-          .sort({ enrolledAt: -1 })
-          .limit(5)
-          .select("courseName courseImage progress status enrolledAt"),
+    // ── ALL ROLES (Inventory System) ──────────────────────────────────────────────
+    const [
+      totalProducts,
+      totalOrders,
+      lowStockProducts,
+      recentOrders,
+      unreadCount
+    ] = await Promise.all([
+      Product.countDocuments({ status: "active" }),
+      Order.countDocuments(),
+      Product.countDocuments({
+        $expr: { $lte: ["$stockQuantity", "$minimumStockThreshold"] },
+        status: "active"
+      }),
 
-        Transaction.find({ studentId: user._id })
-          .sort({ createdAt: -1 })
-          .limit(5)
-          .select("courseName amount status paymentMethod createdAt type"),
+      Order.find()
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select("orderNumber customerName totalAmount status createdAt"),
 
-        Notification.countDocuments({
-          $or: [
-            { userId: user._id, isRead: false },
-            { isBroadcast: true, targetRole: { $in: ["all", "student"] }, isRead: false },
-          ],
-        }),
-      ]);
+      Notification.countDocuments({
+        $or: [
+          { userId: user._id, isRead: false },
+          { isBroadcast: true, targetRole: { $in: ["all", user.role] }, isRead: false },
+        ],
+      }),
+    ]);
 
-      return NextResponse.json({
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          photoURL: user.photoURL || "",
-          role: user.role,
-        },
-        stats: user.stats,
-        recentEnrollments: enrollments,
-        recentTransactions: transactions,
-        unreadNotifications: unreadCount,
-      });
-    }
+    // Calculate today's revenue
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // ── INSTRUCTOR ───────────────────────────────────────────
-    if (user.role === "instructor") {
-      const [courses, recentEnrollments, monthlyEarnings] = await Promise.all([
-        Course.find({ instructorId: user._id })
-          .select("title coverImage stats status createdAt")
-          .sort({ createdAt: -1 }),
+    const todayRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: today, $lt: tomorrow },
+          status: { $in: ["confirmed", "shipped", "delivered"] }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$totalAmount" }
+        }
+      }
+    ]);
 
-        Enrollment.find({ courseId: { $in: await Course.find({ instructorId: user._id }).distinct("_id") } })
-          .sort({ enrolledAt: -1 })
-          .limit(5)
-          .select("courseName studentId progress enrolledAt"),
-
-        Transaction.aggregate([
-          {
-            $match: {
-              instructorId: user._id,
-              type: "payment",
-              status: "completed",
-              createdAt: { $gte: new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000) },
-            },
-          },
-          {
-            $group: {
-              _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
-              total: { $sum: "$netAmount" },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ]),
-      ]);
-
-      return NextResponse.json({
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          photoURL: user.photoURL || "",
-          role: user.role,
-        },
-        stats: user.stats,
-        courses,
-        recentEnrollments,
-        monthlyEarnings,
-      });
-    }
-
-    // ── ADMIN ────────────────────────────────────────────────
-    if (user.role === "admin") {
-      const [
-        totalUsers,
-        totalCourses,
-        totalEnrollments,
-        revenueData,
-        recentTransactions,
-        pendingCourses,
-      ] = await Promise.all([
-        User.countDocuments(),
-        Course.countDocuments({ status: "published" }),
-        Enrollment.countDocuments(),
-
-        Transaction.aggregate([
-          { $match: { type: "payment", status: "completed" } },
-          { $group: { _id: null, total: { $sum: "$amount" } } },
-        ]),
-
-        Transaction.find({ type: "payment" })
-          .sort({ createdAt: -1 })
-          .limit(5)
-          .select("courseName studentName amount status paymentMethod createdAt"),
-
-        Course.countDocuments({ status: "draft" }),
-      ]);
-
-      return NextResponse.json({
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          photoURL: user.photoURL || "",
-          role: user.role,
-        },
-        stats: {
-          totalUsers,
-          totalCourses,
-          totalEnrollments,
-          totalRevenue: revenueData[0]?.total || 0,
-          pendingCourses,
-        },
-        recentTransactions,
-      });
-    }
-
-    return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    return NextResponse.json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        photoURL: user.photoURL || "",
+        role: user.role,
+      },
+      stats: {
+        totalProducts,
+        totalOrders,
+        lowStockProducts,
+        todayRevenue: todayRevenue[0]?.total || 0,
+      },
+      recentOrders,
+      unreadNotifications: unreadCount,
+    });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

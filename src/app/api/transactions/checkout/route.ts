@@ -1,7 +1,10 @@
 // src/app/api/transactions/checkout/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/db/connect";
-import { Course, Transaction, Enrollment, User } from "@/models";
+import Product from "@/models/Product";
+import Order from "@/models/Order";
+import Transaction from "@/models/Transaction";
+import User from "@/models/User";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import Stripe from "stripe";
@@ -27,30 +30,7 @@ function getDecoded(req: NextRequest) {
   }
 }
 
-// ✅ DB schema অনুযায়ী price extract
-// DB তে pricing object নেই — flat price & originalPrice field আছে
-function extractPrice(course: any): { isFree: boolean; priceInBDT: number } {
-  // Free check — pricing.type === "free" অথবা price === 0
-  if (course.pricing?.type === "free" || course.price === 0) {
-    return { isFree: true, priceInBDT: 0 };
-  }
-
-  // ✅ DB schema: flat price field (primary)
-  const basePrice = course.pricing?.price ?? course.price ?? 0;
-
-  // ✅ DB schema: originalPrice = discounted/sale price
-  // (form এ discountPrice → API route এ originalPrice হিসেবে save হয়)
-  const discountPrice = course.pricing?.discountPrice ?? course.originalPrice ?? null;
-
-  // discountPrice থাকলে এবং basePrice এর চেয়ে কম হলে সেটাই final price
-  const finalPrice = (discountPrice && discountPrice > 0 && discountPrice < basePrice)
-    ? discountPrice
-    : basePrice;
-
-  return { isFree: finalPrice === 0, priceInBDT: finalPrice };
-}
-
-// ─── POST — PaymentIntent ──────────────────────────────────────────────────
+// ─── POST — Create Order with Payment ──────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
@@ -61,101 +41,132 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { courseId } = body;
+    const { items, customerName, customerEmail, customerPhone, notes } = body;
 
-    if (!courseId || !mongoose.isValidObjectId(courseId)) {
-      return NextResponse.json({ error: "Valid courseId required" }, { status: 400 });
+    // Validate items
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: "Order items are required" }, { status: 400 });
     }
 
-    const course = await Course.findById(courseId)
-      .populate("instructorId", "name")
-      .lean() as any;
-
-    if (!course) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    if (!customerName?.trim()) {
+      return NextResponse.json({ error: "Customer name is required" }, { status: 400 });
     }
 
-    // ✅ Price extract — DB flat field থেকে
-    const { isFree, priceInBDT } = extractPrice(course);
+    // Validate and process items
+    let totalAmount = 0;
+    const orderItems = [];
 
-    // Free course enroll
-    if (isFree) {
-      const existing = await Enrollment.findOne({ studentId: decoded.userId, courseId });
-      if (!existing) {
-        await Enrollment.create({
-          studentId:      decoded.userId,
-          courseId,
-          courseName:     course.title,
-          // ✅ DB schema: thumbnail field
-          courseImage:    course.thumbnail || course.coverImage?.url || "",
-          instructorName: course.instructorId?.name || "",
-          status:         "active",
-          enrolledAt:     new Date(),
-          progress: {
-            completedLessons:   [],
-            progressPercentage: 0,
-            totalTimeSpent:     0,
-            lastAccessedAt:     new Date(),
-          },
-        });
-        await Promise.all([
-          // ✅ enrollmentCount (DB schema field)
-          Course.findByIdAndUpdate(courseId, { $inc: { enrollmentCount: 1 } }),
-          User.findByIdAndUpdate(decoded.userId, { $inc: { "stats.enrolledCourses": 1 } }),
-        ]);
+    for (const item of items) {
+      if (!item.productId || !mongoose.isValidObjectId(item.productId)) {
+        return NextResponse.json({ error: "Valid productId required for all items" }, { status: 400 });
       }
-      return NextResponse.json({ success: true, free: true });
+
+      if (!item.quantity || item.quantity <= 0) {
+        return NextResponse.json({ error: "Valid quantity required for all items" }, { status: 400 });
+      }
+
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return NextResponse.json({ error: `Product not found: ${item.productId}` }, { status: 404 });
+      }
+
+      if (product.status !== "active") {
+        return NextResponse.json({ error: `Product is not available: ${product.name}` }, { status: 400 });
+      }
+
+      if (product.stockQuantity < item.quantity) {
+        return NextResponse.json({ 
+          error: `Insufficient stock for ${product.name}. Only ${product.stockQuantity} available` 
+        }, { status: 400 });
+      }
+
+      const subtotal = product.price * item.quantity;
+      totalAmount += subtotal;
+
+      orderItems.push({
+        productId: product._id,
+        productName: product.name,
+        quantity: item.quantity,
+        price: product.price,
+        subtotal: subtotal,
+      });
     }
 
-    // Already enrolled check (paid)
-    const alreadyEnrolled = await Enrollment.findOne({ studentId: decoded.userId, courseId });
-    if (alreadyEnrolled) {
-      return NextResponse.json({ error: "Already enrolled in this course" }, { status: 409 });
+    // Generate order number
+    const orderNumber = (Order as any).generateOrderNumber();
+
+    // Create order
+    const order = await Order.create({
+      orderNumber,
+      customerName: customerName.trim(),
+      customerEmail: customerEmail?.trim() || "",
+      customerPhone: customerPhone?.trim() || "",
+      items: orderItems,
+      totalAmount,
+      status: "pending",
+      notes: notes?.trim() || "",
+      createdBy: decoded.userId,
+    });
+
+    // If total amount is 0 (free items), complete the order immediately
+    if (totalAmount === 0) {
+      // Update stock quantities
+      for (const item of orderItems) {
+        await Product.findByIdAndUpdate(item.productId, {
+          $inc: { stockQuantity: -item.quantity }
+        });
+      }
+
+      // Update order status
+      await order.updateStatus("confirmed");
+
+      return NextResponse.json({ 
+        success: true, 
+        free: true, 
+        orderId: order._id,
+        orderNumber: order.orderNumber 
+      });
     }
 
-    // ✅ Price validate
-    if (priceInBDT <= 0) {
-      return NextResponse.json({ error: "Invalid course price" }, { status: 400 });
-    }
-
-    const priceInUSD    = parseFloat((priceInBDT / 110).toFixed(2));
+    // Create Stripe PaymentIntent for paid orders
+    const priceInUSD = parseFloat((totalAmount / 110).toFixed(2));
     const amountInCents = Math.max(Math.round(priceInUSD * 100), 50);
-    const platformFee   = Math.round(priceInBDT * 0.3);
-    const netAmount     = priceInBDT - platformFee;
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount:   amountInCents,
+      amount: amountInCents,
       currency: "usd",
       metadata: {
-        courseId:   courseId.toString(),
-        studentId:  decoded.userId,
-        courseName: course.title,
+        orderId: order._id.toString(),
+        orderNumber: order.orderNumber,
+        customerName: customerName,
       },
       automatic_payment_methods: { enabled: true },
     });
 
+    // Create transaction record
     const transaction = await Transaction.create({
-      type:           "payment",
-      amount:         priceInBDT,
-      netAmount,
-      platformFee,
-      currency:       "BDT",
-      status:         "pending",
-      studentId:      decoded.userId,
-      courseId,
-      paymentMethod:  "card",
-      paymentId:      paymentIntent.id,
-      description:    `Course enrollment: ${course.title}`,
-      courseName:     course.title,
-      instructorName: course.instructorId?.name || "",
+      type: "payment",
+      amount: totalAmount,
+      netAmount: totalAmount * 0.95, // 5% platform fee
+      platformFee: totalAmount * 0.05,
+      currency: "BDT",
+      status: "pending",
+      studentId: decoded.userId, // Keep field name for compatibility
+      courseId: order._id, // Use orderId in courseId field for compatibility
+      paymentMethod: "card",
+      paymentId: paymentIntent.id,
+      description: `Order payment: ${order.orderNumber}`,
+      courseName: `Order ${order.orderNumber}`, // Keep field name for compatibility
+      instructorName: customerName,
     });
 
     return NextResponse.json({
-      success:       true,
-      clientSecret:  paymentIntent.client_secret,
+      success: true,
+      clientSecret: paymentIntent.client_secret,
       transactionId: transaction._id,
-      amount:        priceInBDT,
-      courseName:    course.title,
+      orderId: order._id,
+      orderNumber: order.orderNumber,
+      amount: totalAmount,
     });
 
   } catch (error: any) {
@@ -163,7 +174,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ─── GET — Payment verify ──────────────────────────────────────────────────
+// ─── GET — Payment Verification ──────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
   try {
     await connectDB();
@@ -175,10 +186,10 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const paymentIntentId = searchParams.get("payment_intent");
-    const courseId        = searchParams.get("courseId");
+    const orderId = searchParams.get("orderId");
 
-    if (!paymentIntentId || !courseId) {
-      return NextResponse.json({ error: "payment_intent and courseId required" }, { status: 400 });
+    if (!paymentIntentId || !orderId) {
+      return NextResponse.json({ error: "payment_intent and orderId required" }, { status: 400 });
     }
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -187,42 +198,42 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, status: paymentIntent.status });
     }
 
+    // Update transaction status
     await Transaction.findOneAndUpdate(
       { paymentId: paymentIntentId },
       { status: "completed", processedAt: new Date() }
     );
 
-    const alreadyEnrolled = await Enrollment.findOne({ studentId: decoded.userId, courseId });
-    if (!alreadyEnrolled) {
-      const course = await Course.findById(courseId)
-        .populate("instructorId", "name")
-        .lean() as any;
-      if (course) {
-        await Enrollment.create({
-          studentId:      decoded.userId,
-          courseId,
-          courseName:     course.title,
-          // ✅ DB schema: thumbnail field
-          courseImage:    course.thumbnail || course.coverImage?.url || "",
-          instructorName: course.instructorId?.name || "",
-          status:         "active",
-          enrolledAt:     new Date(),
-          progress: {
-            completedLessons:   [],
-            progressPercentage: 0,
-            totalTimeSpent:     0,
-            lastAccessedAt:     new Date(),
-          },
+    // Get order and update stock
+    const order = await Order.findById(orderId);
+    if (order && order.status === "pending") {
+      // Update stock quantities
+      for (const item of order.items) {
+        await Product.findByIdAndUpdate(item.productId, {
+          $inc: { stockQuantity: -item.quantity }
         });
-        await Promise.all([
-          // ✅ enrollmentCount (DB schema field)
-          Course.findByIdAndUpdate(courseId, { $inc: { enrollmentCount: 1 } }),
-          User.findByIdAndUpdate(decoded.userId, { $inc: { "stats.enrolledCourses": 1 } }),
-        ]);
       }
+
+      // Update order status
+      await order.updateStatus("confirmed");
+
+      // Log activity
+      const ActivityLog = (await import("@/models/ActivityLog")).default;
+      await (ActivityLog as any).logActivity(
+        "order_confirmed",
+        `Order ${order.orderNumber} confirmed after payment`,
+        decoded.userId,
+        "User",
+        "order",
+        order._id
+      );
     }
 
-    return NextResponse.json({ success: true, status: "succeeded" });
+    return NextResponse.json({ 
+      success: true, 
+      status: "succeeded",
+      orderNumber: order?.orderNumber 
+    });
 
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

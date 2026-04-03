@@ -5,13 +5,27 @@
 @custom-variant dark (&:where(.dark, [data-theme="dark"], .dark *));
 
 /* =========================
-   Root Theme Variables
+   Root Theme Variables (Orange & Black Theme)
 ========================= */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
   --nav-bg: #ffffff;
   --border-color: #f3f4f6;
+  
+  /* Primary Orange Colors */
+  --primary: #FF6B35;
+  --primary-dark: #E55A2B;
+  --primary-light: #FF8C42;
+  
+  /* Secondary Black Colors */
+  --secondary: #1A1A1A;
+  --secondary-light: #2D2D2D;
+  --secondary-dark: #000000;
+  
+  /* Accent Colors */
+  --accent-orange: #FF8C42;
+  --accent-dark-orange: #E55A2B;
 
   /* Font variables */
   --font-geist-sans: "Geist", sans-serif;
@@ -20,14 +34,19 @@
 }
 
 /* =========================
-   Dark Theme Variables
+   Dark Theme Variables (Orange & Black Theme)
 ========================= */
 .dark,
 [data-theme="dark"] {
-  --background: #0b1120;
-  --foreground: #ededed;
-  --nav-bg: #0b1120;
-  --border-color: #1f2937;
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --nav-bg: #1a1a1a;
+  --border-color: #2d2d2d;
+  
+  /* Keep orange colors in dark mode */
+  --primary: #FF6B35;
+  --primary-dark: #E55A2B;
+  --primary-light: #FF8C42;
 }
 
 /* =========================

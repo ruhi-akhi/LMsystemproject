@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams, useRouter } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { Package } from "lucide-react";
 import toast from "react-hot-toast";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/firebase/firebase";
@@ -247,6 +248,37 @@ const LoginPage = () => {
                 <GitHubIcon />
                 GitHub
               </Link>
+            </div>
+
+            {/* Demo Login Section */}
+            <div className="mb-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex-1 h-px bg-gray-300 dark:bg-white/10" />
+                <span className="text-gray-600 dark:text-gray-400 text-xs font-medium">DEMO LOGIN</span>
+                <div className="flex-1 h-px bg-gray-300 dark:bg-white/10" />
+              </div>
+              
+              <div className="grid grid-cols-1 gap-2">
+                <button
+                  onClick={() => {
+                    // Fill demo admin credentials
+                    const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
+                    const passwordInput = document.querySelector('input[type="password"]') as HTMLInputElement;
+                    if (emailInput && passwordInput) {
+                      emailInput.value = "admin@inventory.com";
+                      passwordInput.value = "admin123";
+                      // Trigger form validation
+                      emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+                      passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                  }}
+                  type="button"
+                  className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-[#FF6B35] text-white hover:bg-[#E55A2B] transition text-sm font-medium"
+                >
+                  <Package className="w-4 h-4" />
+                  Demo Admin Login
+                </button>
+              </div>
             </div>
 
             <p className="text-center text-sm text-gray-700 dark:text-gray-400 mt-6">

@@ -89,7 +89,7 @@ const DashboardNavbar = () => {
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
             <input 
               type="text" 
-              placeholder="Search lessons, analytics..." 
+              placeholder="Search products, orders, inventory..." 
               className="w-full pl-11 pr-4 py-2.5 bg-gray-100/50 dark:bg-gray-800/50 dark:text-gray-200 border border-transparent focus:border-purple-500/30 rounded-2xl text-sm outline-none focus:ring-4 focus:ring-purple-500/5 transition-all"
             />
           </div>
@@ -133,7 +133,7 @@ const DashboardNavbar = () => {
               
               <div className="hidden lg:block text-left leading-tight">
                 <p className="text-sm font-black text-gray-800 dark:text-gray-100 truncate max-w-[120px]">
-                  {user?.name || "Instructor Name"}
+                  {user?.name || "Manager"}
                 </p>
                 <p className="text-[10px] text-purple-500 font-bold uppercase tracking-widest">
                   {user?.role || "Instructor"}

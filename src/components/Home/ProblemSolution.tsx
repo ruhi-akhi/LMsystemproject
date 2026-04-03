@@ -7,39 +7,39 @@ import { FiArrowRight, FiActivity, FiZap, FiTarget } from "react-icons/fi";
 const ProblemSolution = () => {
   const data = [
     {
-      problem: "কী শিখব, কতটুকু শিখব, কোথা থেকে শুরু করব কিছুই বুঝি না।",
+      problem: "ইনভেন্টরি ট্র্যাক করা কঠিন, কোন প্রোডাক্ট কতটুকু আছে জানি না।",
       problemEmoji: "😒",
-      solution: "আমরা পুরো আউটলাইন, গাইডলাইন, কনটেন্ট রেডি করেই তোমার সাথে আছি।",
-      solutionEmoji: "😊",
-      color: "from-orange-500 via-rose-500 to-purple-600",
-      icon: <FiTarget className="text-orange-500" />,
+      solution: "রিয়েল-টাইম ইনভেন্টরি ট্র্যাকিং সিস্টেম দিয়ে সব প্রোডাক্টের সঠিক তথ্য পাবেন।",
+      solutionEmoji: "📊",
+      color: "from-[#FF6B35] via-[#E55A2B] to-orange-600",
+      icon: <FiTarget className="text-[#FF6B35]" />,
     },
     {
-      problem: "স্কিল ও নলেজ নেই।",
+      problem: "অর্ডার ম্যানেজমেন্ট জটিল, ম্যানুয়াল কাজে ভুল হয়।",
       problemEmoji: "😟",
       solution:
-        "৬ মাসে লার্নিং জার্নিতে যদি সিরিয়াস হও - নিজের নলেজ ও স্কিল দুইটাই পাবে।",
-      solutionEmoji: "😎",
+        "অটোমেটিক অর্ডার প্রসেসিং এবং স্মার্ট ওয়ার্কফ্লো দিয়ে ভুলের সম্ভাবনা শূন্য।",
+      solutionEmoji: "⚡",
       color: "from-blue-600 via-indigo-500 to-purple-500",
       icon: <FiZap className="text-blue-500" />,
     },
     {
-      problem: "ইন্টার্নশিপ বা চাকরি পর্যন্ত পৌঁছানোর আগেই হার মেনে যাই।",
+      problem: "স্টক শেষ হয়ে গেলে বুঝতে পারি না, বিক্রয় হারিয়ে ফেলি।",
       problemEmoji: "😫",
       solution:
-        "তোমার জব ইন্টার্ন নিশ্চিত না হওয়া পর্যন্ত আমরা তোমাকে ছাড়ব না।",
-      solutionEmoji: "🤝",
+        "স্মার্ট রিস্টক অ্যালার্ট এবং অটোমেটিক নোটিফিকেশন দিয়ে কখনো স্টক শেষ হবে না।",
+      solutionEmoji: "🔔",
       color: "from-emerald-500 via-teal-500 to-cyan-600",
       icon: <FiActivity className="text-emerald-500" />,
     },
     {
-      problem: "রেগুলারিটি বজায় রাখতে পারি না - মাঝপথেই থেমে যাই।",
+      problem: "বিজনেস রিপোর্ট তৈরি করা সময়সাপেক্ষ এবং জটিল।",
       problemEmoji: "😰",
       solution:
-        "ডেডিকেটেড লাইভ সাপোর্ট, গাইডলাইন, ২৪/৭ কমিউনিটি সাপোর্টে থেমে যাওয়ার চান্স নেই।",
-      solutionEmoji: "🔥",
-      color: "from-pink-500 via-rose-500 to-amber-500",
-      icon: <FiZap className="text-pink-500" />,
+        "ওয়ান-ক্লিক রিপোর্ট জেনারেশন এবং রিয়েল-টাইম অ্যানালিটিক্স দিয়ে তাৎক্ষণিক ইনসাইট পাবেন।",
+      solutionEmoji: "📈",
+      color: "from-[#FF6B35] via-[#E55A2B] to-amber-500",
+      icon: <FiZap className="text-[#FF6B35]" />,
     },
   ];
 
@@ -47,8 +47,8 @@ const ProblemSolution = () => {
     <section className="py-24 bg-white dark:bg-[#020617] relative overflow-hidden">
       {/* Dynamic Background Glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-[1200px] pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-rose-500/10 blur-[100px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full animate-pulse" />
+        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#FF6B35]/10 blur-[100px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-[#E55A2B]/10 blur-[100px] rounded-full animate-pulse" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -59,19 +59,19 @@ const ProblemSolution = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 mb-6"
           >
-            <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-[#FF6B35] animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-              Transforming Struggles
+              Business Solutions
             </span>
           </motion.div>
 
           <h2 className="text-4xl md:text-7xl font-black text-slate-800 dark:text-white leading-[1.1] tracking-tight">
-            শেখার পথে <span className="text-rose-500">প্যারা</span> অনেক,
+            ব্যবসায় <span className="text-[#FF6B35]">সমস্যা</span> অনেক,
             <br />
             <span className="italic font-serif font-light text-slate-400 dark:text-slate-500">
               কিন্তু সমাধান মাত্র
             </span>{" "}
-            <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] bg-clip-text text-transparent">
               একটিই!
             </span>
           </h2>
@@ -88,9 +88,9 @@ const ProblemSolution = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative"
             >
-              <div className="relative h-full bg-slate-50 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[3rem] border border-slate-200 dark:border-slate-800 p-8 md:p-12 overflow-hidden transition-all duration-500 hover:border-rose-500/30">
+              <div className="relative h-full bg-slate-50 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[3rem] border border-slate-200 dark:border-slate-800 p-8 md:p-12 overflow-hidden transition-all duration-500 hover:border-[#FF6B35]/30">
                 {/* Background Number */}
-                <div className="absolute -top-10 -right-10 text-[15rem] font-black text-slate-200/30 dark:text-slate-800/10 pointer-events-none select-none group-hover:text-rose-500/5 transition-colors duration-700">
+                <div className="absolute -top-10 -right-10 text-[15rem] font-black text-slate-200/30 dark:text-slate-800/10 pointer-events-none select-none group-hover:text-[#FF6B35]/5 transition-colors duration-700">
                   {index + 1}
                 </div>
 
@@ -102,7 +102,7 @@ const ProblemSolution = () => {
                         {item.icon}
                       </div>
                       <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                        Common Struggle
+                        Business Challenge
                       </span>
                     </div>
                     <div className="flex items-start gap-4">
@@ -115,7 +115,7 @@ const ProblemSolution = () => {
 
                   {/* Dynamic Connector */}
                   <div className="flex items-center gap-4 mb-10 overflow-hidden">
-                    <div className="h-[2px] w-full bg-gradient-to-r from-rose-500 to-transparent opacity-20" />
+                    <div className="h-[2px] w-full bg-gradient-to-r from-[#FF6B35] to-transparent opacity-20" />
                     <motion.div
                       animate={{ x: [-10, 10, -10] }}
                       transition={{
@@ -130,12 +130,12 @@ const ProblemSolution = () => {
 
                   {/* Solution Section */}
                   <div className="mt-auto relative">
-                    <div className="absolute -inset-6 bg-gradient-to-r from-rose-500/5 to-transparent rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute -inset-6 bg-gradient-to-r from-[#FF6B35]/5 to-transparent rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
                     <div className="relative">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="text-xs font-black uppercase tracking-[0.2em] text-emerald-500">
-                          The Ultimate Solution
+                          Smart Solution
                         </span>
                       </div>
                       <div className="flex items-start gap-4">

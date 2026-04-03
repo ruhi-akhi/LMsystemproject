@@ -8,31 +8,31 @@ const ImpactSection = () => {
   const stats = [
     {
       id: 1,
-      icon: <FaGlobeAmericas className="text-4xl text-[#832388]" />,
- 
-      label: "দেশে",
+      icon: <FaGlobeAmericas className="text-4xl text-[#FF6B35]" />,
+      number: "৯৯.৯%",
+      label: "আপটাইম গ্যারান্টি",
     },
     {
       id: 2,
-      icon: <FaBuilding className="text-4xl text-[#E3436B]" />,
-  
-      label: "গ্লোবাল জব প্লেসমেন্ট",
+      icon: <FaBuilding className="text-4xl text-[#E55A2B]" />,
+      number: "২৪/৭",
+      label: "কাস্টমার সাপোর্ট",
     },
     {
       id: 3,
-      icon: <FaHeadset className="text-4xl text-[#F0772F]" />,
-    
-      label: "রিমোট জব",
+      icon: <FaHeadset className="text-4xl text-[#FF6B35]" />,
+      number: "১০০+",
+      label: "সন্তুষ্ট ক্লায়েন্ট",
     },
     {
       id: 4,
-      icon: <FaTrophy className="text-4xl text-[#832388]" />,
-  
-      label: "জব সাকসেস রেশিও",
+      icon: <FaTrophy className="text-4xl text-[#E55A2B]" />,
+      number: "৫০০+",
+      label: "সফল প্রজেক্ট",
     },
   ];
 
-  const phGradient = "linear-gradient(to right, #832388, #E3436B, #F0772F)";
+  const phGradient = "linear-gradient(to right, #FF6B35, #E55A2B, #FF6B35)";
 
   return (
     <section className="py-12 md:py-24 bg-white dark:bg-slate-950 overflow-hidden">
@@ -56,7 +56,7 @@ const ImpactSection = () => {
               ease: "linear",
             }}
             style={{
-              backgroundImage: `conic-gradient(from 0deg, transparent 60%, #832388, #E3436B, #F0772F)`,
+              backgroundImage: `conic-gradient(from 0deg, transparent 60%, #FF6B35, #E55A2B, #FF6B35)`,
             }}
             className="absolute inset-[-150%] md:inset-[-100%] z-0"
           />
@@ -68,7 +68,7 @@ const ImpactSection = () => {
             <motion.h2 
               className="text-xl md:text-3xl font-black text-center text-slate-800 dark:text-white mb-10 md:mb-16 px-4"
             >
-              আমাদের <span className="text-transparent bg-clip-text" style={{ backgroundImage: phGradient }}>হিরোদের</span> ক্যারিয়ারে ব্রেইন-বুস্ট এর ইমপ্যাক্ট
+              আমাদের <span className="text-transparent bg-clip-text" style={{ backgroundImage: phGradient }}>স্মার্ট সিস্টেমের</span> ব্যবসায়িক প্রভাব
             </motion.h2>
 
             {/* Stats Grid */}
@@ -89,6 +89,10 @@ const ImpactSection = () => {
 
                   <div className="mb-3 md:mb-4 transform transition-transform duration-300">
                     {item.icon}
+                  </div>
+
+                  <div className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white mb-2">
+                    {item.number}
                   </div>
 
                   <p className="text-gray-500 dark:text-gray-400 font-bold text-xs md:text-sm tracking-wide">

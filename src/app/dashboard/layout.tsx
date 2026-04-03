@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
-  LayoutDashboard, User, BookOpen, FileText, HelpCircle, Award,
-  MessageSquare, Settings, Bell, ChevronLeft, ChevronRight,
-  Menu, X, LogOut, Users, DollarSign, BarChart2, Megaphone,
+  LayoutDashboard, User, Settings, Bell, ChevronLeft, ChevronRight,
+  Menu, X, LogOut, Users, Package, ShoppingCart, FolderOpen, 
+  AlertTriangle, Activity, BarChart2
 } from "lucide-react";
 import { FaSun, FaMoon } from "react-icons/fa";
 
@@ -19,62 +19,62 @@ const POLL_INTERVAL = 60_000;
 
 const menus: Record<Role, { label: string; href: string; icon: React.ReactNode }[]> = {
   student: [
-    { label: "Dashboard", href: "/dashboard/student", icon: <LayoutDashboard size={18} /> },
+    { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
+    { label: "Products", href: "/dashboard/products", icon: <Package size={18} /> },
+    { label: "Categories", href: "/dashboard/categories", icon: <FolderOpen size={18} /> },
+    { label: "Orders", href: "/dashboard/orders", icon: <ShoppingCart size={18} /> },
+    { label: "Restock Queue", href: "/dashboard/restock-queue", icon: <AlertTriangle size={18} /> },
+    { label: "Activity Log", href: "/dashboard/activity-log", icon: <Activity size={18} /> },
     { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
-    { label: "Courses", href: "/dashboard/student/courses", icon: <BookOpen size={18} /> },
-    { label: "Assignments", href: "/dashboard/student/assignments", icon: <FileText size={18} /> },
-    { label: "Announcements", href: "/dashboard/announcements", icon: <Megaphone size={18} /> },
-    { label: "Quiz", href: "/dashboard/student/quiz", icon: <HelpCircle size={18} /> },
-    { label: "Certificates", href: "/dashboard/student/certificates", icon: <Award size={18} /> },
-    { label: "Blog", href: "/dashboard/blog", icon: <BookOpen size={18} /> },
-    { label: "Messages", href: "/dashboard/messages", icon: <MessageSquare size={18} /> },
     { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
   ],
   instructor: [
-    { label: "Dashboard", href: "/dashboard/instructor", icon: <LayoutDashboard size={18} /> },
+    { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
+    { label: "Products", href: "/dashboard/products", icon: <Package size={18} /> },
+    { label: "Categories", href: "/dashboard/categories", icon: <FolderOpen size={18} /> },
+    { label: "Orders", href: "/dashboard/orders", icon: <ShoppingCart size={18} /> },
+    { label: "Restock Queue", href: "/dashboard/restock-queue", icon: <AlertTriangle size={18} /> },
+    { label: "Activity Log", href: "/dashboard/activity-log", icon: <Activity size={18} /> },
+    { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart2 size={18} /> },
     { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
-    { label: "Courses", href: "/dashboard/instructor/courses", icon: <BookOpen size={18} /> },
-    { label: "Announcements", href: "/dashboard/announcements", icon: <Megaphone size={18} /> },
-    { label: "Assignments", href: "/dashboard/instructor/assignments", icon: <FileText size={18} /> },
-    { label: "Students", href: "/dashboard/instructor/students", icon: <Users size={18} /> },
-    { label: "Quiz", href: "/dashboard/instructor/quiz", icon: <HelpCircle size={18} /> },
-    { label: "Quiz Results", href: "/dashboard/instructor/quiz-results", icon: <BarChart2 size={18} /> },
-    { label: "Earnings", href: "/dashboard/instructor/earnings", icon: <DollarSign size={18} /> },
-    { label: "Blog", href: "/dashboard/blog", icon: <BookOpen size={18} /> },
-    { label: "Messages", href: "/dashboard/messages", icon: <MessageSquare size={18} /> },
     { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
   ],
   admin: [
-    { label: "Dashboard", href: "/dashboard/admin", icon: <LayoutDashboard size={18} /> },
-    { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
-    { label: "Courses", href: "/dashboard/admin/courses", icon: <BookOpen size={18} /> },
+    { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
+    { label: "Products", href: "/dashboard/products", icon: <Package size={18} /> },
+    { label: "Categories", href: "/dashboard/categories", icon: <FolderOpen size={18} /> },
+    { label: "Orders", href: "/dashboard/orders", icon: <ShoppingCart size={18} /> },
+    { label: "Restock Queue", href: "/dashboard/restock-queue", icon: <AlertTriangle size={18} /> },
+    { label: "Activity Log", href: "/dashboard/activity-log", icon: <Activity size={18} /> },
     { label: "Users", href: "/dashboard/admin/users", icon: <Users size={18} /> },
-    { label: "Announcements", href: "/dashboard/announcements", icon: <Megaphone size={18} /> },
-    { label: "Earnings", href: "/dashboard/admin/earnings", icon: <DollarSign size={18} /> },
-    { label: "Blog", href: "/dashboard/blog", icon: <BookOpen size={18} /> },
-    { label: "Messages", href: "/dashboard/messages", icon: <MessageSquare size={18} /> },
+    { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart2 size={18} /> },
+    { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
     { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
   ],
 };
 
 const roleDashboard: Record<Role, string> = {
-  student: "/dashboard/student",
-  instructor: "/dashboard/instructor",
-  admin: "/dashboard/admin",
+  student: "/dashboard/inventory",
+  instructor: "/dashboard/inventory", 
+  admin: "/dashboard/inventory",
 };
 
 const roleProtectedPrefixes: Record<Role, string[]> = {
-  student: ["/dashboard/student"],
-  instructor: ["/dashboard/instructor"],
-  admin: ["/dashboard/admin"],
+  student: [],
+  instructor: [],
+  admin: [],
 };
 
 const sharedPaths = [
+  "/dashboard/inventory",
+  "/dashboard/products", 
+  "/dashboard/categories",
+  "/dashboard/orders",
+  "/dashboard/restock-queue",
+  "/dashboard/activity-log",
+  "/dashboard/analytics",
   "/dashboard/profile",
-  "/dashboard/messages",
   "/dashboard/settings",
-  "/dashboard/announcements",
-  "/dashboard/blog",
 ];
 
 function isUnauthorizedPath(path: string, userRole: Role): boolean {
@@ -87,19 +87,19 @@ function isUnauthorizedPath(path: string, userRole: Role): boolean {
 }
 
 const roleMeta: Record<Role, { color: string; label: string }> = {
-  student: { color: "#00C48C", label: "Student" },
-  instructor: { color: "#F89B29", label: "Instructor" },
-  admin: { color: "#FF0F7B", label: "Admin" },
+  student: { color: "#FF6B35", label: "Manager" },
+  instructor: { color: "#FF6B35", label: "Manager" },
+  admin: { color: "#FF6B35", label: "Admin" },
 };
 
-const rootHrefs = ["/dashboard/instructor", "/dashboard/student", "/dashboard/admin"];
+const rootHrefs = ["/dashboard/inventory"];
 
 function Avatar({ user, sm }: { user: UserData | null; sm?: boolean }) {
   const letter = user?.name?.charAt(0).toUpperCase() || "?";
   const cls = sm ? "w-7 h-7" : "w-9 h-9";
   return user?.photoURL
     ? <img src={user.photoURL} alt="" className={`${cls} rounded-lg object-cover flex-shrink-0`} />
-    : <div className={`${cls} rounded-lg flex items-center justify-center font-bold text-sm text-white bg-gradient-to-br from-[#832388] to-[#FF0F7B] flex-shrink-0`}>{letter}</div>;
+    : <div className={`${cls} rounded-lg flex items-center justify-center font-bold text-sm text-white bg-gradient-to-br from-[#FF6B35] to-[#E55A2B] flex-shrink-0`}>{letter}</div>;
 }
 
 function Sidebar({ items, collapsed, onToggle, mobileOpen, onMobileClose }: {
@@ -117,8 +117,8 @@ function Sidebar({ items, collapsed, onToggle, mobileOpen, onMobileClose }: {
         <div className={`h-16 flex items-center flex-shrink-0 border-b border-white/[0.07] ${w ? "px-3.5 justify-between" : "justify-center px-0"}`}>
           {w && (
             <Link href="/" className="flex items-center gap-2.5 no-underline min-w-0">
-              <div className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center text-[15px] font-black text-white bg-gradient-to-br from-[#832388] to-[#FF0F7B]">S</div>
-              <span className="text-[15px] font-black text-white whitespace-nowrap tracking-tight">SmartLMS<span className="text-[#FF0F7B]">Pro</span></span>
+              <div className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center text-[15px] font-black text-white bg-gradient-to-br from-[#FF6B35] to-[#E55A2B]">I</div>
+              <span className="text-[15px] font-black text-white whitespace-nowrap tracking-tight">Smart<span className="text-[#FF6B35]">Inventory</span></span>
             </Link>
           )}
           {!forceWide ? (
@@ -139,15 +139,15 @@ function Sidebar({ items, collapsed, onToggle, mobileOpen, onMobileClose }: {
               <Link key={item.href} href={item.href} title={!w ? item.label : undefined}
                 className={`relative flex items-center mx-2 my-0.5 rounded-lg no-underline transition-colors duration-150
                   ${w ? "gap-3 px-3.5 py-2.5 justify-start" : "justify-center py-3"}
-                  ${active ? "bg-gradient-to-r from-[#83238888] to-[#FF0F7B44] text-white" : "text-white/50 hover:text-white/80 hover:bg-white/[0.05]"}`}>
-                {active && <span className="absolute left-0 top-[18%] h-[64%] w-[3px] rounded-r-sm bg-gradient-to-b from-[#832388] to-[#FF0F7B]" />}
+                  ${active ? "bg-gradient-to-r from-[#FF6B3588] to-[#E55A2B44] text-white" : "text-white/50 hover:text-white/80 hover:bg-white/[0.05]"}`}>
+                {active && <span className="absolute left-0 top-[18%] h-[64%] w-[3px] rounded-r-sm bg-gradient-to-b from-[#FF6B35] to-[#E55A2B]" />}
                 <span className={active ? "text-white" : "text-white/40"}>{item.icon}</span>
                 {w && <span className={`text-[13.5px] whitespace-nowrap ${active ? "font-semibold" : "font-normal"}`}>{item.label}</span>}
               </Link>
             );
           })}
         </nav>
-        {w && <div className="px-3.5 py-3 border-t border-white/[0.07] text-[11px] text-white/20 flex-shrink-0">SmartLMS Pro v2.0</div>}
+        {w && <div className="px-3.5 py-3 border-t border-white/[0.07] text-[11px] text-white/20 flex-shrink-0">Smart Inventory v1.0</div>}
       </div>
     );
   };
@@ -225,7 +225,7 @@ function TopNavbar({ role, items, theme, toggleTheme, user, onLogout, onMobileMe
         </button>
         <div>
           <p className="m-0 text-[17px] font-bold text-gray-900 dark:text-white leading-tight">{currentPage}</p>
-          <p className="m-0 text-[11px] text-gray-400 dark:text-gray-500 leading-none capitalize">{role} Dashboard</p>
+          <p className="m-0 text-[11px] text-gray-400 dark:text-gray-500 leading-none capitalize">Inventory Dashboard</p>
         </div>
       </div>
 
@@ -238,7 +238,7 @@ function TopNavbar({ role, items, theme, toggleTheme, user, onLogout, onMobileMe
           <button onClick={handleNotifOpen} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer relative">
             <Bell size={18} className="text-gray-600 dark:text-gray-300" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full text-white font-bold flex items-center justify-center text-[9px] bg-[#FF0F7B]">
+              <span className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full text-white font-bold flex items-center justify-center text-[9px] bg-[#FF6B35]">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
@@ -247,13 +247,13 @@ function TopNavbar({ role, items, theme, toggleTheme, user, onLogout, onMobileMe
             <div className="absolute right-0 top-[calc(100%+6px)] w-72 bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl z-[200] overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                 <span className="text-sm font-bold text-gray-900 dark:text-white">Notifications</span>
-                <span className="text-xs font-semibold cursor-pointer text-[#832388]">Mark all read</span>
+                <span className="text-xs font-semibold cursor-pointer text-[#FF6B35]">Mark all read</span>
               </div>
               {notifications.length === 0 ? (
                 <div className="px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-500">কোনো notification নেই</div>
               ) : notifications.slice(0, 5).map((n, i) => (
                 <div key={i} className={`flex gap-3 px-4 py-3 border-b border-gray-100 dark:border-gray-700 cursor-pointer items-start hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${!n.isRead ? "bg-gray-50 dark:bg-gray-800/50" : ""}`}>
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${n.isRead ? "bg-gray-300 dark:bg-gray-600" : "bg-[#FF0F7B]"}`} />
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${n.isRead ? "bg-gray-300 dark:bg-gray-600" : "bg-[#FF6B35]"}`} />
                   <div>
                     <p className={`text-[13px] leading-snug m-0 ${n.isRead ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white font-semibold"}`}>{n.title}</p>
                     <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5 m-0">{n.message}</p>
@@ -261,7 +261,7 @@ function TopNavbar({ role, items, theme, toggleTheme, user, onLogout, onMobileMe
                 </div>
               ))}
               <div className="py-2.5 text-center">
-                <Link href="/dashboard/settings" className="text-xs font-semibold text-[#832388]">View all →</Link>
+                <Link href="/dashboard/settings" className="text-xs font-semibold text-[#FF6B35]">View all →</Link>
               </div>
             </div>
           )}
@@ -305,7 +305,7 @@ function TopNavbar({ role, items, theme, toggleTheme, user, onLogout, onMobileMe
                 <Settings size={14} className="opacity-50" /> Settings
               </Link>
               <button onClick={() => { setShowUser(false); onLogout(); }}
-                className="flex items-center gap-2.5 w-full px-4 py-2.5 text-[13.5px] font-semibold bg-transparent border-none cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-[#FF0F7B]">
+                className="flex items-center gap-2.5 w-full px-4 py-2.5 text-[13.5px] font-semibold bg-transparent border-none cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-[#FF6B35]">
                 <LogOut size={14} /> Logout
               </button>
             </div>
@@ -327,7 +327,7 @@ function PageLoader({ children }: { children: React.ReactNode }) {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-      <div className="w-10 h-10 border-4 border-[#832388]/20 border-t-[#832388] rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-[#FF6B35]/20 border-t-[#FF6B35] rounded-full animate-spin" />
       <p className="text-sm text-gray-400 dark:text-gray-500 font-medium m-0">Loading...</p>
     </div>
   );
@@ -446,12 +446,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       localStorage.setItem("user", JSON.stringify(freshUser));
 
-      // Role change হলে redirect
+      // Role change হলেও same dashboard এ থাকবে
       if (currentRoleRef.current !== null && newRole !== currentRoleRef.current) {
         currentRoleRef.current = newRole;
         setUser(freshUser);
         setRole(newRole);
-        router.replace(roleDashboard[newRole]);
+        // No redirect needed - stay on same dashboard
         return;
       }
 
@@ -462,11 +462,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       if (isInitial) {
         setIsLoading(false);
-        const isWrongRoleDashboard = Object.entries(roleDashboard).some(
-          ([r, path]) => r !== newRole && pathname.startsWith(path)
-        );
-        if (isWrongRoleDashboard || isUnauthorizedPath(pathname, newRole)) {
-          router.replace(roleDashboard[newRole]);
+        // সবাই inventory dashboard এ যাবে
+        if (pathname !== "/dashboard/inventory" && !pathname.startsWith("/dashboard/")) {
+          router.replace("/dashboard/inventory");
         }
       }
 
@@ -513,13 +511,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // URL guard
-  useEffect(() => {
-    if (isLoading) return;
-    if (isUnauthorizedPath(pathname, role)) {
-      router.replace(roleDashboard[role]);
-    }
-  }, [pathname, role, isLoading, router]);
+  // URL guard - removed since everyone uses same dashboard
+  // useEffect(() => {
+  //   if (isLoading) return;
+  //   if (isUnauthorizedPath(pathname, role)) {
+  //     router.replace(roleDashboard[role]);
+  //   }
+  // }, [pathname, role, isLoading, router]);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -530,7 +528,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isLoading) return (
     <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-[#0b1120]">
-      <div className="w-12 h-12 border-4 border-[#832388]/20 border-t-[#832388] rounded-full animate-spin" />
+      <div className="w-12 h-12 border-4 border-[#FF6B35]/20 border-t-[#FF6B35] rounded-full animate-spin" />
     </div>
   );
 
