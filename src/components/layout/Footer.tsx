@@ -2,13 +2,13 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { 
-  FaFacebook, 
-  FaInstagram, 
-  FaYoutube, 
-  FaLinkedin, 
-  FaMapMarkerAlt, 
-  FaEnvelope, 
+import {
+  FaFacebook,
+  FaInstagram,
+  FaYoutube,
+  FaLinkedin,
+  FaMapMarkerAlt,
+  FaEnvelope,
   FaPhoneAlt,
   FaApple,
   FaGooglePlay,
@@ -26,16 +26,16 @@ const footerLinks = [
   { name: "Newsletter", path: "/privacy" },
 
   // New Link
-  { name: "Become an Instructor", path: "/become-instructor" },
+  { name: "Become a Manager", path: "/become-manager" },
 ];
 const Footer = () => {
   return (
     // Important: We use !important styles via Tailwind for background to override any conflicts
     <footer className="w-full bg-[#F9F5FF] dark:bg-[#0b1120] pt-16 pb-6 transition-colors duration-300 border-t border-gray-100 dark:border-gray-800">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          
+
           {/* Column 1: BrainBoost Logo & Contact */}
           <div className="space-y-6">
             <Logo />
@@ -145,7 +145,7 @@ const Footer = () => {
                   </a>
                 </div>
               </button>
-              
+
               <button className="flex items-center gap-3 w-full max-w-[200px] bg-[#1a1a1a] dark:bg-black text-white p-3 rounded-xl hover:opacity-80 transition-all border border-gray-800">
                 <FaGooglePlay size={22} className="text-green-400" />
                 <div className="text-left">

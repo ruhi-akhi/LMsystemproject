@@ -5,12 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   LayoutDashboard, User, Settings, Bell, ChevronLeft, ChevronRight,
-  Menu, X, LogOut, Users, Package, ShoppingCart, FolderOpen, 
+  Menu, X, LogOut, Users, Package, ShoppingCart, FolderOpen,
   AlertTriangle, Activity, BarChart2
 } from "lucide-react";
 import { FaSun, FaMoon } from "react-icons/fa";
 
-type Role = "student" | "instructor" | "admin";
+type Role = "staff" | "manager" | "admin";
 interface UserData { name: string; email: string; photoURL?: string; role: Role; }
 
 // ✅ Poll interval বাড়ানো হয়েছে — 5s থেকে 60s
@@ -18,7 +18,7 @@ interface UserData { name: string; email: string; photoURL?: string; role: Role;
 const POLL_INTERVAL = 60_000;
 
 const menus: Record<Role, { label: string; href: string; icon: React.ReactNode }[]> = {
-  student: [
+  staff: [
     { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
     { label: "Products", href: "/dashboard/products", icon: <Package size={18} /> },
     { label: "Categories", href: "/dashboard/categories", icon: <FolderOpen size={18} /> },
@@ -28,7 +28,7 @@ const menus: Record<Role, { label: string; href: string; icon: React.ReactNode }
     { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
     { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
   ],
-  instructor: [
+  manager: [
     { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
     { label: "Products", href: "/dashboard/products", icon: <Package size={18} /> },
     { label: "Categories", href: "/dashboard/categories", icon: <FolderOpen size={18} /> },
@@ -54,20 +54,20 @@ const menus: Record<Role, { label: string; href: string; icon: React.ReactNode }
 };
 
 const roleDashboard: Record<Role, string> = {
-  student: "/dashboard/inventory",
-  instructor: "/dashboard/inventory", 
+  staff: "/dashboard/inventory",
+  manager: "/dashboard/inventory",
   admin: "/dashboard/inventory",
 };
 
 const roleProtectedPrefixes: Record<Role, string[]> = {
-  student: [],
-  instructor: [],
+  staff: [],
+  manager: [],
   admin: [],
 };
 
 const sharedPaths = [
   "/dashboard/inventory",
-  "/dashboard/products", 
+  "/dashboard/products",
   "/dashboard/categories",
   "/dashboard/orders",
   "/dashboard/restock-queue",
@@ -87,8 +87,8 @@ function isUnauthorizedPath(path: string, userRole: Role): boolean {
 }
 
 const roleMeta: Record<Role, { color: string; label: string }> = {
-  student: { color: "#FF6B35", label: "Manager" },
-  instructor: { color: "#FF6B35", label: "Manager" },
+  staff: { color: "#FF6B35", label: "Staff" },
+  manager: { color: "#FF6B35", label: "Manager" },
   admin: { color: "#FF6B35", label: "Admin" },
 };
 
@@ -339,7 +339,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
 
   const [theme, setTheme] = useState<"dark" | "light">("light");
-  const [role, setRole] = useState<Role>("student");
+  const [role, setRole] = useState<Role>("staff");
   const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
@@ -375,8 +375,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (!raw) return false;
     try {
       const parsed: UserData = JSON.parse(raw);
-      const r = (["student", "instructor", "admin"].includes(parsed.role)
-        ? parsed.role : "student") as Role;
+      const r = (["staff", "manager", "admin"].includes(parsed.role)
+        ? parsed.role : "staff") as Role;
       currentRoleRef.current = r;
       setUser(parsed);
       setRole(r);
@@ -441,8 +441,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       }
 
       const freshUser: UserData = data.user;
-      const newRole = (["student", "instructor", "admin"].includes(freshUser.role)
-        ? freshUser.role : "student") as Role;
+      const newRole = (["staff", "manager", "admin"].includes(freshUser.role)
+        ? freshUser.role : "staff") as Role;
 
       localStorage.setItem("user", JSON.stringify(freshUser));
 

@@ -72,9 +72,9 @@ export default function VerifyOtpPage() {
         localStorage.setItem("user", JSON.stringify(data.user));
         toast.success("Login successful!");
         setTimeout(() => {
-          if (data.user.role === "admin") window.location.href = "/dashboard/admin";
-          else if (data.user.role === "instructor") window.location.href = "/dashboard/instructor";
-          else window.location.href = "/dashboard/student";
+          if (data.user.role === "admin") window.location.href = "/dashboard";
+          else if (data.user.role === "manager") window.location.href = "/dashboard";
+          else window.location.href = "/dashboard/inventory";
         }, 800);
         return;
       }

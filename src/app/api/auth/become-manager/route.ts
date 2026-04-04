@@ -1,4 +1,4 @@
-// src/app/api/auth/become-instructor/route.ts
+// src/app/api/auth/become-manager/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/db/connect";
 import User from "@/models/User";
@@ -25,37 +25,37 @@ export async function POST(req: Request) {
     // CASE 1: User already exists
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     if (existingUser) {
-      // Check if already an instructor
-      if (existingUser.role === "instructor") {
+      // Check if already a manager
+      if (existingUser.role === "manager") {
         return NextResponse.json(
-          { error: "আপনি ইতিমধ্যে instructor হিসেবে registered আছেন!" },
+          { error: "আপনি ইতিমধ্যে manager হিসেবে registered আছেন!" },
           { status: 400 }
         );
       }
 
-      // Check if admin (admins can't become instructors)
+      // Check if admin (admins can't become managers)
       if (existingUser.role === "admin") {
         return NextResponse.json(
-          { error: "Admin account কে instructor করা যাবে না!" },
+          { error: "Admin account কে manager করা যাবে না!" },
           { status: 400 }
         );
       }
 
-      // ✅ Update student → instructor
-      existingUser.role = "instructor";
-      
+      // ✅ Update staff → manager
+      existingUser.role = "manager";
+
       // Update other fields if provided
       if (name?.trim()) existingUser.name = name.trim();
       if (phone?.trim()) existingUser.phone = phone.trim();
-      
+
       await existingUser.save();
 
       // Generate new token with updated role
       const token = jwt.sign(
-        { 
-          userId: existingUser._id, 
-          email: existingUser.email, 
-          role: "instructor" 
+        {
+          userId: existingUser._id,
+          email: existingUser.email,
+          role: "manager"
         },
         JWT_SECRET,
         { expiresIn: "7d" }
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
       return NextResponse.json({
         success: true,
-        message: "🎉 আপনি এখন instructor!",
+        message: "🎉 আপনি এখন manager!",
         user: {
           id: existingUser._id,
           name: existingUser.name,
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // CASE 2: New user - Create as instructor
+    // CASE 2: New user - Create as manager
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     if (!name?.trim()) {
@@ -93,19 +93,19 @@ export async function POST(req: Request) {
         email: email.toLowerCase().trim(),
         phone: phone?.trim() || null,
         photoURL: body.photoURL || "",
-        role: "instructor",
+        role: "manager",
         provider,
       });
 
       const token = jwt.sign(
-        { userId: newUser._id, email: newUser.email, role: "instructor" },
+        { userId: newUser._id, email: newUser.email, role: "manager" },
         JWT_SECRET,
         { expiresIn: "7d" }
       );
 
       return NextResponse.json({
         success: true,
-        message: "🎉 Instructor account created!",
+        message: "🎉 Manager account created!",
         user: {
           id: newUser._id,
           name: newUser.name,
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
       email: email.toLowerCase().trim(),
       phone: phone?.trim() || null,
       password: hashedPassword,
-      role: "instructor",
+      role: "manager",
       provider: "credentials",
     });
 

@@ -2,30 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const roleRoutes: Record<string, string[]> = {
-  student: [
-    "/dashboard/student",
+  staff: [
+    "/dashboard",
     "/dashboard/profile",
-    "/dashboard/messages",
     "/dashboard/settings",
   ],
-  instructor: [
-    "/dashboard/instructor",
+  manager: [
+    "/dashboard",
     "/dashboard/profile",
-    "/dashboard/messages",
     "/dashboard/settings",
   ],
   admin: [
-    "/dashboard/admin",
+    "/dashboard",
     "/dashboard/profile",
-    "/dashboard/messages",
     "/dashboard/settings",
   ],
 };
 
 const roleDashboard: Record<string, string> = {
-  student: "/dashboard/student",
-  instructor: "/dashboard/instructor",
-  admin: "/dashboard/admin",
+  staff: "/dashboard",
+  manager: "/dashboard",
+  admin: "/dashboard",
 };
 
 const authRoutes = ["/login", "/register"];

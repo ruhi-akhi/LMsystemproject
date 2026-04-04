@@ -1,4 +1,4 @@
-// YouTube Video Utilities for CareerCanvas LMS
+// YouTube Video Utilities for Smart Inventory System
 
 /**
  * Convert YouTube URL to embed URL for better performance
@@ -54,7 +54,7 @@ export function getYouTubeThumbnail(videoId: string, quality: 'default' | 'mediu
  */
 export function createVideoPlayerProps(url: string) {
   const videoId = extractYouTubeVideoId(url);
-  
+
   return {
     src: getYouTubeEmbedUrl(url),
     thumbnail: videoId ? getYouTubeThumbnail(videoId) : undefined,

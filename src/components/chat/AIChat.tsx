@@ -43,11 +43,21 @@ export default function AIChat({ userId, userName = "আপনি", userAvatar }
         content: m.content,
       }));
 
-      const res = await fetch("/api/chat", {
+      const apiUrl = typeof window !== "undefined"
+        ? `${window.location.origin}/api/chat`
+        : "/api/chat";
+
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, history }),
       });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("AIChat API non-ok response:", text);
+        throw new Error(`Server responded with status ${res.status}`);
+      }
 
       const data = await res.json();
 

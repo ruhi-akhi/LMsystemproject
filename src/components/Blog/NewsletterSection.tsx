@@ -8,7 +8,7 @@ const NewsletterSection = () => {
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [frequency, setFrequency] = useState("weekly");
 
-  const topics = ["Web Development", "Digital Marketing", "Graphics Design", "Career Tips", "Tech Updates"];
+  const topics = ["Inventory Trends", "Supply Chain", "Business Growth", "Tech Updates", "Best Practices"];
   const frequencies = [
     { value: "daily", label: "Daily" },
     { value: "weekly", label: "Weekly" },
@@ -16,8 +16,8 @@ const NewsletterSection = () => {
   ];
 
   const toggleTopic = (topic: string) => {
-    setSelectedTopics(prev => 
-      prev.includes(topic) 
+    setSelectedTopics(prev =>
+      prev.includes(topic)
         ? prev.filter(t => t !== topic)
         : [...prev, topic]
     );
@@ -53,12 +53,12 @@ const NewsletterSection = () => {
             {/* Left Side: Content */}
             <div className="w-full lg:w-1/2 text-white">
               <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
-                Stay Up To Date
+                Stay Updated with Smart Inventory
               </h2>
               <p className="text-lg md:text-xl leading-relaxed mb-8 text-white/90 font-medium">
-                Get exclusive insights, industry trends, and expert analysis delivered straight to your inbox.
-                Join thousands of professionals who trust our curated content to stay ahead in
-                <span className="font-bold"> Digital Marketing, Graphics Design, and Web Development</span>.
+                Get exclusive insights, inventory management trends, and expert tips delivered straight to your inbox.
+                Join thousands of businesses who trust Smart Inventory to stay ahead in
+                <span className="font-bold"> Inventory Management, Supply Chain Optimization, and Business Growth</span>.
               </p>
 
               {!isSubscribed ? (

@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function BlogDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
-  
+
   const [blogData, setBlogData] = useState<any>(null);
   const [relatedBlogs, setRelatedBlogs] = useState<any[]>([]);
   const [isLiked, setIsLiked] = useState(false);
@@ -27,16 +27,16 @@ export default function BlogDetailPage() {
         // Find blog from all sections
         let foundBlog = null;
         const allBlogs = [...data.popular, ...data.allBlogs, ...data.career, ...data.techUpdates];
-        
+
         foundBlog = allBlogs.find((b: any) => b.slug === slug);
-        
+
         if (!foundBlog) {
           foundBlog = data.featured;
         }
-        
+
         setBlogData(foundBlog);
         setLikes(foundBlog?.likes || 0);
-        
+
         // Get related blogs from same category
         const related = allBlogs
           .filter((b: any) => b.category === foundBlog?.category && b.slug !== slug)
@@ -67,14 +67,14 @@ export default function BlogDetailPage() {
   const handleShare = (platform: string) => {
     const url = `${window.location.origin}/blog/${slug}`;
     const text = blogData?.title;
-    
+
     const shareUrls: Record<string, string> = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
       whatsapp: `https://wa.me/?text=${text} ${url}`
     };
-    
+
     window.open(shareUrls[platform], '_blank', 'width=600,height=400');
     setShowShareMenu(false);
   };
@@ -102,7 +102,7 @@ export default function BlogDetailPage() {
     <div className="min-h-screen bg-white dark:bg-[#0b1120] transition-colors duration-300">
       {/* Reading Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 dark:bg-gray-800 z-50">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-[#C81D77] to-[#6710C2] transition-all duration-300"
           style={{ width: `${readingProgress}%` }}
         />
@@ -112,21 +112,19 @@ export default function BlogDetailPage() {
       <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-40">
         <button
           onClick={handleLike}
-          className={`p-4 rounded-full shadow-xl transition-all ${
-            isLiked 
-              ? 'bg-red-500 text-white' 
+          className={`p-4 rounded-full shadow-xl transition-all ${isLiked
+              ? 'bg-red-500 text-white'
               : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20'
-          }`}
+            }`}
         >
           <FaHeart className={isLiked ? 'animate-pulse' : ''} />
         </button>
         <button
           onClick={() => setIsBookmarked(!isBookmarked)}
-          className={`p-4 rounded-full shadow-xl transition-all ${
-            isBookmarked 
-              ? 'bg-purple-500 text-white' 
+          className={`p-4 rounded-full shadow-xl transition-all ${isBookmarked
+              ? 'bg-purple-500 text-white'
               : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
-          }`}
+            }`}
         >
           <FaBookmark className={isBookmarked ? 'animate-bounce' : ''} />
         </button>
@@ -179,7 +177,7 @@ export default function BlogDetailPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Link 
+            <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-[#C81D77] dark:hover:text-[#C81D77] font-bold mb-8 transition-colors"
             >
@@ -261,8 +259,8 @@ export default function BlogDetailPage() {
           transition={{ duration: 0.8 }}
           className="rounded-[40px] overflow-hidden shadow-2xl"
         >
-          <img 
-            src={blogData.image} 
+          <img
+            src={blogData.image}
             alt={blogData.title}
             className="w-full h-[400px] md:h-[600px] object-cover"
           />
@@ -286,7 +284,7 @@ export default function BlogDetailPage() {
             prose-a:text-[#6710C2] hover:prose-a:text-[#C81D77]"
         >
           <p className="text-xl leading-relaxed">{blogData.excerpt}</p>
-          
+
           <h2>প্রোগ্রামিং ছাড়া জীবন কেমন হতো?</h2>
           <p>আপনি কি কখনো ভেবেছেন প্রতিদিনের জীবনটা প্রোগ্রামিং ছাড়া কেমন হতো? সকালে ঘুম থেকে উঠে YouTube-এ গান শুনতে চান, কিন্তু অ্যাপই নেই! দুপুরে Daraz থেকে হেডফোন কিনতে গিয়েও দেখলেন সাইট লোড হয় না। রাতে Netflix-এ সিনেমা দেখার প্ল্যান? সেটাও বাতিল!</p>
 
@@ -340,7 +338,7 @@ export default function BlogDetailPage() {
           <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6">
             Comments ({blogData.comments + comments.length})
           </h3>
-          
+
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="mb-8">
             <textarea
@@ -414,14 +412,14 @@ export default function BlogDetailPage() {
           style={{ background: "linear-gradient(90deg, #C81D77, #6710C2)" }}
         >
           <h3 className="text-2xl md:text-3xl font-black text-white mb-4">
-            Ready to Start Your Learning Journey?
+            Ready to Manage Your Inventory?
           </h3>
           <p className="text-white/90 text-lg mb-6">
-            Join thousands of students already learning with us
+            Join thousands of businesses already organizing with Smart Inventory
           </p>
-          <Link href="/enrollment">
+          <Link href="/dashboard/inventory">
             <button className="px-8 py-4 rounded-2xl bg-white text-[#C81D77] font-black text-lg hover:scale-105 transition-transform shadow-xl">
-              Enroll Now
+              Get Started Now
             </button>
           </Link>
         </motion.div>

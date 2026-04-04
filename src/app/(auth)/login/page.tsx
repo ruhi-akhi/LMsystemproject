@@ -15,10 +15,10 @@ import Link from "next/link";
 type LoginFormData = { email: string; password: string; };
 
 const roleDashboard: Record<string, string> = {
-  admin: "/dashboard/admin",
-  instructor: "/dashboard/instructor",
-  // student direct to dashboard/orders as requested
-  student: "/dashboard/orders",
+  admin: "/dashboard",
+  manager: "/dashboard",
+  // staff goes to inventory dashboard
+  staff: "/dashboard/inventory",
 };
 
 const GoogleIcon = () => (
@@ -55,7 +55,7 @@ const LoginPage = () => {
     if (token && raw) {
       try {
         const user = JSON.parse(raw);
-        const dest = redirectUrl || roleDashboard[user.role] || "/dashboard/student";
+        const dest = redirectUrl || roleDashboard[user.role] || "/dashboard/inventory";
         router.replace(dest);
         return;
       } catch { /* corrupt data — fall through */ }
@@ -64,7 +64,7 @@ const LoginPage = () => {
   }, [router, redirectUrl]);
 
   const doRedirect = (role: string) => {
-    const dest = redirectUrl || roleDashboard[role] || "/dashboard/student";
+    const dest = redirectUrl || roleDashboard[role] || "/dashboard/inventory";
     router.replace(dest);
   };
 

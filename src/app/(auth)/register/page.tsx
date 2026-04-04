@@ -43,10 +43,10 @@ const Register = () => {
   const password = watch("password");
 
   const redirect = (role: string) => {
-    if (role === "admin") window.location.href = "/dashboard/admin";
-    else if (role === "instructor") window.location.href = "/dashboard/instructor";
-    // student should go to orders dashboard directly
-    else window.location.href = "/dashboard/orders";
+    if (role === "admin") window.location.href = "/dashboard";
+    else if (role === "manager") window.location.href = "/dashboard";
+    // staff goes to inventory dashboard
+    else window.location.href = "/dashboard/inventory";
   };
 
   // ✅ Google Login

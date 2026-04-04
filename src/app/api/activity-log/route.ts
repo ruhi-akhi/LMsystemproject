@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/db/connect";
-import { ActivityLog } from "@/models/ActivityLog";
+import ActivityLog from "@/models/ActivityLog";
 
 export async function GET(request: NextRequest) {
   try {

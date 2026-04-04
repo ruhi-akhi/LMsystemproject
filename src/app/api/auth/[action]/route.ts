@@ -54,22 +54,22 @@ export async function GET(
 
     const tokenData = await tokenRes.json();
     const { access_token, error, error_description } = tokenData;
-    
+
     if (error) {
       return NextResponse.redirect(`${APP_URL}/login?error=${encodeURIComponent(error_description || error)}`);
     }
-    
+
     if (!access_token) {
       return NextResponse.redirect(`${APP_URL}/login?error=github_no_token`);
     }
 
     // User info নাও
     const [userRes, emailRes] = await Promise.all([
-      fetch("https://api.github.com/user", { 
-        headers: { Authorization: `Bearer ${access_token}` } 
+      fetch("https://api.github.com/user", {
+        headers: { Authorization: `Bearer ${access_token}` }
       }),
-      fetch("https://api.github.com/user/emails", { 
-        headers: { Authorization: `Bearer ${access_token}` } 
+      fetch("https://api.github.com/user/emails", {
+        headers: { Authorization: `Bearer ${access_token}` }
       }),
     ]);
 
@@ -84,14 +84,14 @@ export async function GET(
 
     // User খুঁজো বা তৈরি করো
     let user = await User.findOne({ email: primaryEmail });
-    
+
     if (!user) {
       user = await User.create({
         name: githubUser.name || githubUser.login,
         email: primaryEmail,
         photoURL: githubUser.avatar_url || "",
         provider: "github",
-        role: "student",
+        role: "staff",
       });
     } else {
       // Update photo if changed
@@ -132,7 +132,7 @@ export async function GET(
     });
 
     return response;
-    
+
   } catch (err: any) {
     return NextResponse.redirect(`${APP_URL}/login?error=${encodeURIComponent(err.message)}`);
   }
@@ -174,7 +174,7 @@ export async function POST(
 
       try {
         await transporter.sendMail({
-          from: `"CareerCanvas" <${process.env.GMAIL_USER}>`,
+          from: `"Smart Inventory" <${process.env.GMAIL_USER}>`,
           to: email,
           subject: "🔑 Password Reset Request",
           html: `
@@ -194,10 +194,10 @@ export async function POST(
                       <tr>
                         <td style="background:linear-gradient(135deg,#832388 0%,#E3436B 50%,#F0772F 100%);padding:30px 20px;text-align:center">
                           <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:-0.5px">
-                            CareerCanvas
+                            Smart Inventory
                           </h1>
                           <p style="margin:8px 0 0;color:rgba(255,255,255,0.9);font-size:14px;font-weight:500">
-                            Learning Management System
+                            Inventory Management System
                           </p>
                         </td>
                       </tr>
@@ -251,7 +251,7 @@ export async function POST(
                       <tr>
                         <td style="background:#f9fafb;padding:25px 30px;text-align:center;border-top:1px solid #e5e7eb">
                           <p style="margin:0 0 8px;color:#6b7280;font-size:13px">
-                            © 2025 CareerCanvas. All rights reserved.
+                            © 2025 Smart Inventory. All rights reserved.
                           </p>
                           <p style="margin:0;color:#9ca3af;font-size:12px">
                             This is an automated message, please do not reply.
@@ -335,7 +335,7 @@ export async function POST(
       await user.save();
 
       await transporter.sendMail({
-        from: `"CareerCanvas" <${process.env.GMAIL_USER}>`,
+        from: `"Smart Inventory" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "✉️ Your Verification Code",
         html: `
@@ -355,10 +355,10 @@ export async function POST(
                     <tr>
                       <td style="background:linear-gradient(135deg,#832388 0%,#E3436B 50%,#F0772F 100%);padding:30px 20px;text-align:center">
                         <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:-0.5px">
-                          CareerCanvas
+                          Smart Inventory
                         </h1>
                         <p style="margin:8px 0 0;color:rgba(255,255,255,0.9);font-size:14px;font-weight:500">
-                          Learning Management System
+                          Inventory Management System
                         </p>
                       </td>
                     </tr>
@@ -399,7 +399,7 @@ export async function POST(
                     <tr>
                       <td style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb">
                         <p style="margin:0;color:#9ca3af;font-size:12px">
-                          © 2025 CareerCanvas. All rights reserved.
+                          © 2025 Smart Inventory. All rights reserved.
                         </p>
                       </td>
                     </tr>

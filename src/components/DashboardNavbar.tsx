@@ -2,8 +2,8 @@
 // export default DashboardNavbar;
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { 
-  FaSun, FaMoon, FaBell, FaSearch, FaChevronDown, 
+import {
+  FaSun, FaMoon, FaBell, FaSearch, FaChevronDown,
   FaUser, FaSignOutAlt, FaThLarge, FaCog, FaHistory
 } from "react-icons/fa";
 import Link from "next/link";
@@ -59,12 +59,22 @@ const DashboardNavbar = () => {
     // 1. Clear LocalStorage
     localStorage.removeItem("user");
     localStorage.removeItem("token"); // Jodi token thake
-    
+
     // 2. Redirect to Login/Home
-    router.push("/login"); 
-    
+    router.push("/login");
+
     // 3. Refresh (Optional: to clear state across the app)
     // window.location.reload(); 
+  };
+
+  // --- Role Display Mapping ---
+  const getRoleDisplayName = (role: string) => {
+    const roleMap: Record<string, string> = {
+      staff: "Staff",
+      manager: "Manager",
+      admin: "Administrator"
+    };
+    return roleMap[role] || role.toUpperCase();
   };
 
   useEffect(() => {
@@ -82,14 +92,14 @@ const DashboardNavbar = () => {
   return (
     <nav className="w-full bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-4 md:px-8 py-3 sticky top-0 z-50 transition-all duration-300">
       <div className="flex items-center justify-between gap-4">
-        
+
         {/* --- Left: Search Bar (Enhanced) --- */}
         <div className="flex-1 max-w-md hidden md:block">
           <div className="relative group">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
-            <input 
-              type="text" 
-              placeholder="Search products, orders, inventory..." 
+            <input
+              type="text"
+              placeholder="Search products, orders, inventory..."
               className="w-full pl-11 pr-4 py-2.5 bg-gray-100/50 dark:bg-gray-800/50 dark:text-gray-200 border border-transparent focus:border-purple-500/30 rounded-2xl text-sm outline-none focus:ring-4 focus:ring-purple-500/5 transition-all"
             />
           </div>
@@ -97,7 +107,7 @@ const DashboardNavbar = () => {
 
         {/* --- Right Actions --- */}
         <div className="flex items-center gap-3 md:gap-5">
-          
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -116,7 +126,7 @@ const DashboardNavbar = () => {
 
           {/* Profile Dropdown */}
           <div className="relative" ref={menuRef}>
-            <button 
+            <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex items-center gap-2.5 p-1 pr-3 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
             >
@@ -130,13 +140,13 @@ const DashboardNavbar = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="hidden lg:block text-left leading-tight">
                 <p className="text-sm font-black text-gray-800 dark:text-gray-100 truncate max-w-[120px]">
                   {user?.name || "Manager"}
                 </p>
                 <p className="text-[10px] text-purple-500 font-bold uppercase tracking-widest">
-                  {user?.role || "Manager"}
+                  {getRoleDisplayName(user?.role || "Manager")}
                 </p>
               </div>
               <FaChevronDown size={10} className={`text-gray-400 transition-transform duration-300 ${showProfileMenu ? 'rotate-180' : ''}`} />
@@ -156,10 +166,10 @@ const DashboardNavbar = () => {
                   <DropdownLink href="/dashboard/settings" icon={<FaCog />} label="Settings" color="text-gray-500" />
                   <DropdownLink href="/dashboard/history" icon={<FaHistory />} label="Activities" color="text-orange-500" />
                   <DropdownLink href="/" icon={<FaThLarge />} label="Public View" color="text-purple-500" />
-                  
+
                   <div className="h-[1px] bg-gray-100 dark:bg-gray-800 my-2 mx-3"></div>
-                  
-                  <button 
+
+                  <button
                     onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all group"
                   >

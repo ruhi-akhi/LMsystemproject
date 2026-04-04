@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
           email,
           photoURL: photoURL || "",
           provider,
-          role: "student",
+          role: "staff",
           // ✅ phone intentionally omitted — social login এ phone নেই
         });
       } else {

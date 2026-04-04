@@ -51,14 +51,14 @@ const ChatWidget = () => {
         {
             id: 1,
             sender: "bot",
-            text: "Hello! Welcome to CareerCanvas LMS customer support.",
+            text: "Hello! Welcome to Smart Inventory customer support.",
             timestamp: new Date().toLocaleTimeString(),
             type: "text"
         },
         {
             id: 2,
             sender: "bot",
-            text: "How can we help you today? You can ask about courses, enrollment, technical issues, or anything else!",
+            text: "How can we help you today? You can ask about products, orders, inventory management, or anything else!",
             timestamp: new Date().toLocaleTimeString(),
             type: "text"
         },
@@ -219,7 +219,7 @@ ${transcript}
 
 
 ---
-This transcript was generated from CareerCanvas LMS Chat Widget
+This transcript was generated from Smart Inventory Chat Widget
 Visit: ${window.location.origin}
     `.trim();
 
@@ -343,14 +343,14 @@ Visit: ${window.location.origin}
 
 
     const confirmEmbedCode = async () => {
-        const embedCode = `<!-- CareerCanvas LMS Chat Widget -->
+        const embedCode = `<!-- Smart Inventory Chat Widget -->
 <script>
   (function() {
     var script = document.createElement('script');
     script.src = 'https://your-domain.com/chat-widget.js';
     script.async = true;
     script.onload = function() {
-      CareerCanvasChat.init({
+      SmartInventoryChat.init({
         apiKey: 'your-api-key',
         theme: 'default',
         position: 'bottom-left',
@@ -360,7 +360,7 @@ Visit: ${window.location.origin}
     document.head.appendChild(script);
   })();
 </script>
-<!-- End CareerCanvas LMS Chat Widget -->`;
+<!-- End Smart Inventory Chat Widget -->`;
 
         try {
             await navigator.clipboard.writeText(embedCode);
@@ -426,8 +426,12 @@ Visit: ${window.location.origin}
 
     // Send message to backend API
     const sendMessageToBackend = async (userMessage: string): Promise<string> => {
+        const apiUrl = typeof window !== 'undefined'
+            ? `${window.location.origin}/api/chat`
+            : '/api/chat';
+
         try {
-            const response = await fetch('/api/chat', {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -444,25 +448,23 @@ Visit: ${window.location.origin}
             if (!response.ok) {
                 const text = await response.text();
                 console.error('Chat API non-ok body:', text);
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Server error: ${response.status}`);
             }
 
             const data = await response.json();
             if (data.error) {
-                console.warn('Chat API error response (still delivering message):', data.error);
-                // If backend includes fallback message, return it; show error notice in UI.
-                if (data.message) {
-                    // preserve error in caller to render error banner
-                    setError(data.error);
-                    return data.message;
-                }
-                throw new Error(data.error);
+                console.warn('Chat API returned error:', data.error);
+                setError(data.error);
+                return data.message || 'দুঃখিত, সার্ভারে সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।';
             }
 
-            return data.message || data.response || "Thank you for your message. Our team will respond shortly.";
+            return data.message || data.response || 'Thank you for your message. Our team will respond shortly.';
         } catch (err) {
             console.error('Chat API error:', err);
-            throw new Error(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
+            const message = err instanceof Error
+                ? err.message
+                : 'Failed to connect to chat API. Please make sure the server is running.';
+            throw new Error(message);
         }
     };
 
@@ -1062,7 +1064,7 @@ Visit: ${window.location.origin}
                                     <li>• Complete chat history ({messages.filter(m => m.type !== "system").length} messages)</li>
                                     <li>• Message timestamps</li>
                                     <li>• Chat session details</li>
-                                    <li>• CareerCanvas LMS branding</li>
+                                    <li>• Smart Inventory branding</li>
                                 </ul>
                             </div>
 
@@ -1261,7 +1263,7 @@ Visit: ${window.location.origin}
                             <div className="flex items-center justify-between bg-gradient-to-r from-[#832388] via-[#E3436B] to-[#F0772F] px-4 py-3 text-white">
                                 <div>
                                     <h3 className="font-bold text-lg">Responsive Preview</h3>
-                                    <p className="text-xs opacity-90">CareerCanvas LMS • Live Testing</p>
+                                    <p className="text-xs opacity-90">Smart Inventory • Live Testing</p>
                                 </div>
                                 <button
                                     onClick={() => setShowResponsivePanel(false)}
@@ -1387,7 +1389,7 @@ Visit: ${window.location.origin}
                                 </div>
 
                                 <div className="mt-2 text-center">
-                                    <span className="text-xs text-gray-400">Powered by CareerCanvas LMS</span>
+                                    <span className="text-xs text-gray-400">Powered by Smart Inventory</span>
                                 </div>
                             </div>
                         </motion.div>

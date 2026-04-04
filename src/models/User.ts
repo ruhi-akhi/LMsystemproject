@@ -15,19 +15,17 @@ export interface IProfile {
 }
 
 export interface IUserStats {
-  // Instructor-specific stats
-  totalCourses?: number;
-  totalStudents?: number;
-  totalEarnings?: number;
-  rating?: number;
-  reviewCount?: number;
-  
-  // Student-specific stats
-  enrolledCourses?: number;
-  completedCourses?: number;
-  certificatesEarned?: number;
-  totalLearningTime?: number; // in minutes
-  
+  // Manager-specific stats
+  totalProducts?: number;
+  totalCategories?: number;
+  totalOrders?: number;
+  totalRevenue?: number;
+
+  // Staff-specific stats
+  productsManaged?: number;
+  ordersProcessed?: number;
+  tasksCompleted?: number;
+
   // Common stats
   joinedAt?: Date;
   lastActiveAt?: Date;
@@ -47,25 +45,25 @@ export interface IUserDocument extends Document {
   phone?: string | null;
   password?: string;
   photoURL?: string;
-  role: "student" | "instructor" | "admin";
+  role: "staff" | "manager" | "admin";
   provider: "credentials" | "google" | "github";
-  
+
   // Enhanced fields
   profile?: IProfile;
   stats?: IUserStats;
   preferences?: IUserPreferences;
-  
+
   // Account status and verification
   status: "active" | "suspended" | "pending";
   isVerified: boolean;
   verificationToken?: string;
-  
+
   // Security fields
   resetToken?: string;
   resetTokenExpiry?: Date;
   loginAttempts?: number;
   lockUntil?: Date;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -85,19 +83,17 @@ const ProfileSchema = new Schema<IProfile>({
 });
 
 const UserStatsSchema = new Schema<IUserStats>({
-  // Instructor-specific stats
-  totalCourses: { type: Number, default: 0, min: 0 },
-  totalStudents: { type: Number, default: 0, min: 0 },
-  totalEarnings: { type: Number, default: 0, min: 0 },
-  rating: { type: Number, min: 0, max: 5 },
-  reviewCount: { type: Number, default: 0, min: 0 },
-  
-  // Student-specific stats
-  enrolledCourses: { type: Number, default: 0, min: 0 },
-  completedCourses: { type: Number, default: 0, min: 0 },
-  certificatesEarned: { type: Number, default: 0, min: 0 },
-  totalLearningTime: { type: Number, default: 0, min: 0 },
-  
+  // Manager-specific stats
+  totalProducts: { type: Number, default: 0, min: 0 },
+  totalCategories: { type: Number, default: 0, min: 0 },
+  totalOrders: { type: Number, default: 0, min: 0 },
+  totalRevenue: { type: Number, default: 0, min: 0 },
+
+  // Staff-specific stats
+  productsManaged: { type: Number, default: 0, min: 0 },
+  ordersProcessed: { type: Number, default: 0, min: 0 },
+  tasksCompleted: { type: Number, default: 0, min: 0 },
+
   // Common stats
   joinedAt: { type: Date, default: Date.now },
   lastActiveAt: { type: Date, default: Date.now },
@@ -113,7 +109,7 @@ const UserPreferencesSchema = new Schema<IUserPreferences>({
 
 const UserSchema = new Schema<IUserDocument>(
   {
-    name:  { type: String, required: true, trim: true },
+    name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
 
     // ✅ phone — unique index নেই, duplicate নিয়ে মাথাব্যথা নেই
@@ -125,28 +121,28 @@ const UserSchema = new Schema<IUserDocument>(
       set: (v: any) => (!v || v.trim() === "" ? null : v.trim()),
     },
 
-    password:         { type: String, minlength: 6 },
-    photoURL:         { type: String, default: "" },
-    role:             { type: String, enum: ["student", "instructor", "admin"], default: "student" },
-    provider:         { type: String, enum: ["credentials", "google", "github"], default: "credentials" },
-    
+    password: { type: String, minlength: 6 },
+    photoURL: { type: String, default: "" },
+    role: { type: String, enum: ["staff", "manager", "admin"], default: "staff" },
+    provider: { type: String, enum: ["credentials", "google", "github"], default: "credentials" },
+
     // Enhanced fields
     profile: { type: ProfileSchema },
     stats: { type: UserStatsSchema, default: () => ({}) },
     preferences: { type: UserPreferencesSchema, default: () => ({}) },
-    
+
     // Account status and verification
     status: { type: String, enum: ["active", "suspended", "pending"], default: "active" },
     isVerified: { type: Boolean, default: false },
     verificationToken: { type: String },
-    
+
     // Security fields
-    resetToken:       { type: String },
+    resetToken: { type: String },
     resetTokenExpiry: { type: Date },
-    loginAttempts:    { type: Number, default: 0 },
-    lockUntil:        { type: Date },
+    loginAttempts: { type: Number, default: 0 },
+    lockUntil: { type: Date },
   },
-  { 
+  {
     timestamps: true,
     collection: "users" // ✅ Fixed collection name in code
   }
@@ -159,7 +155,7 @@ UserSchema.index({ provider: 1 });
 UserSchema.index({ "stats.lastActiveAt": -1 });
 
 // ─── Methods ──────────────────────────────────────────────────────────────────
-UserSchema.methods.updateLastActive = function() {
+UserSchema.methods.updateLastActive = function () {
   if (this.stats) {
     this.stats.lastActiveAt = new Date();
   } else {
@@ -168,52 +164,52 @@ UserSchema.methods.updateLastActive = function() {
   return this.save();
 };
 
-UserSchema.methods.updateInstructorStats = function(courseCount?: number, studentCount?: number, earnings?: number) {
+UserSchema.methods.updateManagerStats = function (productCount?: number, categoryCount?: number, orderCount?: number, revenue?: number) {
   if (!this.stats) {
     this.stats = {};
   }
-  
-  if (courseCount !== undefined) this.stats.totalCourses = courseCount;
-  if (studentCount !== undefined) this.stats.totalStudents = studentCount;
-  if (earnings !== undefined) this.stats.totalEarnings = earnings;
-  
+
+  if (productCount !== undefined) this.stats.totalProducts = productCount;
+  if (categoryCount !== undefined) this.stats.totalCategories = categoryCount;
+  if (orderCount !== undefined) this.stats.totalOrders = orderCount;
+  if (revenue !== undefined) this.stats.totalRevenue = revenue;
+
   return this.save();
 };
 
-UserSchema.methods.updateStudentStats = function(enrolledCount?: number, completedCount?: number, certificatesCount?: number, learningTime?: number) {
+UserSchema.methods.updateStaffStats = function (productsManaged?: number, ordersProcessed?: number, tasksCompleted?: number) {
   if (!this.stats) {
     this.stats = {};
   }
-  
-  if (enrolledCount !== undefined) this.stats.enrolledCourses = enrolledCount;
-  if (completedCount !== undefined) this.stats.completedCourses = completedCount;
-  if (certificatesCount !== undefined) this.stats.certificatesEarned = certificatesCount;
-  if (learningTime !== undefined) this.stats.totalLearningTime = (this.stats.totalLearningTime || 0) + learningTime;
-  
+
+  if (productsManaged !== undefined) this.stats.productsManaged = productsManaged;
+  if (ordersProcessed !== undefined) this.stats.ordersProcessed = ordersProcessed;
+  if (tasksCompleted !== undefined) this.stats.tasksCompleted = tasksCompleted;
+
   return this.save();
 };
 
-UserSchema.methods.updateProfile = function(profileData: Partial<IProfile>) {
+UserSchema.methods.updateProfile = function (profileData: Partial<IProfile>) {
   if (!this.profile) {
     this.profile = {};
   }
-  
+
   Object.assign(this.profile, profileData);
   return this.save();
 };
 
-UserSchema.methods.updatePreferences = function(preferencesData: Partial<IUserPreferences>) {
+UserSchema.methods.updatePreferences = function (preferencesData: Partial<IUserPreferences>) {
   if (!this.preferences) {
     this.preferences = {};
   }
-  
+
   Object.assign(this.preferences, preferencesData);
   return this.save();
 };
 
 // ─── Static methods ───────────────────────────────────────────────────────────
-UserSchema.statics.getInstructorLeaderboard = function(limit: number = 10) {
-  return this.find({ 
+UserSchema.statics.getInstructorLeaderboard = function (limit: number = 10) {
+  return this.find({
     role: "instructor",
     status: "active"
   })
@@ -222,7 +218,7 @@ UserSchema.statics.getInstructorLeaderboard = function(limit: number = 10) {
     .select('name photoURL stats.rating stats.totalStudents stats.totalCourses');
 };
 
-UserSchema.statics.getActiveUsers = function(days: number = 30) {
+UserSchema.statics.getActiveUsers = function (days: number = 30) {
   const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   return this.find({
     "stats.lastActiveAt": { $gte: cutoffDate },

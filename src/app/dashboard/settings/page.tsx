@@ -6,28 +6,28 @@ import {
   Smartphone, Plus, X
 } from "lucide-react";
 
-type Role = "student" | "instructor" | "admin";
+type Role = "staff" | "manager" | "admin";
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab]   = useState("Profile");
-  const [role, setRole]             = useState<Role>("student");
-  const [theme, setTheme]           = useState("light");
-  const [showPw, setShowPw]         = useState({ current: false, new: false, confirm: false });
-  const [education, setEducation]   = useState([{ degree: "", university: "", from: "", to: "" }]);
-  const [notifs, setNotifs]         = useState({ email: true, push: true, assign: true, msg: false });
-  const [twoFA, setTwoFA]           = useState({ app: true, sms: false });
-  const [saved, setSaved]           = useState(false);
+  const [activeTab, setActiveTab] = useState("Profile");
+  const [role, setRole] = useState<Role>("staff");
+  const [theme, setTheme] = useState("light");
+  const [showPw, setShowPw] = useState({ current: false, new: false, confirm: false });
+  const [education, setEducation] = useState([{ degree: "", university: "", from: "", to: "" }]);
+  const [notifs, setNotifs] = useState({ email: true, push: true, assign: true, msg: false });
+  const [twoFA, setTwoFA] = useState({ app: true, sms: false });
+  const [saved, setSaved] = useState(false);
 
   // ── Dark/Light + Role sync ──
   useEffect(() => {
     const t = localStorage.getItem("theme") || "light";
-    const r = (localStorage.getItem("dashboardRole") as Role) || "student";
+    const r = (localStorage.getItem("dashboardRole") as Role) || "staff";
     setTheme(t); setRole(r);
     document.documentElement.setAttribute("data-theme", t);
 
     const interval = setInterval(() => {
       const ct = localStorage.getItem("theme") || "light";
-      const cr = (localStorage.getItem("dashboardRole") as Role) || "student";
+      const cr = (localStorage.getItem("dashboardRole") as Role) || "staff";
       if (ct !== theme) { setTheme(ct); document.documentElement.setAttribute("data-theme", ct); }
       if (cr !== role) setRole(cr);
     }, 100);
@@ -37,9 +37,9 @@ export default function SettingsPage() {
   const showSaved = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
 
   const tabs: Record<Role, { id: string; icon: React.ElementType }[]> = {
-    student:    [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }],
-    instructor: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }, { id: "Plans", icon: Star }, { id: "Withdraw", icon: CreditCard }],
-    admin:      [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }],
+    staff: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }],
+    manager: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }, { id: "Plans", icon: Star }, { id: "Withdraw", icon: CreditCard }],
+    admin: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }],
   };
   const currentTabs = tabs[role];
 
@@ -104,10 +104,10 @@ export default function SettingsPage() {
             <p className="text-xs font-bold uppercase tracking-wider opacity-50 mb-4">Personal Information</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { label: "First Name", val: "Eugene",              type: "text"  },
-                { label: "Last Name",  val: "Andre",               type: "text"  },
-                { label: "Email",      val: "eugene@example.com",  type: "email" },
-                { label: "Phone",      val: "+880-1712-345678",    type: "tel"   },
+                { label: "First Name", val: "Eugene", type: "text" },
+                { label: "Last Name", val: "Andre", type: "text" },
+                { label: "Email", val: "eugene@example.com", type: "email" },
+                { label: "Phone", val: "+880-1712-345678", type: "tel" },
               ].map(f => (
                 <div key={f.label} className="flex flex-col gap-1">
                   <label className="text-xs font-bold opacity-50">{f.label}</label>
@@ -184,8 +184,8 @@ export default function SettingsPage() {
           <div className="rounded-2xl bg-base-100 border border-base-300 p-6">
             <p className="text-xs font-bold uppercase tracking-wider opacity-50 mb-4">Two-Factor Authentication</p>
             {[
-              { key: "app" as const,  icon: Smartphone, title: "Authenticator App", sub: "Use Google Authenticator or Authy" },
-              { key: "sms" as const,  icon: Shield,      title: "SMS Authentication", sub: "Receive OTP on your mobile" },
+              { key: "app" as const, icon: Smartphone, title: "Authenticator App", sub: "Use Google Authenticator or Authy" },
+              { key: "sms" as const, icon: Shield, title: "SMS Authentication", sub: "Receive OTP on your mobile" },
             ].map(({ key, icon: Icon, title, sub }) => (
               <div key={key} className="flex items-center justify-between p-4 rounded-xl bg-base-200 mb-2">
                 <div className="flex items-center gap-3">
@@ -215,10 +215,10 @@ export default function SettingsPage() {
         <div className="rounded-2xl bg-base-100 border border-base-300 p-6">
           <p className="text-xs font-bold uppercase tracking-wider opacity-50 mb-4">Notification Preferences</p>
           {[
-            { key: "email" as const, label: "Email Notifications",  sub: "Receive updates via email"        },
-            { key: "push"  as const, label: "Push Notifications",   sub: "Browser push notifications"       },
-            { key: "assign"as const, label: "Assignment Updates",   sub: "New submissions and grades"       },
-            { key: "msg"   as const, label: "Direct Messages",      sub: "Notifications for new messages"   },
+            { key: "email" as const, label: "Email Notifications", sub: "Receive updates via email" },
+            { key: "push" as const, label: "Push Notifications", sub: "Browser push notifications" },
+            { key: "assign" as const, label: "Assignment Updates", sub: "New submissions and grades" },
+            { key: "msg" as const, label: "Direct Messages", sub: "Notifications for new messages" },
           ].map(({ key, label, sub }) => (
             <div key={key} className="flex items-center justify-between py-3 border-b border-base-300 last:border-0">
               <div>
@@ -244,10 +244,10 @@ export default function SettingsPage() {
           <p className="text-xs font-bold uppercase tracking-wider opacity-50 mb-4">Social Profiles</p>
           <div className="space-y-3 max-w-md">
             {[
-              { label: "Website",  emoji: "🌐", ph: "https://yoursite.com"         },
-              { label: "LinkedIn", emoji: "💼", ph: "https://linkedin.com/in/..."  },
-              { label: "Twitter",  emoji: "🐦", ph: "https://twitter.com/..."      },
-              { label: "GitHub",   emoji: "🐙", ph: "https://github.com/..."       },
+              { label: "Website", emoji: "🌐", ph: "https://yoursite.com" },
+              { label: "LinkedIn", emoji: "💼", ph: "https://linkedin.com/in/..." },
+              { label: "Twitter", emoji: "🐦", ph: "https://twitter.com/..." },
+              { label: "GitHub", emoji: "🐙", ph: "https://github.com/..." },
             ].map(({ label, emoji, ph }) => (
               <div key={label} className="flex flex-col gap-1">
                 <label className="text-xs font-bold opacity-50">{emoji} {label}</label>
@@ -263,9 +263,9 @@ export default function SettingsPage() {
       {activeTab === "Plans" && role === "instructor" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { name: "Free",       price: "$0",     features: ["3 courses", "Basic analytics"],                                   current: false },
-            { name: "Pro",        price: "$19/mo", features: ["Unlimited courses", "Advanced analytics", "Priority support"],    current: true  },
-            { name: "Enterprise", price: "$49/mo", features: ["Everything in Pro", "White labeling", "API access"],              current: false },
+            { name: "Free", price: "$0", features: ["3 courses", "Basic analytics"], current: false },
+            { name: "Pro", price: "$19/mo", features: ["Unlimited courses", "Advanced analytics", "Priority support"], current: true },
+            { name: "Enterprise", price: "$49/mo", features: ["Everything in Pro", "White labeling", "API access"], current: false },
           ].map(p => (
             <div key={p.name} className={`rounded-2xl bg-base-100 p-6 border-2 ${p.current ? "" : "border-base-300"}`}
               style={p.current ? { borderColor: "#832388" } : {}}>
@@ -296,8 +296,8 @@ export default function SettingsPage() {
           <div className="grid grid-cols-3 gap-4">
             {[
               { label: "Available", value: "৳1,248", color: "#00C48C" },
-              { label: "Pending",   value: "৳340",   color: "#F89B29" },
-              { label: "Total",     value: "৳8,920", color: "#832388" },
+              { label: "Pending", value: "৳340", color: "#F89B29" },
+              { label: "Total", value: "৳8,920", color: "#832388" },
             ].map(({ label, value, color }) => (
               <div key={label} className="rounded-2xl bg-base-100 border border-base-300 p-5 text-center">
                 <p className="text-xs font-bold uppercase opacity-50 mb-1">{label}</p>

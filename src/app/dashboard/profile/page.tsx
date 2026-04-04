@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Check, Pencil, X, Mail, Phone, Clock } from "lucide-react";
 
-type Role = "student" | "instructor" | "admin";
+type Role = "staff" | "manager" | "admin";
 interface UserData {
   name: string;
   email: string;
@@ -13,13 +13,13 @@ interface UserData {
 }
 
 const roleStats: Record<Role, { label: string; value: string; color: string }[]> = {
-  student: [
+  staff: [
     { label: "Orders", value: "12", color: "#FF6B35" },
     { label: "Completed", value: "8", color: "#00C48C" },
     { label: "Pending", value: "4", color: "#F89B29" },
     { label: "Total Spent", value: "৳15k", color: "#E55A2B" },
   ],
-  instructor: [
+  manager: [
     { label: "Products", value: "45", color: "#FF6B35" },
     { label: "Orders", value: "320", color: "#E55A2B" },
     { label: "Revenue", value: "৳48k", color: "#F89B29" },
@@ -34,13 +34,13 @@ const roleStats: Record<Role, { label: string; value: string; color: string }[]>
 };
 
 const roleActivity: Record<Role, { text: string; time: string; color: string }[]> = {
-  student: [
+  staff: [
     { text: "Placed order for Office Supplies", time: "2 days ago", color: "#FF6B35" },
     { text: "Updated delivery address", time: "5 days ago", color: "#F89B29" },
     { text: "Reviewed purchased items", time: "1 week ago", color: "#00C48C" },
     { text: "Completed payment for Order #1234", time: "2 weeks ago", color: "#E55A2B" },
   ],
-  instructor: [
+  manager: [
     { text: "Added new product: Wireless Mouse", time: "1 day ago", color: "#FF6B35" },
     { text: "Updated inventory for Keyboards", time: "3 days ago", color: "#F89B29" },
     { text: "Processed 15 orders", time: "1 week ago", color: "#00C48C" },
@@ -55,8 +55,8 @@ const roleActivity: Record<Role, { text: string; time: string; color: string }[]
 };
 
 const roleCfg: Record<Role, { accent: string; label: string; bg: string }> = {
-  student: { accent: "#FF6B35", label: "User", bg: "rgba(255,107,53,0.08)" },
-  instructor: { accent: "#E55A2B", label: "Manager", bg: "rgba(229,90,43,0.08)" },
+  staff: { accent: "#FF6B35", label: "User", bg: "rgba(255,107,53,0.08)" },
+  manager: { accent: "#E55A2B", label: "Manager", bg: "rgba(229,90,43,0.08)" },
   admin: { accent: "#F89B29", label: "Admin", bg: "rgba(248,155,41,0.08)" },
 };
 
@@ -71,7 +71,7 @@ function UserIcon({ size }: { size: number }) {
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserData | null>(null);
-  const [role, setRole] = useState<Role>("student");
+  const [role, setRole] = useState<Role>("staff");
   const [theme, setTheme] = useState("light");
   const [editMode, setEdit] = useState(false);
   const [name, setName] = useState("");
@@ -94,7 +94,7 @@ export default function ProfilePage() {
         setPhone(parsed.phone || "");
         setBio(parsed.bio || "");
         const r = parsed.role as Role;
-        if (["student", "instructor", "admin"].includes(r)) setRole(r);
+        if (["staff", "manager", "admin"].includes(r)) setRole(r);
       } catch { }
     }
 

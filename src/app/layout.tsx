@@ -29,8 +29,8 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "CareerCanvas : Smart Online LMS Platform",
-  description: "CareerCanvas learning management system designed to deliver smart, personalized, and interactive online education experiences.",
+  title: "Smart Inventory - Intelligent Inventory Management System",
+  description: "Smart Inventory management system designed to deliver smart, efficient, and organized product and order management experiences.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.ico", sizes: "32x32" }],
   },
@@ -56,8 +56,8 @@ async function getUser() {
 
     return {
       id: payload.id ?? payload.userId ?? payload.sub ?? "user",
-      name: payload.name ?? payload.username ?? "Student",
-      role: payload.role ?? "student",   // ← JWT এ role থাকলে
+      name: payload.name ?? payload.username ?? "User",
+      role: payload.role ?? "staff",   // ← JWT এ role থাকলে
       image: payload.image ?? payload.avatar ?? undefined,
     };
   } catch {

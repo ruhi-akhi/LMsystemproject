@@ -314,15 +314,15 @@ export async function GET(req: NextRequest) {
     
     let dashboardData: any = { user: { name: user.name, email: user.email, role: user.role } };
     
-    if (role === "student" || user.role === "student") {
-      // Student Dashboard Data
+    if (role === "User" || user.role === "User") {
+      // User Dashboard Data
       const enrollments = await Enrollment.find({ studentId: decoded.userId })
         .populate("courseId", "title coverImage")
         .sort({ enrolledAt: -1 })
         .limit(10);
       
       const transactions = await Transaction.find({ 
-        studentId: decoded.userId, 
+        UserId: decoded.userId, 
         type: "payment" 
       })
         .populate("courseId", "title")
