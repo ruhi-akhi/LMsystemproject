@@ -18,8 +18,15 @@ interface RestockItem {
   createdAt: string;
 }
 
+interface Product {
+  _id: string;
+  name: string;
+  stockQuantity: number;
+}
+
 export default function RestockQueuePage() {
   const [items, setItems] = useState<RestockItem[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,6 +43,19 @@ export default function RestockQueuePage() {
     estimatedCost: "",
     notes: "",
   });
+
+  // ✅ Fetch products for dropdown
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      if (data.success) {
+        setProducts(data.products || data.items || []);
+      }
+    } catch {
+      // silently fail
+    }
+  };
 
   const fetchItems = async () => {
     setLoading(true);
@@ -60,13 +80,37 @@ export default function RestockQueuePage() {
 
   useEffect(() => {
     fetchItems();
+    fetchProducts();
   }, [searchTerm, priorityFilter, statusFilter]);
+
+  // ✅ When product is selected from dropdown, auto-fill productId, productName, currentStock
+  const handleProductSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value;
+    const selectedProduct = products.find((p) => p._id === selectedId);
+    if (selectedProduct) {
+      setNewItem((prev) => ({
+        ...prev,
+        productId: selectedProduct._id,
+        productName: selectedProduct.name,
+        currentStock: String(selectedProduct.stockQuantity),
+      }));
+    } else {
+      setNewItem((prev) => ({
+        ...prev,
+        productId: "",
+        productName: "",
+        currentStock: "",
+      }));
+    }
+  };
 
   const addItem = async () => {
     if (!newItem.productId || !newItem.productName) {
-      setError("Product ID and name are required");
+      setError("Please select a product");
       return;
     }
+
+    setError(null);
 
     try {
       const payload = {
@@ -89,6 +133,8 @@ export default function RestockQueuePage() {
 
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || "Unable to create restock entry");
+
+      // Reset form
       setNewItem({
         productId: "",
         productName: "",
@@ -140,14 +186,20 @@ export default function RestockQueuePage() {
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Filter size={24} /> Restock Queue
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-300">Track products that need restocking and manage statuses.</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Track products that need restocking and manage statuses.
+            </p>
           </div>
-          <button onClick={fetchItems} className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-slate-700 bg-white hover:bg-slate-100 transition">
+          <button
+            onClick={fetchItems}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-slate-700 bg-white hover:bg-slate-100 transition"
+          >
             <RefreshCw size={16} /> Refresh
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          {/* ── Left: Table ── */}
           <div className="lg:col-span-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
             <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
               <div className="relative w-full lg:w-1/2">
@@ -190,7 +242,9 @@ export default function RestockQueuePage() {
             ) : error ? (
               <div className="py-4 text-center text-red-500">{error}</div>
             ) : items.length === 0 ? (
-              <div className="py-12 text-center text-slate-500 dark:text-slate-300">No restock items available.</div>
+              <div className="py-12 text-center text-slate-500 dark:text-slate-300">
+                No restock items available.
+              </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full text-sm text-left border-collapse">
@@ -207,24 +261,58 @@ export default function RestockQueuePage() {
                   </thead>
                   <tbody>
                     {items.map((item) => (
-                      <tr key={item._id} className="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
-                        <td className="px-3 py-2 font-semibold text-slate-800 dark:text-white">{item.productName}</td>
-                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{item.currentStock} / {item.minimumThreshold ?? "-"}</td>
-                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{item.requestedQuantity ?? item.suggestedQuantity ?? "-"}</td>
+                      <tr
+                        key={item._id}
+                        className="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      >
+                        <td className="px-3 py-2 font-semibold text-slate-800 dark:text-white">
+                          {item.productName}
+                        </td>
+                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">
+                          {item.currentStock} / {item.minimumThreshold ?? "-"}
+                        </td>
+                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">
+                          {item.requestedQuantity ?? "-"}
+                        </td>
                         <td className="px-3 py-2">
-                          <span className={`inline-flex px-2 py-1 text-xs rounded-full ${item.priority === "high" ? "bg-red-100 text-red-700" : item.priority === "medium" ? "bg-yellow-100 text-yellow-700" : "bg-green-100 text-green-700"}`}>
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                              item.priority === "high"
+                                ? "bg-red-100 text-red-700"
+                                : item.priority === "medium"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-green-100 text-green-700"
+                            }`}
+                          >
                             {item.priority}
                           </span>
                         </td>
                         <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{item.status}</td>
-                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{item.supplier || "-"}</td>
+                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">
+                          {item.supplier || "-"}
+                        </td>
                         <td className="px-3 py-2 flex gap-1">
                           <button
-                            onClick={() => updateStatus(item._id, item.status === "pending" ? "ordered" : item.status === "ordered" ? "completed" : "completed")}
+                            onClick={() =>
+                              updateStatus(
+                                item._id,
+                                item.status === "pending"
+                                  ? "ordered"
+                                  : item.status === "ordered"
+                                  ? "completed"
+                                  : "completed"
+                              )
+                            }
                             className="inline-flex items-center px-2 py-1 text-xs rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200"
                           >
                             <CheckCircle2 size={14} />
-                            <span className="ml-1">{item.status === "pending" ? "Mark Ordered" : item.status === "ordered" ? "Mark Completed" : "Completed"}</span>
+                            <span className="ml-1">
+                              {item.status === "pending"
+                                ? "Mark Ordered"
+                                : item.status === "ordered"
+                                ? "Mark Completed"
+                                : "Completed"}
+                            </span>
                           </button>
                           <button
                             onClick={() => deleteItem(item._id)}
@@ -241,21 +329,33 @@ export default function RestockQueuePage() {
             )}
           </div>
 
+          {/* ── Right: Add Form ── */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Add Restock Item</h2>
             <div className="space-y-2">
-              <input
+
+              {/* ✅ Product dropdown — real ObjectId যাবে */}
+              <select
                 value={newItem.productId}
-                onChange={(e) => setNewItem({ ...newItem, productId: e.target.value })}
-                placeholder="Product ID"
+                onChange={handleProductSelect}
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
-              />
+              >
+                <option value="">-- Select Product --</option>
+                {products.map((p) => (
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Product name auto-filled, but editable */}
               <input
                 value={newItem.productName}
                 onChange={(e) => setNewItem({ ...newItem, productName: e.target.value })}
-                placeholder="Product name"
+                placeholder="Product name (auto-filled)"
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
               />
+
               <div className="grid grid-cols-2 gap-2">
                 <input
                   value={newItem.currentStock}
@@ -267,11 +367,12 @@ export default function RestockQueuePage() {
                 <input
                   value={newItem.minStockLevel}
                   onChange={(e) => setNewItem({ ...newItem, minStockLevel: e.target.value })}
-                  placeholder="Minimum stock level"
+                  placeholder="Min stock level"
                   type="number"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
                 />
               </div>
+
               <input
                 value={newItem.suggestedQuantity}
                 onChange={(e) => setNewItem({ ...newItem, suggestedQuantity: e.target.value })}
@@ -279,6 +380,7 @@ export default function RestockQueuePage() {
                 type="number"
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
               />
+
               <select
                 value={newItem.priority}
                 onChange={(e) => setNewItem({ ...newItem, priority: e.target.value })}
@@ -288,12 +390,14 @@ export default function RestockQueuePage() {
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
               </select>
+
               <input
                 value={newItem.supplier}
                 onChange={(e) => setNewItem({ ...newItem, supplier: e.target.value })}
                 placeholder="Supplier"
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
               />
+
               <input
                 value={newItem.estimatedCost}
                 onChange={(e) => setNewItem({ ...newItem, estimatedCost: e.target.value })}
@@ -301,6 +405,7 @@ export default function RestockQueuePage() {
                 type="number"
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
               />
+
               <textarea
                 value={newItem.notes}
                 onChange={(e) => setNewItem({ ...newItem, notes: e.target.value })}
@@ -309,7 +414,13 @@ export default function RestockQueuePage() {
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
               />
             </div>
-            <button onClick={addItem} className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition">
+
+            {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+
+            <button
+              onClick={addItem}
+              className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition"
+            >
               <Plus size={16} /> Add to Restock Queue
             </button>
           </div>

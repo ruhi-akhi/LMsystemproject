@@ -6,14 +6,14 @@ import ActivityLog from "@/models/ActivityLog";
 import RestockQueue from "@/models/RestockQueue";
 import { requireAuth } from "@/lib/auth";
 
-// GET - List products with filters
+// GET - List products with filters (no auth required for listing)
 export async function GET(req: NextRequest) {
   try {
     await connectDB();
-    
+
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const limit = parseInt(searchParams.get("limit") || "100"); // ✅ সব product dropdown এ আসবে
     const category = searchParams.get("category");
     const status = searchParams.get("status");
     const search = searchParams.get("search");

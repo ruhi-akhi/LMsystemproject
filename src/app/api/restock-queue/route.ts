@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/db/connect";
 import RestockQueue from "@/models/RestockQueue";
 import Product from "@/models/Product";
+import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
   try {
@@ -67,9 +68,24 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!productId || !productName || currentStock === undefined || minStockLevel === undefined || !suggestedQuantity || !estimatedCost) {
+    if (
+      !productId ||
+      !productName ||
+      currentStock === undefined ||
+      minStockLevel === undefined ||
+      !suggestedQuantity ||
+      !estimatedCost
+    ) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Validate productId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid productId format. Must be a valid MongoDB ObjectId." },
         { status: 400 }
       );
     }
@@ -85,7 +101,7 @@ export async function POST(request: NextRequest) {
     // Check if item already exists in queue
     const existingItem = await RestockQueue.findOne({
       productId,
-      status: { $in: ["pending", "ordered"] }
+      status: { $in: ["pending", "ordered"] },
     });
 
     if (existingItem) {
@@ -155,15 +171,12 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // If status is "received", update product stock
+    // ✅ Fixed: was suggestedQuantity (wrong), now requestedQuantity (correct)
     if (status === "received") {
-      await Product.findByIdAndUpdate(
-        restockItem.productId,
-        {
-          $inc: { quantity: restockItem.suggestedQuantity },
-          updatedAt: new Date(),
-        }
-      );
+      await Product.findByIdAndUpdate(restockItem.productId, {
+        $inc: { quantity: restockItem.requestedQuantity },
+        updatedAt: new Date(),
+      });
     }
 
     return NextResponse.json({
