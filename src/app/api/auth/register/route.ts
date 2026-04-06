@@ -9,6 +9,9 @@ import { User } from "@/models";
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function POST(req: NextRequest) {
+  if (!JWT_SECRET) {
+    return NextResponse.json({ error: "JWT_SECRET সেট করা হয়নি। অনুগ্রহ করে সার্ভার কনফিগার করুন।" }, { status: 500 });
+  }
   try {
     await connectDB();
 

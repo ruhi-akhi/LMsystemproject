@@ -43,9 +43,8 @@ const Register = () => {
   const password = watch("password");
 
   const redirect = (role: string) => {
-    if (role === "admin") window.location.href = "/dashboard";
-    else if (role === "manager") window.location.href = "/dashboard";
-    // staff goes to inventory dashboard
+    if (role === "admin") window.location.href = "/dashboard/inventory";
+    else if (role === "manager") window.location.href = "/dashboard/inventory";
     else window.location.href = "/dashboard/inventory";
   };
 

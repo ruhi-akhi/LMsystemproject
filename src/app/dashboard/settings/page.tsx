@@ -2,11 +2,18 @@
 import { useState, useEffect } from "react";
 import {
   User, Shield, Bell, Globe, CreditCard, Star,
-  Upload, Trash2, Eye, EyeOff, Check, Lock,
+  Upload, Trash2, Eye, EyeOff, Check,
   Smartphone, Plus, X
 } from "lucide-react";
 
 type Role = "staff" | "manager" | "admin";
+
+const normalizeRole = (value: string | null): Role => {
+  if (value === "manager" || value === "admin") return value;
+  return "staff";
+};
+
+const normalizeTheme = (value: string | null) => (value === "dark" ? "dark" : "light");
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Profile");
@@ -20,19 +27,12 @@ export default function SettingsPage() {
 
   // ── Dark/Light + Role sync ──
   useEffect(() => {
-    const t = localStorage.getItem("theme") || "light";
-    const r = (localStorage.getItem("dashboardRole") as Role) || "staff";
-    setTheme(t); setRole(r);
+    const t = normalizeTheme(localStorage.getItem("theme"));
+    const r = normalizeRole(localStorage.getItem("dashboardRole"));
+    setTheme(t);
+    setRole(r);
     document.documentElement.setAttribute("data-theme", t);
-
-    const interval = setInterval(() => {
-      const ct = localStorage.getItem("theme") || "light";
-      const cr = (localStorage.getItem("dashboardRole") as Role) || "staff";
-      if (ct !== theme) { setTheme(ct); document.documentElement.setAttribute("data-theme", ct); }
-      if (cr !== role) setRole(cr);
-    }, 100);
-    return () => clearInterval(interval);
-  }, [theme, role]);
+  }, []);
 
   const showSaved = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
 
@@ -41,7 +41,7 @@ export default function SettingsPage() {
     manager: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }, { id: "Plans", icon: Star }, { id: "Withdraw", icon: CreditCard }],
     admin: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }],
   };
-  const currentTabs = tabs[role];
+  const currentTabs = tabs[role] ?? tabs.staff;
 
   // ── Save button ──
   const SaveBtn = ({ label = "Save Changes" }: { label?: string }) => (

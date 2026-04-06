@@ -15,9 +15,8 @@ import Link from "next/link";
 type LoginFormData = { email: string; password: string; };
 
 const roleDashboard: Record<string, string> = {
-  admin: "/dashboard",
-  manager: "/dashboard",
-  // staff goes to inventory dashboard
+  admin: "/dashboard/inventory",
+  manager: "/dashboard/inventory",
   staff: "/dashboard/inventory",
 };
 
@@ -161,6 +160,7 @@ const LoginPage = () => {
                 <input
                   type="email"
                   placeholder="example@gmail.com"
+                  autoComplete="email"
                   className="input w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-purple-500"
                   {...register("email", {
                     required: "Email is required",
@@ -177,6 +177,7 @@ const LoginPage = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
+                    autoComplete="current-password"
                     className="input w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 pr-10 focus:border-purple-500"
                     {...register("password", {
                       required: "Password is required",

@@ -20,9 +20,9 @@ const roleRoutes: Record<string, string[]> = {
 };
 
 const roleDashboard: Record<string, string> = {
-  staff: "/dashboard",
-  manager: "/dashboard",
-  admin: "/dashboard",
+  staff: "/dashboard/inventory",
+  manager: "/dashboard/inventory",
+  admin: "/dashboard/inventory",
 };
 
 const authRoutes = ["/login", "/register"];
