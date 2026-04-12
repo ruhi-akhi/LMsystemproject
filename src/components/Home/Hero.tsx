@@ -110,26 +110,7 @@ const Hero = () => {
               </Link>
             </div>
 
-            {/* New Video Message Section */}
-            <div className="mt-6 p-4 rounded-2xl bg-white/70 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 shadow-xl">
-              <h3 className="text-lg md:text-xl font-extrabold text-gray-900 dark:text-white text-center">
-                ব্যবসায় সমস্যা অনেক,
-                <br />
-                কিন্তু সমাধান মাত্র একটিই!
-              </h3>
-              <p className="mt-2 text-gray-600 dark:text-gray-300 text-center">Smart Inventory আপনার ইনভেন্টরি, অর্ডার এবং স্টক সবই একসঙ্গে নিয়ন্ত্রণ করে।</p>
-              <div className="mt-3 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
-                <video
-                  src="https://www.shutterstock.com/shutterstock/videos/3848861823/preview/stock-footage-vitamin-b-thiamine-icon-animates-in-with-rice-meat-and-grains-on-a-vibrant-green-background.webm"
-                  controls
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-48 sm:h-56 object-cover"
-                />
-              </div>
-            </div>
+         
           </div>
 
           {/* Right Content - Video */}

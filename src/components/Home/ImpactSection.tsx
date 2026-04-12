@@ -1,105 +1,102 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FaGlobeAmericas, FaBuilding, FaHeadset, FaTrophy } from 'react-icons/fa';
+import React from "react";
+import { motion } from "framer-motion";
 
 const ImpactSection = () => {
+  const images = [
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUCXFYSb_RokMqqAI8awQ5lEUfODvzvkWXoQ&s",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE2q5Tbrw_L7JGsL3N_fPehYafRTdtTankaw&s",
+  ];
+
   const stats = [
     {
       id: 1,
-      icon: <FaGlobeAmericas className="text-4xl text-[#FF6B35]" />,
       number: "৯৯.৯%",
       label: "আপটাইম গ্যারান্টি",
+      image: images[0],
     },
     {
       id: 2,
-      icon: <FaBuilding className="text-4xl text-[#E55A2B]" />,
       number: "২৪/৭",
       label: "কাস্টমার সাপোর্ট",
+      image: images[1],
     },
     {
       id: 3,
-      icon: <FaHeadset className="text-4xl text-[#FF6B35]" />,
       number: "১০০+",
       label: "সন্তুষ্ট ক্লায়েন্ট",
+      image: images[0],
     },
     {
       id: 4,
-      icon: <FaTrophy className="text-4xl text-[#E55A2B]" />,
       number: "৫০০+",
       label: "সফল প্রজেক্ট",
+      image: images[1],
     },
   ];
 
-  const phGradient = "linear-gradient(to right, #FF6B35, #E55A2B, #FF6B35)";
-
   return (
-    <section className="py-12 md:py-24 bg-white dark:bg-slate-950 overflow-hidden">
+    <section className="py-16 md:py-24 bg-[#F8FAFC] dark:bg-[#020617] overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative p-[1px] md:p-[2px] rounded-[24px] md:rounded-[38px] overflow-hidden" 
+          className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] items-center rounded-[36px] border border-white/80 bg-white/85 dark:bg-slate-950/90 shadow-[0_40px_120px_rgba(15,23,42,0.08)] p-6 md:p-10"
         >
-          
-          {/* --- Animated Moving Border Magic --- */}
-          <motion.div
-            animate={{
-              rotate: [0, 360],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            style={{
-              backgroundImage: `conic-gradient(from 0deg, transparent 60%, #FF6B35, #E55A2B, #FF6B35)`,
-            }}
-            className="absolute inset-[-150%] md:inset-[-100%] z-0"
-          />
+          <div className="space-y-8">
+            <div className="max-w-xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.45em] text-[#FF6B35] mb-4">Mobile First</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight">
+                আমাদের স্মার্ট সিস্টেমের ব্যবসায়িক প্রভাব
+              </h2>
+              <p className="mt-6 text-base md:text-lg text-slate-600 dark:text-slate-300 leading-8">
+                একটি মোবাইল-ফার্স্ট অভিজ্ঞতা যা দ্রুত, স্মার্ট এবং ব্যবসায়িক সিদ্ধান্তকে শক্তিশালী করে।
+              </p>
+            </div>
 
-          {/* Inner Content Area */}
-          <div className="relative z-10 bg-white dark:bg-slate-900 rounded-[23px] md:rounded-[36px] py-10 md:py-16 px-2 md:px-4 shadow-2xl">
-            
-            {/* Section Title */}
-            <motion.h2 
-              className="text-xl md:text-3xl font-black text-center text-slate-800 dark:text-white mb-10 md:mb-16 px-4"
-            >
-              আমাদের <span className="text-transparent bg-clip-text" style={{ backgroundImage: phGradient }}>স্মার্ট সিস্টেমের</span> ব্যবসায়িক প্রভাব
-            </motion.h2>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-10 md:gap-y-12 items-start">
-              {stats.map((item, index) => (
-                <motion.div 
+            <div className="grid gap-4 sm:grid-cols-2">
+              {stats.map((item) => (
+                <motion.div
                   key={item.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -8 }}
-                  className="flex flex-col items-center relative text-center px-2"
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.3 }}
+                  className="rounded-[28px] border border-slate-200/70 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/95 p-5 shadow-sm shadow-slate-200/40 dark:shadow-none"
                 >
-                  {/* Vertical Divider for Desktop */}
-                  {index !== 0 && (
-                    <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 h-16 w-[1px] bg-gray-100 dark:bg-slate-800"></div>
-                  )}
-
-                  <div className="mb-3 md:mb-4 transform transition-transform duration-300">
-                    {item.icon}
-                  </div>
-
-                  <div className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white mb-2">
-                    {item.number}
-                  </div>
-
-                  <p className="text-gray-500 dark:text-gray-400 font-bold text-xs md:text-sm tracking-wide">
-                    {item.label}
-                  </p>
+                  <p className="text-3xl font-black text-slate-900 dark:text-white mb-1">{item.number}</p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">{item.label}</p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-[520px]">
+            <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-[#FFEDD5] blur-2xl" />
+            <div className="absolute -right-6 bottom-6 h-24 w-24 rounded-full bg-[#D8B4FE] blur-2xl" />
+            <div className="relative overflow-hidden rounded-[40px] border border-slate-200/80 bg-slate-100 dark:border-slate-800 dark:bg-slate-900 shadow-[0_30px_90px_rgba(15,23,42,0.12)]">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUCXFYSb_RokMqqAI8awQ5lEUfODvzvkWXoQ&s"
+                alt="Mobile preview"
+                className="h-[440px] w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
+              <div className="absolute left-6 bottom-6 right-6 rounded-[26px] bg-white/90 p-4 shadow-xl shadow-slate-900/10 backdrop-blur-sm">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Smart Inventory</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-900">Mobile-ready dashboard</p>
+                  </div>
+                  <div className="h-12 w-12 rounded-3xl overflow-hidden">
+                    <img
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE2q5Tbrw_L7JGsL3N_fPehYafRTdtTankaw&s"
+                      alt="App preview"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

@@ -165,7 +165,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Menu", href: "/dashboard/inventory" },
+    { name: "Menu", href: "/shop" },
     { name: "Product", href: "/dashboard/products" },
 
     { name: "About", href: "/about" },
