@@ -55,12 +55,12 @@ const MobilePreviewSection = () => {
                                     Scan QR-Code and check<br />
                                     mobile version on your smartphone
                                 </p>
-                                <Link 
-                                    href="/qr-demo"
-                                    className="inline-block bg-[#1a2e1a] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-[#2a4a2a] transition-colors text-center w-fit"
-                                >
-                                    Order Now →
-                                </Link>
+                              <Link 
+  href="/qr-demo"
+  className="inline-block bg-orange-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-orange-700 transition-colors text-center w-fit"
+>
+  Order Now →
+</Link>
                             </div>
                         </div>
                     </motion.div>
@@ -90,3 +90,5 @@ const MobilePreviewSection = () => {
 };
 
 export default MobilePreviewSection;
+
+

@@ -48,7 +48,7 @@ export default function SettingsPage() {
     <button
       onClick={showSaved}
       className="btn btn-sm gap-2 border-0 text-white cursor-pointer"
-      style={{ backgroundColor: "#832388" }}
+      style={{ backgroundColor: "#FF6B35" }}
     >
       {saved ? <><Check size={13} /> Saved!</> : <><Check size={13} /> {label}</>}
     </button>
@@ -71,7 +71,7 @@ export default function SettingsPage() {
             key={id}
             onClick={() => setActiveTab(id)}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer"
-            style={activeTab === id ? { backgroundColor: "#832388", color: "#fff" } : {}}
+            style={activeTab === id ? { backgroundColor: "#FF6B35", color: "#fff" } : {}}
           >
             <Icon size={13} /> {id}
           </button>
@@ -88,7 +88,7 @@ export default function SettingsPage() {
             <div className="flex items-center gap-4">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-black flex-shrink-0"
-                style={{ background: "linear-gradient(135deg,#FF0F7B,#F89B29)" }}
+                style={{ background: "linear-gradient(135deg,#FF6B35,#E55A2B)" }}
               >
                 E
               </div>
@@ -139,7 +139,7 @@ export default function SettingsPage() {
                     ))}
                   </div>
                 ))}
-                <button onClick={() => setEducation(e => [...e, { degree: "", university: "", from: "", to: "" }])} className="btn btn-xs btn-ghost gap-1 cursor-pointer mt-1" style={{ color: "#832388" }}>
+                <button onClick={() => setEducation(e => [...e, { degree: "", university: "", from: "", to: "" }])} className="btn btn-xs btn-ghost gap-1 cursor-pointer mt-1" style={{ color: "#FF6B35" }}>
                   <Plus size={12} /> Add Education
                 </button>
               </>
@@ -189,7 +189,7 @@ export default function SettingsPage() {
             ].map(({ key, icon: Icon, title, sub }) => (
               <div key={key} className="flex items-center justify-between p-4 rounded-xl bg-base-200 mb-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#832388", opacity: 0.8 }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#FF6B35", opacity: 0.8 }}>
                     <Icon size={15} color="#fff" />
                   </div>
                   <div>
@@ -202,7 +202,7 @@ export default function SettingsPage() {
                   className="toggle toggle-sm cursor-pointer"
                   checked={twoFA[key]}
                   onChange={() => setTwoFA(s => ({ ...s, [key]: !s[key] }))}
-                  style={twoFA[key] ? { backgroundColor: "#832388", borderColor: "#832388" } : {}}
+                  style={twoFA[key] ? { backgroundColor: "#FF6B35", borderColor: "#FF6B35" } : {}}
                 />
               </div>
             ))}
@@ -230,7 +230,7 @@ export default function SettingsPage() {
                 className="toggle toggle-sm cursor-pointer"
                 checked={notifs[key]}
                 onChange={() => setNotifs(s => ({ ...s, [key]: !s[key] }))}
-                style={notifs[key] ? { backgroundColor: "#832388", borderColor: "#832388" } : {}}
+                style={notifs[key] ? { backgroundColor: "#FF6B35", borderColor: "#FF6B35" } : {}}
               />
             </div>
           ))}
@@ -268,10 +268,10 @@ export default function SettingsPage() {
             { name: "Enterprise", price: "$49/mo", features: ["Everything in Pro", "White labeling", "API access"], current: false },
           ].map(p => (
             <div key={p.name} className={`rounded-2xl bg-base-100 p-6 border-2 ${p.current ? "" : "border-base-300"}`}
-              style={p.current ? { borderColor: "#832388" } : {}}>
-              {p.current && <span className="inline-block text-xs font-black px-2 py-0.5 rounded-full text-white mb-3" style={{ backgroundColor: "#832388" }}>CURRENT</span>}
+              style={p.current ? { borderColor: "#FF6B35" } : {}}>
+              {p.current && <span className="inline-block text-xs font-black px-2 py-0.5 rounded-full text-white mb-3" style={{ backgroundColor: "#FF6B35" }}>CURRENT</span>}
               <h3 className="text-lg font-black">{p.name}</h3>
-              <p className="text-3xl font-black mb-4" style={p.current ? { color: "#832388" } : {}}>{p.price}</p>
+              <p className="text-3xl font-black mb-4" style={p.current ? { color: "#FF6B35" } : {}}>{p.price}</p>
               <ul className="space-y-2 mb-5">
                 {p.features.map(f => (
                   <li key={f} className="flex items-center gap-2 text-sm opacity-70"><Check size={13} className="text-success flex-shrink-0" /> {f}</li>
@@ -280,8 +280,8 @@ export default function SettingsPage() {
               <button
                 className="btn btn-sm w-full border-0 cursor-pointer"
                 style={p.current
-                  ? { backgroundColor: "transparent", border: "2px solid #832388", color: "#832388" }
-                  : { backgroundColor: "#832388", color: "#fff" }}
+                  ? { backgroundColor: "transparent", border: "2px solid #FF6B35", color: "#FF6B35" }
+                  : { backgroundColor: "#FF6B35", color: "#fff" }}
               >
                 {p.current ? "Current Plan" : "Upgrade"}
               </button>
@@ -297,7 +297,7 @@ export default function SettingsPage() {
             {[
               { label: "Available", value: "৳1,248", color: "#00C48C" },
               { label: "Pending", value: "৳340", color: "#F89B29" },
-              { label: "Total", value: "৳8,920", color: "#832388" },
+              { label: "Total", value: "৳8,920", color: "#FF6B35" },
             ].map(({ label, value, color }) => (
               <div key={label} className="rounded-2xl bg-base-100 border border-base-300 p-5 text-center">
                 <p className="text-xs font-bold uppercase opacity-50 mb-1">{label}</p>
