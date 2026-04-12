@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Hind_Siliguri } from "next/font/google";
+import { Geist, Geist_Mono, Hind_Siliguri, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
 import FloatingChat from "@/components/chat/FloatingChat";
@@ -8,6 +8,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatWidget from "@/components/Home/ChatWidget";
+import MouseFollower from "@/components/layout/MouseFollower";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,11 @@ const hindSiliguri = Hind_Siliguri({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["bengali", "latin"],
   variable: "--font-hind-siliguri",
+  display: "swap",
+});
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -91,7 +97,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${hindSiliguri.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${hindSiliguri.variable} ${inter.variable} antialiased`}
         style={{ fontFamily: "var(--font-hind-siliguri), var(--font-geist-sans), sans-serif" }}
         suppressHydrationWarning
       >
@@ -134,6 +140,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }
           }}
         />
+
+        <MouseFollower />
 
         {children}
 

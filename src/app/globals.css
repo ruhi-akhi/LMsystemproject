@@ -4,6 +4,11 @@
 /* Dark mode strategy for Tailwind */
 @custom-variant dark (&:where(.dark, [data-theme="dark"], .dark *));
 
+/* Font utility classes */
+.font-inter {
+  font-family: var(--font-inter), sans-serif;
+}
+
 /* =========================
    Root Theme Variables (Orange & Black Theme)
 ========================= */
@@ -12,17 +17,17 @@
   --foreground: #1a1a1a;
   --nav-bg: #ffffff;
   --border-color: #f3f4f6;
-  
+
   /* Primary Orange Colors */
   --primary: #FF6B35;
   --primary-dark: #E55A2B;
   --primary-light: #FF8C42;
-  
+
   /* Secondary Black Colors */
   --secondary: #1A1A1A;
   --secondary-light: #2D2D2D;
   --secondary-dark: #000000;
-  
+
   /* Accent Colors */
   --accent-orange: #FF8C42;
   --accent-dark-orange: #E55A2B;
@@ -31,6 +36,7 @@
   --font-geist-sans: "Geist", sans-serif;
   --font-geist-mono: "Geist Mono", monospace;
   --font-hind-siliguri: "Hind Siliguri", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
 
 /* =========================
@@ -42,7 +48,7 @@
   --foreground: #ffffff;
   --nav-bg: #1a1a1a;
   --border-color: #2d2d2d;
-  
+
   /* Keep orange colors in dark mode */
   --primary: #FF6B35;
   --primary-dark: #E55A2B;
@@ -87,16 +93,14 @@ body {
 
 /* Hexagon shape */
 .clip-hexagon {
-  clip-path: polygon(
-    30% 0%,
-    70% 0%,
-    100% 30%,
-    100% 70%,
-    70% 100%,
-    30% 100%,
-    0% 70%,
-    0% 30%
-  );
+  clip-path: polygon(30% 0%,
+      70% 0%,
+      100% 30%,
+      100% 70%,
+      70% 100%,
+      30% 100%,
+      0% 70%,
+      0% 30%);
 }
 
 /* =========================
@@ -117,6 +121,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -128,6 +133,7 @@ body {
     opacity: 0;
     transform: scale(0.8);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -139,6 +145,7 @@ body {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
