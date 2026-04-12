@@ -1,11 +1,10 @@
 "use client";
-
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link"; // Next.js এর Link ব্যবহার করা ভালো
 
 const QRCodeCanvas = ({ value, size = 90 }: { value: string; size?: number }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
     useEffect(() => {
         const generateQR = async () => {
             const canvas = canvasRef.current;
@@ -19,19 +18,16 @@ const QRCodeCanvas = ({ value, size = 90 }: { value: string; size?: number }) =>
         };
         generateQR();
     }, [value, size]);
-
     return <canvas ref={canvasRef} style={{ borderRadius: "8px", display: "block" }} />;
 };
 
 const MobilePreviewSection = () => {
     const phoneImage = "https://parkofideas.com/wp-content/uploads/2023/10/parkofideas.com-1853880822.jpg";
-
     return (
         <section className="py-16 md:py-24 bg-[#eef4ec] dark:bg-[#0d1f0d] overflow-hidden relative">
             <div className="container mx-auto px-6 md:px-10 max-w-7xl relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-
-                    {/* LEFT: Text + QR */}
+                    {/* LEFT: Text + QR + Order Now Button */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -47,15 +43,25 @@ const MobilePreviewSection = () => {
                             ensuring seamless performance and optimized user
                             experience across all devices.
                         </p>
-
+                        
                         <div className="flex items-center gap-4">
                             <div className="rounded-xl overflow-hidden border border-[#c8dfc8] bg-white p-1.5 shadow-sm">
-                     <QRCodeCanvas value="https://thefoodfunda.com/scan?product=PKT-001" size={160} />
+                                <QRCodeCanvas value="https://thefoodfunda.com/scan?product=PKT-001" size={160} />
                             </div>
-                            <p className="text-sm text-[#3a4a3a] dark:text-slate-300 leading-[1.65]">
-                                Scan QR-Code and check<br />
-                                mobile version on your smartphone
-                            </p>
+                            
+                            {/* টেক্সট এবং বাটন এখানে রাখা হয়েছে */}
+                            <div className="flex flex-col gap-3">
+                                <p className="text-sm text-[#3a4a3a] dark:text-slate-300 leading-[1.65]">
+                                    Scan QR-Code and check<br />
+                                    mobile version on your smartphone
+                                </p>
+                                <Link 
+                                    href="/qr-demo"
+                                    className="inline-block bg-[#1a2e1a] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-[#2a4a2a] transition-colors text-center w-fit"
+                                >
+                                    Order Now →
+                                </Link>
+                            </div>
                         </div>
                     </motion.div>
 
@@ -77,7 +83,6 @@ const MobilePreviewSection = () => {
                             />
                         </motion.div>
                     </div>
-
                 </div>
             </div>
         </section>

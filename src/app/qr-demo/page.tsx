@@ -21,15 +21,12 @@ export default function QRDemoPage() {
   useEffect(() => {
     const initDemo = async () => {
       try {
-        // Create demo products
         await fetch("/api/demo-products", { method: "POST" });
         
-        // Fetch products
         const res = await fetch("/api/demo-products");
         const data = await res.json();
         setProducts(data.products);
 
-        // Generate QR codes
         const qrPromises = data.products.map(async (product: Product) => {
           const qrDataURL = await QRCode.toDataURL(product.scanUrl, {
             width: 200,
@@ -126,11 +123,12 @@ export default function QRDemoPage() {
 
                 {/* Action Buttons */}
                 <div className="space-y-2">
+                  {/* ← শুধু এই line টা change হয়েছে */}
                   <button
-                    onClick={() => window.open(product.scanUrl, "_blank")}
+                    onClick={() => window.location.href = product.scanUrl}
                     className="w-full bg-[#1a2e1a] text-white font-bold py-3 rounded-xl hover:bg-[#2a4a2a] transition-colors"
                   >
-                    🛒 Test Order
+                    🛒 Order Now
                   </button>
                   
                   <button
@@ -164,7 +162,7 @@ export default function QRDemoPage() {
             <div>
               <h3 className="font-bold text-[#1a2e1a] dark:text-white mb-2">💻 Desktop Testing:</h3>
               <ul className="space-y-1 list-disc list-inside">
-                <li>Click "Test Order" button</li>
+                <li>Click "Order Now" button</li>
                 <li>Select quantity and payment method</li>
                 <li>Use bKash sandbox for testing</li>
                 <li>Check success/failure flows</li>
