@@ -50,7 +50,7 @@ const MobilePreviewSection = () => {
 
                         <div className="flex items-center gap-4">
                             <div className="rounded-xl overflow-hidden border border-[#c8dfc8] bg-white p-1.5 shadow-sm">
-                          <QRCodeCanvas value="https://thefoodfunda.com/" size={86} />
+                     <QRCodeCanvas value="https://thefoodfunda.com/scan?product=PKT-001" size={160} />
                             </div>
                             <p className="text-sm text-[#3a4a3a] dark:text-slate-300 leading-[1.65]">
                                 Scan QR-Code and check<br />
