@@ -12,6 +12,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
+
+export const dynamic = 'force-dynamic'; // ✅ এই line যোগ করো
 type LoginFormData = { email: string; password: string; };
 
 const roleDashboard: Record<string, string> = {
