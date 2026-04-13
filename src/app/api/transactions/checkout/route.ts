@@ -9,7 +9,9 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2025-02-24.acacia",
+});
 
 function getDecoded(req: NextRequest) {
   let token = req.cookies.get("token")?.value;
@@ -122,7 +124,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ 
         success: true, 
-        free: true, 
+        free: true, const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
         orderId: order._id,
         orderNumber: order.orderNumber 
       });
