@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ 
         success: true, 
-        free: true, const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+        free: true,
         orderId: order._id,
         orderNumber: order.orderNumber 
       });
