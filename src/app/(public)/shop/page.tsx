@@ -155,7 +155,11 @@ export default function ShopPage() {
 
                     <button
                         onClick={() => setActiveCategory("All")}
-                        className="px-4 py-2 bg-emerald-600 text-white rounded-full"
+                        className={`px-4 py-2 rounded-full font-medium transition-colors ${
+                            activeCategory === "All" 
+                                ? "bg-[#FF6B35] text-white shadow-lg" 
+                                : "bg-white border border-gray-200 text-gray-700 hover:bg-orange-50"
+                        }`}
                     >
                         All
                     </button>
@@ -164,7 +168,11 @@ export default function ShopPage() {
                         <button
                             key={category.label}
                             onClick={() => setActiveCategory(category.label)}
-                            className="flex items-center gap-2 px-4 py-2 border rounded-full hover:bg-emerald-50"
+                            className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors ${
+                                activeCategory === category.label
+                                    ? "bg-[#FF6B35] text-white shadow-lg"
+                                    : "bg-white border border-gray-200 text-gray-700 hover:bg-orange-50"
+                            }`}
                         >
                             {category.icon}
                             {category.label}
@@ -177,23 +185,23 @@ export default function ShopPage() {
 
                     {filteredProducts.map((item) => (
 
-                        <div key={item.name} className="rounded-3xl border border-slate-200 bg-white shadow-sm hover:shadow-lg transition">
+                        <div key={item.name} className="rounded-3xl border border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-orange-200 transition-all duration-300 overflow-hidden group">
 
                             <img
                                 src={getProductImage(item.name)}
                                 alt={item.name}
-                                className="h-52 w-full object-cover rounded-t-3xl"
+                                className="h-52 w-full object-cover rounded-t-3xl group-hover:scale-105 transition-transform duration-300"
                             />
 
                             <div className="p-6">
 
                                 <div className="flex justify-between mb-2">
-                                    <span className="text-xs font-semibold text-emerald-600">
+                                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${item.color}`}>
                                         {item.badge}
                                     </span>
 
-                                    <span className="text-sm text-gray-500">
-                                        ⭐ {item.rating}
+                                    <span className="text-sm text-gray-500 flex items-center gap-1">
+                                        <span className="text-yellow-400">⭐</span> {item.rating}
                                     </span>
                                 </div>
 
@@ -206,7 +214,7 @@ export default function ShopPage() {
                                 <div className="flex items-center justify-between mt-4">
                                     <p className="text-2xl font-bold">{item.price}</p>
 
-                                    <button className="bg-emerald-600 text-white px-4 py-2 rounded-lg">
+                                    <button className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg">
                                         Add to cart
                                     </button>
                                 </div>

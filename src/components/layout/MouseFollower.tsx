@@ -40,12 +40,12 @@ const MouseFollower = () => {
     return (
         <div className="pointer-events-none fixed inset-0 z-[9999]">
             <div
-                className="absolute h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#ff8a3c]/30 shadow-[0_20px_80px_rgba(255,138,60,0.18)] transition-opacity duration-200 ease-out"
+                className="absolute h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_20px_80px_rgba(255,138,60,0.25)] transition-opacity duration-200 ease-out"
                 style={{
                     left: `${position.x}px`,
                     top: `${position.y}px`,
                     opacity: visible ? 1 : 0,
-                    background: "radial-gradient(circle at center, rgba(255, 199, 119, 0.92), rgba(255, 136, 64, 0.28) 40%, rgba(255, 136, 64, 0.15) 60%, transparent 90%)",
+                    background: "radial-gradient(circle at center, rgba(241, 77, 32, 0.95), rgba(246, 115, 54, 0.45) 40%, rgba(246, 127, 42, 0.25) 60%, transparent 90%)",
                     backdropFilter: "blur(2px)",
                 }}
             />

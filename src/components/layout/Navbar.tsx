@@ -166,7 +166,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Menu", href: "/shop" },
-    { name: "Product", href: "/dashboard/products" },
+ 
 
     { name: "About", href: "/about" },
     { name: "Demo", href: "/demo" },
@@ -243,7 +243,7 @@ const Navbar = () => {
           bg-[var(--nav-bg)] border-b border-[var(--border-color)]
           sticky top-0 z-[100] transition-all duration-300
           ${scrolled
-            ? "shadow-lg backdrop-blur-md bg-white/90 dark:bg-[#0b1120]/90"
+            ? "shadow-lg backdrop-red-md bg-white/90 dark:bg-[#0b1120]/90"
             : "shadow-sm"
           }
         `}
@@ -269,7 +269,7 @@ const Navbar = () => {
                   </Link>
                 ))}
                 {user && (
-                  <Link href="/dashboard/orders" className="nav-link-hover hover:text-[#FF6B35] transition-colors nav-link-animate" style={{ animationDelay: "0.43s" }}>
+                  <Link href="/qr-demo" className="nav-link-hover hover:text-[#FF6B35] transition-colors nav-link-animate" style={{ animationDelay: "0.43s" }}>
                     My Orders
                   </Link>
                 )}
@@ -280,7 +280,7 @@ const Navbar = () => {
               <div className="flex items-center gap-5 border-l border-gray-200 dark:border-gray-700 pl-6 nav-link-animate" style={{ animationDelay: "0.55s" }}>
                 <button
                   onClick={toggleTheme}
-                  className="p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-purple-500 dark:text-sky-400 hover:scale-110 hover:rotate-12 transition-all duration-200"
+                  className="p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-[#FF6B35] dark:text-[#FF6B35] hover:scale-110 hover:rotate-12 transition-all duration-200"
                   aria-label="Toggle theme"
                 >
                   {theme === "dark" ? <FaSun size={18} /> : <FaMoon size={18} />}
@@ -383,8 +383,8 @@ const Navbar = () => {
                 aria-label="Toggle theme"
               >
                 {theme === "dark"
-                  ? <FaSun size={20} className="text-yellow-500" />
-                  : <FaMoon size={20} className="text-gray-600" />
+                  ? <FaSun size={20} className="text-[#FF6B35]" />
+                  : <FaMoon size={20} className="text-[#FF6B35]" />
                 }
               </button>
               {user && (
@@ -446,7 +446,7 @@ const Navbar = () => {
                   ))}
                   {user && (
                     <Link
-                      href="/dashboard/orders"
+                      href="/qr-demo"
                       className="flex justify-between items-center p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 font-bold transition-colors"
                       onClick={() => setIsOpen(false)}
                     >

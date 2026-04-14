@@ -10,7 +10,7 @@ interface Order {
   customerEmail?: string;
   customerPhone?: string;
   items: {
-    productId: string;
+    productId?: string;
     productName: string;
     quantity: number;
     price: number;
@@ -20,6 +20,8 @@ interface Order {
   status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
   notes?: string;
   createdAt: string;
+  paymentMethod?: string;
+  bkashTrxID?: string;
 }
 
 export default function OrdersPage() {
@@ -36,21 +38,54 @@ export default function OrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: "20",
-      });
+      setLoading(true);
       
-      if (searchTerm) params.append("search", searchTerm);
-      if (selectedStatus) params.append("status", selectedStatus);
+      // Fetch both dashboard orders and QR scan orders
+      const [dashboardResponse, qrResponse] = await Promise.all([
+        fetch(`/api/orders?page=${currentPage}&limit=10${searchTerm ? `&search=${searchTerm}` : ''}${selectedStatus ? `&status=${selectedStatus}` : ''}`),
+        fetch(`/api/scan-orders?page=${currentPage}&limit=10${searchTerm ? `&search=${searchTerm}` : ''}${selectedStatus ? `&status=${selectedStatus}` : ''}`)
+      ]);
 
-      const response = await fetch(`/api/orders?${params}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setOrders(data.orders);
-        setTotalPages(data.pagination.pages);
+      const dashboardData = await dashboardResponse.json();
+      const qrData = await qrResponse.json();
+
+      let allOrders: Order[] = [];
+
+      // Add dashboard orders if available
+      if (dashboardData.success && dashboardData.orders) {
+        allOrders = [...allOrders, ...dashboardData.orders];
       }
+
+      // Add QR scan orders if available
+      if (qrData.success && qrData.orders) {
+        const qrOrders = qrData.orders.map((order: any) => ({
+          _id: order._id,
+          orderNumber: order._id.slice(-8).toUpperCase(),
+          customerName: "QR Customer",
+          customerEmail: "",
+          items: [{ 
+            productName: order.productName, 
+            quantity: order.quantity,
+            price: order.totalPrice / order.quantity,
+            subtotal: order.totalPrice
+          }],
+          totalAmount: order.totalPrice,
+          status: order.paymentStatus === "paid" ? "confirmed" : order.paymentStatus === "pending" ? "pending" : "cancelled",
+          createdAt: order.createdAt,
+          paymentMethod: order.paymentMethod,
+          bkashTrxID: order.bkashTrxID
+        }));
+        allOrders = [...allOrders, ...qrOrders];
+      }
+
+      // Sort by creation date (newest first)
+      allOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      setOrders(allOrders);
+      setTotalPages(Math.max(
+        dashboardData.pagination?.pages || 1,
+        qrData.pagination?.pages || 1
+      ));
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
@@ -175,7 +210,14 @@ export default function OrdersPage() {
               {orders.map((order) => (
                 <tr key={order._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{order.orderNumber}</div>
+                    <div className="font-medium text-gray-900">
+                      {order.orderNumber}
+                      {order.bkashTrxID && (
+                        <div className="text-xs text-green-600 font-mono">
+                          TrxID: {order.bkashTrxID}
+                        </div>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
@@ -183,13 +225,23 @@ export default function OrdersPage() {
                       {order.customerEmail && (
                         <div className="text-sm text-gray-500">{order.customerEmail}</div>
                       )}
+                      {order.paymentMethod && (
+                        <div className="text-xs text-blue-600 capitalize">
+                          via {order.paymentMethod}
+                        </div>
+                      )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+                      <div className="text-xs text-gray-500">
+                        {order.items.map(item => item.productName).join(', ')}
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    ${order.totalAmount.toFixed(2)}
+                    ৳{order.totalAmount.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(order.status)}
