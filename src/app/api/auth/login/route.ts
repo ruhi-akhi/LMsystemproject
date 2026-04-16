@@ -54,12 +54,13 @@ export async function POST(req: NextRequest) {
     user.resetTokenExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 min
     await user.save();
 
-    // ✅ OTP email পাঠাও (background এ, await করবো না)
-    transporter.sendMail({
-      from: `"Smart Inventory" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: "🔐 Your Login Verification Code",
-      html: `
+    // ✅ OTP email পাঠাও (MUST await to prevent 500 error)
+    try {
+      await transporter.sendMail({
+        from: `"Smart Inventory" <${process.env.GMAIL_USER}>`,
+        to: email,
+        subject: "🔐 Your Login Verification Code",
+        html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -143,11 +144,15 @@ export async function POST(req: NextRequest) {
         </body>
         </html>
       `,
-    }).then(() => {
-      // Email sent successfully
-    }).catch((emailError) => {
-      // Email send failed - log for debugging but don't block login
-    });
+      });
+    } catch (emailError: any) {
+      console.error("Email sending failed:", emailError);
+      // Email failed but OTP is saved - user can still verify if they get it
+      return NextResponse.json({ 
+        error: "Email sending failed. Please check GMAIL_USER and GMAIL_PASS in .env.local", 
+        details: emailError.message 
+      }, { status: 500 });
+    }
 
     // ✅ Token দেওয়া হবে না এখন — OTP verify হলে দেওয়া হবে
     return NextResponse.json({

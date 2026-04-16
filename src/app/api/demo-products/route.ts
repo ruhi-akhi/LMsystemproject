@@ -50,14 +50,26 @@ const DEMO_PRODUCTS = [
 ];
 
 export async function POST(req: NextRequest) {
+  console.log('\n🔥 === DEMO PRODUCTS API CALLED ===');
+  console.log('📍 Time:', new Date().toISOString());
+  console.log('🌐 MongoDB URI exists:', !!process.env.MONGODB_URI);
+  
   try {
+    console.log('🔄 Step 1: Connecting to MongoDB...');
     await connectDB();
+    console.log('✅ Step 1: MongoDB connected successfully');
     
-    // Clear existing demo products
-    await Product.deleteMany({ qrCode: { $in: DEMO_PRODUCTS.map(p => p.qrCode) } });
+    console.log('🗑️ Step 2: Clearing old demo products...');
+    const deleteResult = await Product.deleteMany({ 
+      qrCode: { $in: DEMO_PRODUCTS.map(p => p.qrCode) } 
+    });
+    console.log(`✅ Step 2: Deleted ${deleteResult.deletedCount} old products`);
     
-    // Insert new demo products
+    console.log('📝 Step 3: Inserting new demo products...');
     const products = await Product.insertMany(DEMO_PRODUCTS);
+    console.log(`✅ Step 3: Inserted ${products.length} new products`);
+    
+    console.log('🎉 SUCCESS: All steps completed\n');
     
     return NextResponse.json({ 
       message: "Demo products created successfully", 
@@ -69,15 +81,30 @@ export async function POST(req: NextRequest) {
       }))
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('\n❌ === ERROR OCCURRED ===');
+    console.error('Error Name:', error.name);
+    console.error('Error Message:', error.message);
+    console.error('Error Code:', error.code);
+    console.error('Full Error:', JSON.stringify(error, null, 2));
+    console.error('Stack Trace:', error.stack);
+    console.error('=========================\n');
+    
+    return NextResponse.json({ 
+      error: error.message || 'Unknown error',
+      errorName: error.name,
+      errorCode: error.code,
+      details: error.toString()
+    }, { status: 500 });
   }
 }
 
 export async function GET(req: NextRequest) {
   try {
+    console.log('🔍 GET: Fetching products...');
     await connectDB();
     
     const products = await Product.find({ available: true }).select('name qrCode price emoji badge');
+    console.log(`✅ GET: Found ${products.length} products`);
     
     return NextResponse.json({ 
       products: products.map(p => ({
@@ -86,6 +113,7 @@ export async function GET(req: NextRequest) {
       }))
     });
   } catch (error: any) {
+    console.error('❌ GET Error:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

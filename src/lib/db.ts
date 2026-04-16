@@ -11,7 +11,7 @@ export async function connectDB() {
   
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, { 
-      dbName: "tastydaily" 
+      dbName: "learning-management"  // ✅ Fixed: Use correct database name
     });
   }
   
