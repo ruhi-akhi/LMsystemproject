@@ -16,8 +16,10 @@ async function getAuthUser(req: NextRequest) {
     req.headers.get("authorization")?.replace("Bearer ", "");
   if (!token) return null;
   try {
-    return jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; role: string };
-  } catch {
+    const secret = process.env.JWT_SECRET || "fallback_secret";
+    return jwt.verify(token, secret) as { userId: string; role: string };
+  } catch (err) {
+    console.error("JWT Verify Error in Dashboard:", err);
     return null;
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB, Order } from "@/lib/db";
+import { connectDB, DemoOrder } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,12 +31,12 @@ export async function GET(req: NextRequest) {
     }
 
     const [orders, total] = await Promise.all([
-      Order.find(filter)
+      DemoOrder.find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
-      Order.countDocuments(filter),
+      DemoOrder.countDocuments(filter),
     ]);
 
     return NextResponse.json({

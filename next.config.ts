@@ -7,7 +7,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups', // এটি Google Popup কাজ করতে সাহায্য করবে
+            value: 'unsafe-none',
           },
         ],
       },
@@ -15,4 +15,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

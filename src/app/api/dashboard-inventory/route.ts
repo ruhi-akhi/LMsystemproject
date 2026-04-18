@@ -1,158 +1,125 @@
+// src/app/api/dashboard/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/db/connect";
-import { Order, Product, ActivityLog, RestockQueue } from "@/models";
-import { requireAuth } from "@/lib/auth";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import { connectDB } from "@/lib/db";
+import User from "@/models/User";
+import Product from "@/models/Product";
+import Category from "@/models/Category";
+import Order from "@/models/Order";
+import ActivityLog from "@/models/ActivityLog";
+import RestockQueue from "@/models/RestockQueue";
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
 
-// GET - Dashboard statistics
 export async function GET(req: NextRequest) {
   try {
+    const cookieStore = await cookies();
+    const token = 
+      cookieStore.get("token")?.value || 
+      req.headers.get("authorization")?.replace("Bearer ", "");
+
+    console.log("🔐 Dashboard API - Token exists:", !!token);
+
+    if (!token) {
+      return NextResponse.json({ error: "No token provided" }, { status: 401 });
+    }
+
+    // Verify token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+      console.log("✅ Token verified, userId:", decoded.userId);
+    } catch (error) {
+      console.error("❌ Token verification failed:", error);
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+
+    // Connect to DB
     await connectDB();
-    
-    const user = requireAuth(req);
-    
-    // Get today's date range
+    const user = await User.findById(decoded.userId).select("-password");
+    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+    // Fetch stats
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    // Parallel queries for better performance
+
     const [
-      todayOrders,
-      pendingOrders,
-      completedOrders,
-      todayRevenue,
-      lowStockProducts,
-      outOfStockProducts,
-      recentActivities,
       totalProducts,
       totalCategories,
+      lowStockCount,
+      outOfStockCount,
+      totalOrdersToday,
+      pendingOrders,
+      completedOrders,
+      revenueToday,
+      restockQueueCount,
+      productSummary,
+      recentActivities
     ] = await Promise.all([
-      // Today's orders
-      Order.countDocuments({
-        createdAt: { $gte: today, $lt: tomorrow }
-      }),
-      
-      // Pending orders
-      Order.countDocuments({ status: "pending" }),
-      
-      // Completed orders (confirmed, shipped, delivered)
-      Order.countDocuments({ 
-        status: { $in: ["confirmed", "shipped", "delivered"] }
-      }),
-      
-      // Today's revenue
-      Order.aggregate([
-        {
-          $match: {
-            createdAt: { $gte: today, $lt: tomorrow },
-            status: { $in: ["confirmed", "shipped", "delivered"] }
-          }
-        },
-        {
-          $group: {
-            _id: null,
-            totalRevenue: { $sum: "$totalAmount" }
-          }
-        }
-      ]),
-      
-      // Low stock products
-      Product.find({
-        $expr: { $lte: ["$stockQuantity", "$minimumStockThreshold"] },
-        stockQuantity: { $gt: 0 },
-        status: "active"
-      }).populate("categoryId", "name").limit(10),
-      
-      // Out of stock products
+      Product.countDocuments(),
+      Category.countDocuments(),
       Product.countDocuments({
-        stockQuantity: 0,
-        status: "out_of_stock"
+        $expr: { $lte: ["$stockQuantity", "$minimumStockThreshold"] },
+        stockQuantity: { $gt: 0 }
       }),
-      
-      // Recent activities
+      Product.countDocuments({ stockQuantity: 0 }),
+      Order.countDocuments({ createdAt: { $gte: today, $lt: tomorrow } }),
+      Order.countDocuments({ status: "pending" }),
+      Order.countDocuments({ status: "delivered" }),
+      Order.aggregate([
+        { $match: { createdAt: { $gte: today, $lt: tomorrow }, status: "delivered" } },
+        { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+      ]).then(res => res[0]?.total || 0),
+      RestockQueue.countDocuments({ status: "pending" }),
+      Product.find()
+        .sort({ stockQuantity: 1 })
+        .limit(5)
+        .populate("categoryId", "name")
+        .then(products => products.map(p => ({
+          id: p._id,
+          name: p.name,
+          stock: p.stockQuantity,
+          threshold: p.minimumStockThreshold,
+          category: (p.categoryId as any)?.name || "Uncategorized",
+          status: p.stockQuantity === 0 ? "Out of Stock" : p.stockQuantity <= p.minimumStockThreshold ? "Low Stock" : "In Stock"
+        }))),
       ActivityLog.find()
         .sort({ createdAt: -1 })
-        .limit(10)
+        .limit(5)
         .populate("userId", "name")
-        .lean(),
-      
-      // Total products
-      Product.countDocuments({ status: { $ne: "inactive" } }),
-      
-      // Total categories (assuming Category model exists)
-      Product.distinct("categoryId").then(ids => ids.length),
+        .then(logs => logs.map(l => ({
+          id: l._id,
+          time: new Date(l.createdAt).toLocaleTimeString(),
+          description: l.description,
+          userName: (l.userId as any)?.name || "System",
+          entityType: l.entityType
+        })))
     ]);
-    
-    // Calculate order status breakdown
-    const orderStatusBreakdown = await Order.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 }
-        }
-      }
-    ]);
-    
-    // Get restock queue count
-    const restockQueueCount = await RestockQueue.countDocuments({ 
-      status: { $ne: "completed" } 
-    });
-    
-    // Format recent activities
-    const formattedActivities = recentActivities.map(activity => ({
-      id: activity._id,
-      time: activity.createdAt.toLocaleTimeString("en-US", { 
-        hour: "2-digit", 
-        minute: "2-digit",
-        hour12: true 
-      }),
-      description: activity.description,
-      userName: activity.userId?.name || "Unknown User",
-      entityType: activity.entityType,
-    }));
-    
-    // Product summary for dashboard
-    const productSummary = lowStockProducts.map(product => ({
-      id: product._id,
-      name: product.name,
-      stock: product.stockQuantity,
-      threshold: product.minimumStockThreshold,
-      category: product.categoryId?.name || "Unknown",
-      status: product.stockQuantity === 0 ? "Out of Stock" : 
-              product.stockQuantity <= product.minimumStockThreshold ? "Low Stock" : "OK"
-    }));
-    
+
     return NextResponse.json({
       success: true,
       dashboard: {
-        // Key metrics
-        totalOrdersToday: todayOrders,
+        totalOrdersToday,
         pendingOrders,
         completedOrders,
-        revenueToday: todayRevenue[0]?.totalRevenue || 0,
-        lowStockCount: lowStockProducts.length,
-        outOfStockCount: outOfStockProducts,
+        revenueToday,
+        lowStockCount,
+        outOfStockCount,
         restockQueueCount,
-        
-        // Totals
         totalProducts,
         totalCategories,
-        
-        // Order status breakdown
-        orderStatusBreakdown: orderStatusBreakdown.reduce((acc, item) => {
-          acc[item._id] = item.count;
-          return acc;
-        }, {} as Record<string, number>),
-        
-        // Product summary
+        orderStatusBreakdown: {}, // Optional
         productSummary,
-        
-        // Recent activities
-        recentActivities: formattedActivities,
+        recentActivities
       }
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("❌ Dashboard API error:", error.message);
+    return NextResponse.json(
+      { error: "Server error", details: error.message },
+      { status: 500 }
+    );
   }
 }

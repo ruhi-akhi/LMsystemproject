@@ -123,7 +123,7 @@ const UserSchema = new Schema<IUserDocument>(
 
     password: { type: String, minlength: 6 },
     photoURL: { type: String, default: "" },
-    role: { type: String, enum: ["staff", "manager", "admin"], default: "staff" },
+    role: { type: String, enum: ["staff", "manager", "admin", "instructor", "user"], default: "staff" },
     provider: { type: String, enum: ["credentials", "google", "github"], default: "credentials" },
 
     // Enhanced fields

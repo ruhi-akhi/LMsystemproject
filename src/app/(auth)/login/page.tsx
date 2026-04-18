@@ -66,7 +66,7 @@ const LoginPage = () => {
 
   const doRedirect = (role: string) => {
     const dest = redirectUrl || roleDashboard[role] || "/dashboard/inventory";
-    router.replace(dest);
+    window.location.href = dest;
   };
 
   // ── Google Login ──────────────────────────────────────
@@ -75,18 +75,33 @@ const LoginPage = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const u = result.user;
-      const res = await fetch("/api/auth/register", {
+      
+      console.log("🔵 Calling Google login API...");
+      const res = await fetch("/api/auth/google-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: u.displayName, email: u.email, photoURL: u.photoURL, provider: "google" }),
+        body: JSON.stringify({ 
+          name: u.displayName, 
+          email: u.email, 
+          photoURL: u.photoURL 
+        }),
       });
+      
+      console.log("📡 Response status:", res.status);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      console.log("📦 Response data:", data);
+      
+      if (!res.ok) {
+        console.error("❌ API error:", data);
+        throw new Error(data.error || "Login failed");
+      }
+      
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       toast.success("🎉 Google login successful!");
       setTimeout(() => doRedirect(data.user.role), 500);
     } catch (err: any) {
+      console.error("💥 Google login error:", err);
       toast.error("🚫 " + (err.message || "Google login failed"));
     } finally {
       setGoogleLoading(false);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB, Product, Order } from "@/lib/db";
+import { connectDB, DemoProduct, DemoOrder } from "@/lib/db";
 
 const BKASH_BASE_URL = "https://tokenized.sandbox.bka.sh/v1.2.0-beta";
 
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "Missing product id" }, { status: 400 });
     
-    const product = await Product.findOne({ qrCode: id });
+    const product = await DemoProduct.findOne({ qrCode: id });
     if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
     if (!product.available) return NextResponse.json({ error: "Product unavailable" }, { status: 410 });
     
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
     const appURL = process.env.NEXT_PUBLIC_APP_URL;
 
     if (status === "cancel" || status === "failure") {
-      const order = await Order.findOneAndUpdate(
+      const order = await DemoOrder.findOneAndUpdate(
         { bkashPaymentID: paymentID },
         { paymentStatus: "failed" }
       );
@@ -72,14 +72,14 @@ export async function GET(req: NextRequest) {
       const executeData = await executeRes.json();
 
       if (executeData.statusCode === "0000") {
-        const order = await Order.findOneAndUpdate(
+        const order = await DemoOrder.findOneAndUpdate(
           { bkashPaymentID: paymentID },
           { paymentStatus: "paid", bkashTrxID: executeData.trxID },
           { new: true }
         );
         return NextResponse.redirect(`${appURL}/scan?payment=success&order=${order?._id}&trx=${executeData.trxID}`);
       } else {
-        const order = await Order.findOneAndUpdate(
+        const order = await DemoOrder.findOneAndUpdate(
           { bkashPaymentID: paymentID },
           { paymentStatus: "failed" }
         );
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const order = await Order.create({
+    const order = await DemoOrder.create({
       productId,
       productName,
       quantity,
@@ -157,7 +157,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: paymentData.statusMessage }, { status: 400 });
       }
 
-      await Order.findByIdAndUpdate(orderId, { bkashPaymentID: paymentData.paymentID });
+      await DemoOrder.findByIdAndUpdate(orderId, { bkashPaymentID: paymentData.paymentID });
 
       return NextResponse.json({
         bkashURL: paymentData.bkashURL,

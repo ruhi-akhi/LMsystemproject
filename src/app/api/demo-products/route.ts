@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB, Product } from "@/lib/db";
+import { connectDB, DemoProduct } from "@/lib/db";
 
 const DEMO_PRODUCTS = [
   {
@@ -60,13 +60,13 @@ export async function POST(req: NextRequest) {
     console.log('✅ Step 1: MongoDB connected successfully');
     
     console.log('🗑️ Step 2: Clearing old demo products...');
-    const deleteResult = await Product.deleteMany({ 
+    const deleteResult = await DemoProduct.deleteMany({ 
       qrCode: { $in: DEMO_PRODUCTS.map(p => p.qrCode) } 
     });
     console.log(`✅ Step 2: Deleted ${deleteResult.deletedCount} old products`);
     
     console.log('📝 Step 3: Inserting new demo products...');
-    const products = await Product.insertMany(DEMO_PRODUCTS);
+    const products = await DemoProduct.insertMany(DEMO_PRODUCTS);
     console.log(`✅ Step 3: Inserted ${products.length} new products`);
     
     console.log('🎉 SUCCESS: All steps completed\n');
@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
     console.log('🔍 GET: Fetching products...');
     await connectDB();
     
-    const products = await Product.find({ available: true }).select('name qrCode price emoji badge');
+    const products = await DemoProduct.find({ available: true }).select('name qrCode price emoji badge');
     console.log(`✅ GET: Found ${products.length} products`);
     
     return NextResponse.json({ 

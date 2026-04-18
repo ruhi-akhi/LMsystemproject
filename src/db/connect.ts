@@ -17,47 +17,30 @@ const cached: MongooseCache = global.mongooseCache || { conn: null, promise: nul
 global.mongooseCache = cached;
 
 export async function connectDB() {
-  // ✅ Connection alive হলে সরাসরি return
   if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
 
-  // ✅ Dead connection হলে reset
-  if (mongoose.connection.readyState !== 1) {
-    cached.conn = null;
-    cached.promise = null;
-  }
-
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        bufferCommands: false,
-        serverSelectionTimeoutMS: 10000, // 30s থেকে 10s — faster fail
-        socketTimeoutMS: 45000,
-        connectTimeoutMS: 10000,
-        family: 4,                        // ✅ Force IPv4
-        maxPoolSize: 10,
-        retryWrites: true,
-        dbName: "learning-management",
-      })
-      .then((conn) => {
+    const opts = {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 15000, 
+      socketTimeoutMS: 45000,
+      family: 4,
+    };
 
-        return conn;
-      })
-      .catch((error) => {
-
-        cached.promise = null;
-        cached.conn = null;
-        throw error;
-      });
+    console.log("🔌 Attempting MongoDB connection...");
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => {
+      console.log("✅ MongoDB Connected to:", m.connection.name);
+      return m;
+    });
   }
 
   try {
     cached.conn = await cached.promise;
     return cached.conn;
-  } catch (error) {
+  } catch (e) {
     cached.promise = null;
-    cached.conn = null;
-    throw error;
+    throw e;
   }
 }

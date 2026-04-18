@@ -16,43 +16,78 @@ function generateToken(userId: any, email: string, role: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  console.log("\n🔵 ========== REGISTER API CALLED ==========");
+  
   try {
-    console.log("🔵 Register API called");
-    await connectDB();
-    console.log("✅ Database connected");
-
+    console.log("📦 Step 1: Parsing request body...");
     const body = await req.json();
-    console.log("📦 Request body:", { ...body, password: body.password ? "***" : undefined });
+    console.log("✅ Body parsed:", { 
+      email: body.email, 
+      provider: body.provider,
+      hasPassword: !!body.password,
+      hasName: !!body.name
+    });
 
     const { email, password, name, phone, photoURL, provider } = body;
+
+    console.log("🔌 Step 2: Connecting to database...");
+    console.log("   MONGODB_URI exists:", !!process.env.MONGODB_URI);
+    
+    try {
+      await connectDB();
+      console.log("✅ Database connected successfully");
+    } catch (dbError: any) {
+      console.error("❌ Database connection failed:", dbError.message);
+      return NextResponse.json({ 
+        error: "Database connection failed", 
+        details: dbError.message 
+      }, { status: 500 });
+    }
 
     // ═══════════════════════════════════════════════════════
     // 🔥 GOOGLE/GITHUB LOGIN (Social OAuth)
     // ═══════════════════════════════════════════════════════
     if (provider === "google" || provider === "github") {
-      console.log(`🔐 Social login detected: ${provider}`);
+      console.log(`🔐 Step 3: Social login detected - ${provider}`);
       
       if (!email) {
         console.log("❌ Email missing for social login");
         return NextResponse.json({ error: "Email required" }, { status: 400 });
       }
 
-      // Check if user already exists
-      let user = await User.findOne({ email });
+      console.log("🔍 Step 4: Checking if user exists...");
+      let user;
+      try {
+        user = await User.findOne({ email });
+        console.log("   User found:", !!user);
+      } catch (findError: any) {
+        console.error("❌ Error finding user:", findError.message);
+        return NextResponse.json({ 
+          error: "Database query failed", 
+          details: findError.message 
+        }, { status: 500 });
+      }
 
       if (user) {
-        console.log("👤 Existing user found, returning token");
+        console.log("👤 Existing user - updating and returning token");
         
         // Update photoURL if provided
         if (photoURL && user.photoURL !== photoURL) {
           user.photoURL = photoURL;
-          await user.save();
-          console.log("📸 Photo URL updated");
+          try {
+            await user.save();
+            console.log("📸 Photo URL updated");
+          } catch (saveError: any) {
+            console.error("⚠️ Photo update failed (non-critical):", saveError.message);
+          }
         }
 
         // Generate JWT token
+        console.log("🔑 Generating JWT token...");
         const token = generateToken(user._id, user.email, user.role);
+        console.log("✅ Token generated successfully");
 
+        console.log("🎉 SUCCESS: Returning existing user data\n");
         return NextResponse.json({
           success: true,
           token,
@@ -67,34 +102,46 @@ export async function POST(req: NextRequest) {
       }
 
       // Create new social user
-      console.log("🆕 Creating new social user");
-      const newUser = new User({
-        email,
-        name: name || email.split('@')[0],
-        photoURL: photoURL || '',
-        provider: provider,
-        role: 'staff',
-        isVerified: true, // Social login users are auto-verified
-        status: 'active',
-      });
+      console.log("🆕 Creating new social user...");
+      try {
+        const newUser = new User({
+          email,
+          name: name || email.split('@')[0],
+          photoURL: photoURL || '',
+          provider: provider,
+          role: 'staff',
+          isVerified: true,
+          status: 'active',
+        });
 
-      await newUser.save();
-      console.log("✅ New social user created");
+        await newUser.save();
+        console.log("✅ New social user created");
 
-      // Generate JWT token
-      const token = generateToken(newUser._id, newUser.email, newUser.role);
+        // Generate JWT token
+        console.log("🔑 Generating JWT token...");
+        const token = generateToken(newUser._id, newUser.email, newUser.role);
+        console.log("✅ Token generated successfully");
 
-      return NextResponse.json({
-        success: true,
-        token,
-        user: {
-          id: newUser._id,
-          email: newUser.email,
-          name: newUser.name,
-          role: newUser.role,
-          photoURL: newUser.photoURL,
-        },
-      }, { status: 201 });
+        console.log("🎉 SUCCESS: Returning new user data\n");
+        return NextResponse.json({
+          success: true,
+          token,
+          user: {
+            id: newUser._id,
+            email: newUser.email,
+            name: newUser.name,
+            role: newUser.role,
+            photoURL: newUser.photoURL,
+          },
+        }, { status: 201 });
+      } catch (createError: any) {
+        console.error("❌ Error creating social user:", createError.message);
+        console.error("   Stack:", createError.stack);
+        return NextResponse.json({ 
+          error: "Failed to create user", 
+          details: createError.message 
+        }, { status: 500 });
+      }
     }
 
     // ═══════════════════════════════════════════════════════
@@ -197,9 +244,15 @@ export async function POST(req: NextRequest) {
     }, { status: 201 });
 
   } catch (err: any) {
-    console.error("💥 Register Error:", err);
+    console.error("\n💥 ========== FATAL ERROR ==========");
+    console.error("Error name:", err.name);
+    console.error("Error message:", err.message);
+    console.error("Error stack:", err.stack);
+    console.error("=====================================\n");
+    
     return NextResponse.json({ 
       error: err.message || "Registration failed",
+      errorType: err.name,
       details: err.toString()
     }, { status: 500 });
   }

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { connectDB } from "@/db/connect";
 import User from "@/models/User";
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
 
 export async function POST(req: NextRequest) {
   try {
