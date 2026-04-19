@@ -230,7 +230,7 @@ const Navbar = () => {
           position: absolute;
           bottom: -2px; left: 0;
           width: 0; height: 2px;
-          background: linear-gradient(90deg, #FF0F7B, #F89B29);
+          background: linear-gradient(90deg, #FF6B35, #F89B29);
           border-radius: 99px;
           transition: width 0.28s cubic-bezier(0.22,1,0.36,1);
         }
@@ -262,7 +262,7 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="nav-link-hover hover:text-[#C81D77] transition-colors nav-link-animate"
+                    className="nav-link-hover hover:text-[#FF6B35] transition-colors nav-link-animate"
                     style={{ animationDelay: `${0.15 + i * 0.07}s` }}
                   >
                     {link.name}
@@ -290,7 +290,7 @@ const Navbar = () => {
                   <div className="flex items-center gap-4">
                     <Link
                       href="/login"
-                      className="bg-[#2D2D2D] hover:bg-gray-50 transition-all border-2 border-transparent hover:border-[#FF0F7B] hover:text-[#FF0F7B] dark:bg-gray-700 text-white px-7 py-2.5 rounded-xl font-bold text-sm"
+                      className="bg-[#2D2D2D] hover:bg-gray-50 transition-all border-2 border-transparent hover:border-[#FF6B35] hover:text-[#FF6B35] dark:bg-gray-700 text-white px-7 py-2.5 rounded-xl font-bold text-sm"
                     >
                       Login
                     </Link>
@@ -315,7 +315,7 @@ const Navbar = () => {
                     <div className="relative" ref={menuRef}>
                       <button
                         onClick={() => setShowMenu(!showMenu)}
-                        className="flex items-center cursor-pointer p-0.5 rounded-full border-2 border-[#6710C2] hover:scale-105 hover:border-[#FF0F7B] transition-all duration-200"
+                        className="flex items-center cursor-pointer p-0.5 rounded-full border-2 border-[#FF6B35] hover:scale-105 hover:border-[#FF6B35] transition-all duration-200"
                       >
                         <AvatarImage />
                       </button>
@@ -330,8 +330,8 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide bg-[#FF0F7B22] border border-[#FF0F7B33] text-[#FF0F7B]">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#FF0F7B] animate-pulse" />
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide bg-[#FF6B3522] border border-[#FF6B3533] text-[#FF6B35]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse" />
                               {user.role}
                             </span>
                           </div>
@@ -341,7 +341,7 @@ const Navbar = () => {
                             className="flex items-center gap-2.5 px-4 py-2.5 text-[13.5px] text-gray-700 dark:text-gray-200 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors no-underline"
                             onClick={() => setShowMenu(false)}
                           >
-                            <FaUser size={13} className="text-[#6710C2] opacity-70" /> My Profile
+                            <FaUser size={13} className="text-[#FF6B35] opacity-70" /> My Profile
                           </Link>
                           {/* Dashboard — role অনুযায়ী link */}
                           <Link
@@ -358,12 +358,12 @@ const Navbar = () => {
                             className="flex items-center gap-2.5 px-4 py-2.5 text-[13.5px] text-gray-700 dark:text-gray-200 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors no-underline"
                             onClick={() => setShowMenu(false)}
                           >
-                            <FaThLarge size={13} className="text-[#6710C2] opacity-70" /> Settings
+                            <FaThLarge size={13} className="text-[#FF6B35] opacity-70" /> Settings
                           </Link>
                           {/* Logout */}
                           <button
                             onClick={handleLogout}
-                            className="flex items-center gap-2.5 w-full px-4 py-2.5 text-[13.5px] font-semibold text-[#FF0F7B] bg-transparent border-none cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                            className="flex items-center gap-2.5 w-full px-4 py-2.5 text-[13.5px] font-semibold text-[#FF6B35] bg-transparent border-none cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
                           >
                             <FaSignOutAlt size={13} /> Logout
                           </button>
@@ -467,7 +467,7 @@ const Navbar = () => {
                       </Link>
                       <button
                         onClick={() => { setIsOpen(false); setIsEnrollModalOpen(true); }}
-                        style={{ background: "linear-gradient(90deg, #FF0F7B, #F89B29)" }}
+                        style={{ background: "linear-gradient(90deg, #FF6B35, #F89B29)" }}
                         className="w-full text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] transition-transform"
                       >
                         Enroll Now
@@ -490,7 +490,7 @@ const Navbar = () => {
                       </Link>
                       <button
                         onClick={() => { setIsOpen(false); setIsEnrollModalOpen(true); }}
-                        style={{ background: "linear-gradient(90deg, #FF0F7B, #F89B29)" }}
+                        style={{ background: "linear-gradient(90deg, #FF6B35, #F89B29)" }}
                         className="w-full text-white py-4 rounded-2xl font-bold shadow-lg"
                       >
                         Enroll Now

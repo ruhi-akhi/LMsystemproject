@@ -143,20 +143,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <MouseFollower />
 
-        {children}
-
-        {/* FloatingChat — Login হলে সব page এ দেখাবে */}
-        {/* {user && (
-          <FloatingChat
-            userId={user.id}
-            userName={user.name}
-            userRole={user.role}
-            userAvatar={user.image}
-          />
-        )} */}
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
 
         <ChatWidget></ChatWidget>
-
       </body>
     </html>
   );
