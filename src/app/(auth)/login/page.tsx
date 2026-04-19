@@ -8,8 +8,7 @@ import { Package } from "lucide-react";
 import toast from "react-hot-toast";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/firebase/firebase";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+
 import Link from "next/link";
 
 
@@ -156,7 +155,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Navbar />
+      
       <title>Login</title>
 
       <div className="py-16 relative flex items-center justify-center overflow-hidden px-2 min-h-screen bg-white dark:bg-[#05010D] transition-colors">
@@ -307,7 +306,7 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+    
     </>
   );
 };
