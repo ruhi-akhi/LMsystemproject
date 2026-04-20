@@ -193,179 +193,235 @@ const Hero = () => {
     </section>
 
     {/* Flip Cards Section */}
-    <section className="py-20 bg-white dark:bg-gray-900">
+    <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white mb-4">
-            আমাদের <span className="bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] bg-clip-text text-transparent">সেবাসমূহ</span>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-4">
+            আমাদের <span className="bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] bg-clip-text text-transparent">বিশেষ  মেনু </span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            আপনার ব্যবসার জন্য সম্পূর্ণ সমাধান
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          আপনার পছন্দের সব খাবার এক জায়গায়। আমাদের মেনুতে রয়েছে স্টেক, বার্গার, পিৎজা এবং আরও অনেক কিছু। প্রতিদিনের স্পেশাল আইটেম এবং মেনু আপডেট করুন সহজেই।
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+
+
+
+
+
+
+
+
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
           {/* Card 1 */}
-          <div className="flip-card h-80 group perspective-1000">
-            <div className="flip-card-inner relative w-full h-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
+          <div className="flip-card-container h-100">
+            <div className="flip-card-inner">
               {/* Front */}
-              <div className="flip-card-front absolute w-full h-full backface-hidden rounded-2xl overflow-hidden shadow-xl border-4 border-transparent group-hover:border-[#FF6B35] transition-all duration-300">
-                <img 
-                  src="https://thumbs.dreamstime.com/b/american-food-menu-restaurant-cuisine-cafe-lunch-steaks-vector-usa-authentic-dishes-america-meals-breakfast-sandwich-214064220.jpg"
-                  alt="American Food Menu"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-white font-bold text-xl mb-2">মেনু ম্যানেজমেন্ট</h3>
-                  <p className="text-gray-200 text-sm">রেস্তোরাঁ এবং ক্যাফে মেনু</p>
-                  <div className="mt-3 text-[#FF6B35] text-sm font-semibold">
-                    বিস্তারিত দেখতে হোভার করুন →
+              <div className="flip-card-front">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src="https://thumbs.dreamstime.com/b/american-food-menu-restaurant-cuisine-cafe-lunch-steaks-vector-usa-authentic-dishes-america-meals-breakfast-sandwich-214064220.jpg"
+                    alt="American Food Menu"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-white font-bold text-2xl mb-2">মেনু ম্যানেজমেন্ট</h3>
+                    <p className="text-gray-200 text-sm mb-3">রেস্তোরাঁ এবং ক্যাফে মেনু</p>
+                    <div className="flex items-center gap-2 text-[#FF6B35] text-sm font-semibold">
+                      <span>বিস্তারিত দেখুন</span>
+                      <span>→</span>
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Back */}
-              <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#E55A2B] p-6 flex flex-col justify-center items-center text-white shadow-xl">
-                <div className="text-5xl mb-4">🍔</div>
-                <h3 className="text-2xl font-bold mb-3">মেনু ম্যানেজমেন্ট</h3>
-                <p className="text-center mb-6 text-sm leading-relaxed">
-                  স্টেক, বার্গার এবং আরও অনেক কিছু। আমাদের সিস্টেমে আপনার মেনু সহজেই ম্যানেজ করুন।
-                </p>
-                <ul className="text-sm space-y-2 mb-6 text-left w-full">
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>সহজ মেনু আপডেট</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>ডিজিটাল মেনু কার্ড</span>
-                  </li>
-                </ul>
-                <button className="px-6 py-3 bg-white text-[#FF6B35] font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
-                  বিস্তারিত দেখুন
-                </button>
+              <div className="flip-card-back">
+                <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#E55A2B] p-8 flex flex-col justify-center items-center text-white shadow-2xl">
+                  <div className="text-6xl mb-4">🍔</div>
+                  <h3 className="text-2xl font-bold mb-3 text-center">মেনু ম্যানেজমেন্ট</h3>
+                  <p className="text-center mb-6 text-sm leading-relaxed opacity-90">
+                    স্টেক, বার্গার এবং আরও অনেক কিছু। আমাদের সিস্টেমে আপনার মেনু সহজেই ম্যানেজ করুন।
+                  </p>
+                  <ul className="text-sm space-y-2 mb-6 w-full">
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>সহজ মেনু আপডেট</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>ডিজিটাল মেনু কার্ড</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>কাস্টমাইজেশন সুবিধা</span>
+                    </li>
+                  </ul>
+                  <button className="px-6 py-3 bg-white text-[#FF6B35] font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
+                    বিস্তারিত দেখুন
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="flip-card h-80 group perspective-1000">
-            <div className="flip-card-inner relative w-full h-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
+          <div className="flip-card-container h-100">
+            <div className="flip-card-inner">
               {/* Front */}
-              <div className="flip-card-front absolute w-full h-full backface-hidden rounded-2xl overflow-hidden shadow-xl border-4 border-transparent group-hover:border-[#E55A2B] transition-all duration-300">
-                <img 
-                  src="https://i.pinimg.com/474x/56/5e/59/565e59dd4a256171646a359cde96a62d.jpg"
-                  alt="Restaurant Menu"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-white font-bold text-xl mb-2">খাবার ইনভেন্টরি</h3>
-                  <p className="text-gray-200 text-sm">বিভিন্ন ধরনের খাবার</p>
-                  <div className="mt-3 text-[#E55A2B] text-sm font-semibold">
-                    বিস্তারিত দেখতে হোভার করুন →
+              <div className="flip-card-front">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src="https://i.pinimg.com/474x/56/5e/59/565e59dd4a256171646a359cde96a62d.jpg"
+                    alt="Restaurant Menu"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-white font-bold text-2xl mb-2">খাবার ইনভেন্টরি</h3>
+                    <p className="text-gray-200 text-sm mb-3">বিভিন্ন ধরনের খাবার</p>
+                    <div className="flex items-center gap-2 text-[#E55A2B] text-sm font-semibold">
+                      <span>বিস্তারিত দেখুন</span>
+                      <span>→</span>
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Back */}
-              <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-[#E55A2B] to-[#FF6B35] p-6 flex flex-col justify-center items-center text-white shadow-xl">
-                <div className="text-5xl mb-4">🍕</div>
-                <h3 className="text-2xl font-bold mb-3">বিশেষ খাবার</h3>
-                <p className="text-center mb-6 text-sm leading-relaxed">
-                  প্রতিদিনের স্পেশাল আইটেম এবং মেনু আপডেট করুন সহজেই।
-                </p>
-                <ul className="text-sm space-y-2 mb-6 text-left w-full">
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>স্টক ম্যানেজমেন্ট</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>রিয়েল-টাইম আপডেট</span>
-                  </li>
-                </ul>
-                <button className="px-6 py-3 bg-white text-[#E55A2B] font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
-                  অর্ডার করুন
-                </button>
+              <div className="flip-card-back">
+                <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-[#E55A2B] to-[#FF6B35] p-8 flex flex-col justify-center items-center text-white shadow-2xl">
+                  <div className="text-6xl mb-4">🍕</div>
+                  <h3 className="text-2xl font-bold mb-3 text-center">বিশেষ খাবার</h3>
+                  <p className="text-center mb-6 text-sm leading-relaxed opacity-90">
+                    প্রতিদিনের স্পেশাল আইটেম এবং মেনু আপডেট করুন সহজেই।
+                  </p>
+                  <ul className="text-sm space-y-2 mb-6 w-full">
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>স্টক ম্যানেজমেন্ট</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>রিয়েল-টাইম আপডেট</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>স্বয়ংক্রিয় নোটিফিকেশন</span>
+                    </li>
+                  </ul>
+                  <button className="px-6 py-3 bg-white text-[#E55A2B] font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
+                    অর্ডার করুন
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Card 3 - Innovation */}
-          <div className="flip-card h-80 group perspective-1000">
-            <div className="flip-card-inner relative w-full h-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
+          {/* Card 3 - Innovation with new image */}
+          <div className="flip-card-container h-100">
+            <div className="flip-card-inner">
               {/* Front */}
-              <div className="flip-card-front absolute w-full h-full backface-hidden rounded-2xl overflow-hidden shadow-xl border-4 border-transparent group-hover:border-blue-500 transition-all duration-300 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800">
-                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-                  <div className="text-7xl mb-4">💡</div>
-                  <h3 className="text-gray-900 dark:text-white font-bold text-2xl mb-3">উদ্ভাবন ও প্রযুক্তি</h3>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">স্মার্ট সিস্টেম সমাধান</p>
-                  <div className="mt-4 text-blue-600 dark:text-blue-400 text-sm font-semibold">
-                    বিস্তারিত দেখতে হোভার করুন →
+              <div className="flip-card-front">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy7pd4-nE5rfKeje-Du_Zf7fiIYC1-6Y7npg&s"
+                    alt="Innovation Technology"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-white font-bold text-2xl mb-2">উদ্ভাবন ও প্রযুক্তি</h3>
+                    <p className="text-gray-200 text-sm mb-3">স্মার্ট সিস্টেম সমাধান</p>
+                    <div className="flex items-center gap-2 text-blue-400 text-sm font-semibold">
+                      <span>বিস্তারিত দেখুন</span>
+                      <span>→</span>
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Back */}
-              <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 p-6 flex flex-col justify-center items-center text-white shadow-xl">
-                <div className="text-5xl mb-4">🚀</div>
-                <h3 className="text-2xl font-bold mb-3">ডিজিটাল সমাধান</h3>
-                <p className="text-center mb-6 text-sm leading-relaxed">
-                  আধুনিক প্রযুক্তি ব্যবহার করে আপনার ব্যবসা আরও দক্ষ করুন।
-                </p>
-                <ul className="text-sm space-y-2 mb-6 text-left w-full">
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>এআই পাওয়ার্ড সিস্টেম</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>অটোমেশন টুলস</span>
-                  </li>
-                </ul>
-                <button className="px-6 py-3 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
-                  আরও জানুন
-                </button>
+              <div className="flip-card-back">
+                <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 p-8 flex flex-col justify-center items-center text-white shadow-2xl">
+                  <div className="text-6xl mb-4">🚀</div>
+                  <h3 className="text-2xl font-bold mb-3 text-center">ডিজিটাল সমাধান</h3>
+                  <p className="text-center mb-6 text-sm leading-relaxed opacity-90">
+                    আধুনিক প্রযুক্তি ব্যবহার করে আপনার ব্যবসা আরও দক্ষ করুন।
+                  </p>
+                  <ul className="text-sm space-y-2 mb-6 w-full">
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>এআই পাওয়ার্ড সিস্টেম</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>অটোমেশন টুলস</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>ক্লাউড সল্যুশন</span>
+                    </li>
+                  </ul>
+                  <button className="px-6 py-3 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
+                    আরও জানুন
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Card 4 - Support */}
-          <div className="flip-card h-80 group perspective-1000">
-            <div className="flip-card-inner relative w-full h-full transition-all duration-700 transform-style-3d group-hover:rotate-y-180">
+          {/* Card 4 - Support with new image */}
+          <div className="flip-card-container h-100">
+            <div className="flip-card-inner">
               {/* Front */}
-              <div className="flip-card-front absolute w-full h-full backface-hidden rounded-2xl overflow-hidden shadow-xl border-4 border-transparent group-hover:border-green-500 transition-all duration-300 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                <div className="text-center text-white p-6">
-                  <div className="text-7xl mb-4">📞</div>
-                  <h3 className="font-bold text-3xl mb-3">২৪/৭ সাপোর্ট</h3>
-                  <p className="text-sm text-green-50">সবসময় আপনার পাশে</p>
-                  <div className="mt-4 text-green-100 text-sm font-semibold">
-                    বিস্তারিত দেখতে হোভার করুন →
+              <div className="flip-card-front">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5GkNW-Qj7ObrexsPT3m-aHIk16AAkRf3VXw&s"
+                    alt="Customer Support"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-white font-bold text-2xl mb-2">২৪/৭ সাপোর্ট</h3>
+                    <p className="text-gray-200 text-sm mb-3">সবসময় আপনার পাশে</p>
+                    <div className="flex items-center gap-2 text-green-400 text-sm font-semibold">
+                      <span>বিস্তারিত দেখুন</span>
+                      <span>→</span>
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Back */}
-              <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-green-600 to-green-800 p-6 flex flex-col justify-center items-center text-white shadow-xl">
-                <div className="text-5xl mb-4">🎧</div>
-                <h3 className="text-2xl font-bold mb-3">সহায়তা কেন্দ্র</h3>
-                <p className="text-center mb-6 text-sm leading-relaxed">
-                  যেকোনো সমস্যায় আমাদের টিম আপনাকে সাহায্য করতে প্রস্তুত।
-                </p>
-                <ul className="text-sm space-y-2 mb-6 text-left w-full">
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>তাৎক্ষণিক চ্যাট সাপোর্ট</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-white">✓</span>
-                    <span>ফোন সহায়তা</span>
-                  </li>
-                </ul>
-                <button className="px-6 py-3 bg-white text-green-700 font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
-                  যোগাযোগ করুন
-                </button>
+              <div className="flip-card-back">
+                <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-green-600 to-green-800 p-8 flex flex-col justify-center items-center text-white shadow-2xl">
+                  <div className="text-6xl mb-4">🎧</div>
+                  <h3 className="text-2xl font-bold mb-3 text-center">সহায়তা কেন্দ্র</h3>
+                  <p className="text-center mb-6 text-sm leading-relaxed opacity-90">
+                    যেকোনো সমস্যায় আমাদের টিম আপনাকে সাহায্য করতে প্রস্তুত।
+                  </p>
+                  <ul className="text-sm space-y-2 mb-6 w-full">
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>তাৎক্ষণিক চ্যাট সাপোর্ট</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>ফোন সহায়তা</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-white text-lg">✓</span>
+                      <span>ইমেইল সাপোর্ট</span>
+                    </li>
+                  </ul>
+                  <button className="px-6 py-3 bg-white text-green-700 font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg">
+                    যোগাযোগ করুন
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -374,23 +430,34 @@ const Hero = () => {
       </div>
 
       <style jsx>{`
-        .perspective-1000 {
+        .flip-card-container {
           perspective: 1000px;
         }
-        .transform-style-3d {
-          transform-style: preserve-3d;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
+        
         .flip-card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          transition: transform 0.8s;
+          transform-style: preserve-3d;
           cursor: pointer;
         }
-        .group:hover .flip-card-inner {
+        
+        .flip-card-container:hover .flip-card-inner {
+          transform: rotateY(180deg);
+        }
+        
+        .flip-card-front,
+        .flip-card-back {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+        }
+        
+        .flip-card-back {
           transform: rotateY(180deg);
         }
       `}</style>
