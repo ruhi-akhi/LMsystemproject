@@ -1,20 +1,48 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaLeaf, FaAppleAlt, FaFish, FaBreadSlice, FaDrumstickBite } from "react-icons/fa";
-import { GiRiceCooker } from "react-icons/gi";
+import { MdOutlineFreeBreakfast, MdOutlineLunchDining, MdOutlineDinnerDining } from "react-icons/md";
+import { FaLeaf, FaAppleAlt, FaFish } from "react-icons/fa";
 import { getProductImage } from "@/utils/productImage";
 
+// ক্যাটাগরি আপডেট করা হয়েছে: Breakfast, Lunch, Dinner
 const categories = [
+    { label: "Breakfast Menu", icon: <MdOutlineFreeBreakfast /> },
+    { label: "Lunch Menu", icon: <MdOutlineLunchDining /> },
+    { label: "Dinner Menu", icon: <MdOutlineDinnerDining /> },
     { label: "Vegetables", icon: <FaLeaf /> },
     { label: "Fresh Fruit", icon: <FaAppleAlt /> },
-    { label: "Meat", icon: <FaDrumstickBite /> },
     { label: "Seafood", icon: <FaFish /> },
-    { label: "Baking", icon: <FaBreadSlice /> },
-    { label: "Rice", icon: <GiRiceCooker /> },
 ];
 
 const products = [
+    {
+        name: "Lunchbox Burrito",
+        category: "Breakfast Menu",
+        price: "$10.75",
+        rating: "4.9",
+        badge: "Morning Special",
+        description: "Freshly rolled burrito with eggs and cheese.",
+        color: "bg-orange-100 text-orange-700",
+    },
+    {
+        name: "Sea Food Gumbo",
+        category: "Lunch Menu",
+        price: "$14.95",
+        rating: "4.8",
+        badge: "Chef's Choice",
+        description: "Traditional spicy gumbo with fresh seafood.",
+        color: "bg-orange-100 text-orange-700",
+    },
+    {
+        name: "Fajita Salad",
+        category: "Dinner Menu",
+        price: "$12.95",
+        rating: "4.7",
+        badge: "Healthy",
+        description: "Grilled meat over a bed of fresh garden greens.",
+        color: "bg-orange-100 text-orange-700",
+    },
     {
         name: "Spring Onion Bunch",
         category: "Vegetables",
@@ -22,33 +50,6 @@ const products = [
         rating: "4.9",
         badge: "Best Seller",
         description: "Fresh, crisp spring onions for soups and stir-fry.",
-        color: "bg-emerald-100 text-emerald-700",
-    },
-    {
-        name: "Basil",
-        category: "Vegetables",
-        price: "$9.50",
-        rating: "4.8",
-        badge: "Organic",
-        description: "Aromatic basil leaves grown with care.",
-        color: "bg-lime-100 text-lime-700",
-    },
-    {
-        name: "Carrot 1 kg",
-        category: "Vegetables",
-        price: "$8.00",
-        rating: "4.7",
-        badge: "Fresh",
-        description: "Sweet and crunchy carrots for daily meals.",
-        color: "bg-orange-100 text-orange-700",
-    },
-    {
-        name: "Kiwi",
-        category: "Fresh Fruit",
-        price: "$10.00",
-        rating: "4.6",
-        badge: "Seasonal",
-        description: "Juicy kiwi with vibrant green flesh.",
         color: "bg-emerald-100 text-emerald-700",
     },
     {
@@ -60,26 +61,6 @@ const products = [
         description: "Creamy avocado perfect for salads and toast.",
         color: "bg-emerald-100 text-emerald-700",
     },
-
-    {
-        name: "Chicken Breast",
-        category: "Meat",
-        price: "$18.00",
-        rating: "4.7",
-        badge: "Fresh Cut",
-        description: "Premium fresh chicken breast perfect for grilling.",
-        color: "bg-rose-100 text-rose-700",
-    },
-    {
-        name: "Beef Steak",
-        category: "Meat",
-        price: "$25.00",
-        rating: "4.8",
-        badge: "Premium",
-        description: "Juicy beef steak ideal for BBQ lovers.",
-        color: "bg-rose-100 text-rose-700",
-    },
-
     {
         name: "Salmon Fish",
         category: "Seafood",
@@ -89,57 +70,9 @@ const products = [
         description: "High-quality salmon rich in omega-3.",
         color: "bg-sky-100 text-sky-700",
     },
-    {
-        name: "Shrimp Pack",
-        category: "Seafood",
-        price: "$19.00",
-        rating: "4.6",
-        badge: "Chef Pick",
-        description: "Fresh shrimp perfect for seafood dishes.",
-        color: "bg-sky-100 text-sky-700",
-    },
-
-    {
-        name: "Organic Flour",
-        category: "Baking",
-        price: "$7.00",
-        rating: "4.5",
-        badge: "Organic",
-        description: "Premium wheat flour for baking bread and cakes.",
-        color: "bg-amber-100 text-amber-700",
-    },
-
-    {
-        name: "Premium Basmati Rice",
-        category: "Rice",
-        price: "$20.00",
-        rating: "4.9",
-        badge: "Premium",
-        description: "Long grain aromatic basmati rice perfect for biryani.",
-        color: "bg-yellow-100 text-yellow-700",
-    },
-    {
-        name: "Jasmine Rice",
-        category: "Rice",
-        price: "$18.00",
-        rating: "4.7",
-        badge: "Aromatic",
-        description: "Soft fragrant jasmine rice ideal for Asian dishes.",
-        color: "bg-yellow-100 text-yellow-700",
-    },
-    {
-        name: "Brown Rice",
-        category: "Rice",
-        price: "$16.00",
-        rating: "4.6",
-        badge: "Healthy",
-        description: "Nutritious whole grain brown rice rich in fiber.",
-        color: "bg-yellow-100 text-yellow-700",
-    },
 ];
 
 export default function ShopPage() {
-
     const [activeCategory, setActiveCategory] = useState<string>("All");
 
     const filteredProducts =
@@ -148,16 +81,16 @@ export default function ShopPage() {
             : products.filter((p) => p.category === activeCategory);
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-10">
+        <div className="min-h-screen bg-slate-50 py-10">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div className="mb-8 flex flex-wrap gap-3">
-
+                {/* --- Category Tabs --- */}
+                <div className="mb-10 flex flex-wrap justify-center gap-3">
                     <button
                         onClick={() => setActiveCategory("All")}
-                        className={`px-4 py-2 rounded-full font-medium transition-colors ${
+                        className={`px-6 py-2 rounded-full font-bold transition-all ${
                             activeCategory === "All" 
-                                ? "bg-[#FF6B35] text-white shadow-lg" 
+                                ? "bg-[#FF6B35] text-white shadow-lg scale-105" 
                                 : "bg-white border border-gray-200 text-gray-700 hover:bg-orange-50"
                         }`}
                     >
@@ -168,65 +101,71 @@ export default function ShopPage() {
                         <button
                             key={category.label}
                             onClick={() => setActiveCategory(category.label)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors ${
+                            className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all ${
                                 activeCategory === category.label
-                                    ? "bg-[#FF6B35] text-white shadow-lg"
+                                    ? "bg-[#FF6B35] text-white shadow-lg scale-105"
                                     : "bg-white border border-gray-200 text-gray-700 hover:bg-orange-50"
                             }`}
                         >
-                            {category.icon}
+                            <span className="text-xl">{category.icon}</span>
                             {category.label}
                         </button>
                     ))}
-
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-
+                {/* --- Products Grid --- */}
+                <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
                     {filteredProducts.map((item) => (
-
-                        <div key={item.name} className="rounded-3xl border border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-orange-200 transition-all duration-300 overflow-hidden group">
-
-                            <img
-                                src={getProductImage(item.name)}
-                                alt={item.name}
-                                className="h-52 w-full object-cover rounded-t-3xl group-hover:scale-105 transition-transform duration-300"
-                            />
-
-                            <div className="p-6">
-
-                                <div className="flex justify-between mb-2">
-                                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${item.color}`}>
+                        <div key={item.name} className="rounded-3xl border border-slate-200 bg-white shadow-sm hover:shadow-2xl hover:border-orange-300 transition-all duration-500 overflow-hidden group">
+                            
+                            <div className="relative overflow-hidden h-60">
+                                <img
+                                    src={getProductImage(item.name)}
+                                    alt={item.name}
+                                    className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                                <div className="absolute top-4 left-4">
+                                    <span className={`text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full shadow-sm ${item.color}`}>
                                         {item.badge}
                                     </span>
+                                </div>
+                            </div>
 
-                                    <span className="text-sm text-gray-500 flex items-center gap-1">
-                                        <span className="text-yellow-400">⭐</span> {item.rating}
+                            <div className="p-6">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h2 className="text-xl font-bold text-gray-800 group-hover:text-[#FF6B35] transition-colors">
+                                        {item.name}
+                                    </h2>
+                                    <span className="text-sm font-bold text-gray-500 flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg">
+                                        <span className="text-yellow-400">★</span> {item.rating}
                                     </span>
                                 </div>
 
-                                <h2 className="text-xl font-semibold">{item.name}</h2>
-
-                                <p className="text-sm text-gray-500 mt-2">
+                                <p className="text-sm text-gray-400 italic mb-6 line-clamp-2">
                                     {item.description}
                                 </p>
 
-                                <div className="flex items-center justify-between mt-4">
-                                    <p className="text-2xl font-bold">{item.price}</p>
+                                <div className="flex items-center justify-between pt-4 border-t border-dashed border-gray-100">
+                                    <div>
+                                        <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Price</p>
+                                        <p className="text-2xl font-black text-gray-900">{item.price}</p>
+                                    </div>
 
-                                    <button className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg">
-                                        Add to cart
+                                    <button className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-[0_4px_14px_0_rgba(255,107,53,0.39)] hover:shadow-[#FF6B35]/50 hover:-translate-y-1">
+                                        Add to Cart
                                     </button>
                                 </div>
-
                             </div>
-
                         </div>
-
                     ))}
-
                 </div>
 
+                {/* --- No Products Found --- */}
+                {filteredProducts.length === 0 && (
+                    <div className="text-center py-20">
+                        <p className="text-gray-400 text-lg">No items found in this category.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
