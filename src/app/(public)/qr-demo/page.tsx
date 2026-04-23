@@ -36,14 +36,21 @@ export default function QRDemoPage() {
   useEffect(() => {
     const initDemo = async () => {
       try {
-        const seedRes = await fetch("/api/demo-products", { method: "POST" });
-        if (!seedRes.ok) throw new Error(`Failed to seed demo products: ${seedRes.status}`);
+        setLoading(true);
+        
+        // Step 1: Prothome check korun data ache kina
+        const checkRes = await fetch("/api/demo-products");
+        let data = await checkRes.json();
+        let productList: Product[] = Array.isArray(data?.products) ? data.products : [];
 
-        const res = await fetch("/api/demo-products");
-        if (!res.ok) throw new Error(`Failed to fetch demo products: ${res.status}`);
-
-        const data = await res.json();
-        const productList: Product[] = Array.isArray(data?.products) ? data.products : [];
+        // Step 2: Jodi data na thake (length === 0), tokhon seed (POST) korun
+        if (productList.length === 0) {
+          const seedRes = await fetch("/api/demo-products", { method: "POST" });
+          if (!seedRes.ok) throw new Error(`Failed to seed demo products: ${seedRes.status}`);
+          
+          const seedData = await seedRes.json();
+          productList = Array.isArray(seedData?.products) ? seedData.products : [];
+        }
 
         if (productList.length === 0) {
           setError("No demo products found. Please check the API.");
@@ -53,6 +60,7 @@ export default function QRDemoPage() {
 
         setProducts(productList);
 
+        // Step 3: QR Code generate korun
         const qrPromises = productList.map(async (product: Product) => {
           try {
             const qrDataURL = await QRCode.toDataURL(product.scanUrl, {
@@ -110,7 +118,7 @@ export default function QRDemoPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6 font-sans">
         <div className="max-w-md w-full bg-white rounded-3xl p-10 shadow-2xl text-center border-2 border-orange-100">
           <div className="text-5xl mb-6">⚠️</div>
-          <h2 className="text-2xl font-black text-black mb-3">সমস্যা হয়েছে</h2>
+          <h2 className="text-2xl font-black text-black mb-3">সমস্যা হয়েছে</h2>
           <p className="text-gray-500 mb-8 bg-orange-50 p-4 rounded-xl font-mono text-sm border border-orange-100">{error}</p>
           <div className="flex gap-3">
             <button onClick={() => window.location.reload()} className="flex-1 bg-[#FF6B35] text-white font-bold py-4 rounded-xl hover:bg-[#E55A2B] transition-all">আবার চেষ্টা করুন</button>
@@ -123,14 +131,12 @@ export default function QRDemoPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans pb-24 pt-32">
-      {/* Brand Background Elements */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0 opacity-20">
         <div className="absolute top-[-10%] -right-[10%] w-[600px] h-[600px] bg-orange-100 rounded-full blur-[150px]"></div>
         <div className="absolute bottom-[-10%] -left-[10%] w-[500px] h-[500px] bg-orange-50 rounded-full blur-[120px]"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header */}
         <div className="max-w-4xl mx-auto text-center mb-20">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-orange-50 border border-orange-200 mb-8">
             <Zap size={16} className="text-[#FF6B35] fill-[#FF6B35]" />
@@ -143,7 +149,7 @@ export default function QRDemoPage() {
           </h1>
           
           <p className="text-xl text-gray-700 font-bold leading-relaxed max-w-2xl mx-auto bg-white/50 backdrop-blur-sm p-4 rounded-2xl">
-            আপনার ফোন দিয়ে নিচের কিউআর কোডটি স্ক্যান করুন অথবা সরাসরি অর্ডার বাটনে ক্লিক করে চেকআউট প্রসেসটি টেস্ট করুন।
+            আপনার ফোন দিয়ে নিচের কিউআর কোডটি স্ক্যান করুন অথবা সরাসরি অর্ডার বাটনে ক্লিক করে চেকআউট প্রসেসটি টেস্ট করুন.
           </p>
 
           <div className="flex flex-wrap justify-center gap-6 mt-12">
@@ -161,16 +167,14 @@ export default function QRDemoPage() {
           </div>
         </div>
 
-        {/* Product Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {products.map((product, idx) => (
+          {products.map((product) => (
             <div
               key={product.qrCode}
               className="group bg-white rounded-[3rem] border-2 border-orange-50 shadow-xl shadow-orange-100/10 hover:shadow-2xl hover:shadow-orange-200/30 transition-all duration-500 overflow-hidden"
               onMouseEnter={() => setHoveredCard(product.qrCode)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              {/* Product Info - Top Header */}
               <div className="p-8 pb-0 flex items-center justify-between">
                 <div className="bg-orange-50 px-4 py-1 rounded-full text-[10px] font-black text-[#FF6B35] uppercase tracking-widest">
                   ID: {product.qrCode}
@@ -182,7 +186,6 @@ export default function QRDemoPage() {
                 )}
               </div>
 
-              {/* QR Code Area */}
               <div className="p-10 text-center relative">
                 <div className={`inline-block p-6 bg-white rounded-[2.5rem] border-2 border-orange-50 shadow-inner transition-all duration-500 ${hoveredCard === product.qrCode ? 'scale-105 border-[#FF6B35]' : ''}`}>
                   {qrCodes[product.qrCode] ? (
@@ -199,7 +202,6 @@ export default function QRDemoPage() {
                 </div>
               </div>
 
-              {/* Product Details - Bottom Area */}
               <div className="p-10 pt-0">
                 <div className="flex items-center gap-5 mb-8">
                   <div className="text-5xl transform group-hover:scale-125 transition-transform duration-500 drop-shadow-sm">
@@ -238,9 +240,7 @@ export default function QRDemoPage() {
           ))}
         </div>
 
-        {/* How to Test Section */}
         <div className="mt-32 bg-black rounded-[4rem] p-12 lg:p-24 relative overflow-hidden text-white shadow-2xl shadow-orange-200/20">
-          {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z' fill='%23FF6B35' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
           }}></div>
@@ -253,9 +253,9 @@ export default function QRDemoPage() {
               </h2>
               <div className="space-y-8">
                 {[
-                  { title: "মোবাইল স্ক্যান", desc: "ফোনের ক্যামেরা দিয়ে কিউআর কোডটি স্ক্যান করলে সরাসরি আমাদের পেমেন্ট পেজে চলে যাবেন।" },
+                  { title: "মোবাইল স্ক্যান", desc: "ফোনের ক্যামেরা দিয়ে কিউআর কোডটি স্ক্যান করলে সরাসরি আমাদের পেমেন্ট পেজে চলে যাবেন।" },
                   { title: "সরাসরি অর্ডার", desc: "ডেস্কটপ থেকে টেস্ট করতে Order Now বাটনে ক্লিক করুন এবং বিকাশ পেমেন্ট প্রসেসটি দেখুন।" },
-                  { title: "বিকাশ স্যান্ডবক্স", desc: "পেমেন্টের সময় আমাদের দেওয়া স্যান্ডবক্স ক্রেডিট ব্যবহার করে সফলভাবে অর্ডার সম্পন্ন করুন।" }
+                  { title: "বিকাশ স্যান্ডবক্স", desc: "পেমেন্টের সময় আমাদের দেওয়া স্যান্ডবক্স ক্রেডিট ব্যবহার করে সফলভাবে অর্ডার সম্পন্ন করুন।" }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-6 items-start group">
                     <div className="w-12 h-12 bg-[#FF6B35] text-white rounded-2xl flex items-center justify-center shrink-0 font-black text-xl group-hover:rotate-6 transition-transform">
