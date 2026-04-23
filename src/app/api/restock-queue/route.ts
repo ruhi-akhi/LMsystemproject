@@ -174,7 +174,8 @@ export async function PUT(request: NextRequest) {
     // ✅ Fixed: was suggestedQuantity (wrong), now requestedQuantity (correct)
     if (status === "received") {
       await Product.findByIdAndUpdate(restockItem.productId, {
-        $inc: { quantity: restockItem.requestedQuantity },
+        $inc: { stockQuantity: restockItem.requestedQuantity },
+        $set: { status: "active" }, // ইনভেন্টরি বাড়লে স্ট্যাটাস একটিভ করো
         updatedAt: new Date(),
       });
     }

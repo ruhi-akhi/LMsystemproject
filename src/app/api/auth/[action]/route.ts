@@ -92,6 +92,8 @@ export async function GET(
         photoURL: githubUser.avatar_url || "",
         provider: "github",
         role: "staff",
+        isVerified: true,
+        status: "active",
       });
     } else {
       // Update photo if changed
@@ -443,6 +445,8 @@ export async function POST(
 
       user.resetToken = undefined;
       user.resetTokenExpiry = undefined;
+      user.isVerified = true;
+      user.status = "active";
       await user.save();
 
       return NextResponse.json({ success: true, message: "OTP verified!" });

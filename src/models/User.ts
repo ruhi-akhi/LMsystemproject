@@ -45,7 +45,7 @@ export interface IUserDocument extends Document {
   phone?: string | null;
   password?: string;
   photoURL?: string;
-  role: "staff" | "manager" | "admin";
+  role: "staff" | "manager" | "admin" | "instructor" | "user";
   provider: "credentials" | "google" | "github";
 
   // Enhanced fields

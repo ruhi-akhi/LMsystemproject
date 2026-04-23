@@ -26,9 +26,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid or expired OTP!" }, { status: 400 });
     }
 
-    // ✅ OTP clear করো
+    // ✅ OTP clear করো এবং user verify করো
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
+    user.isVerified = true;
+    user.status = "active";
     await user.save();
 
     // ✅ Token তৈরি করো — login mode এ দরকার

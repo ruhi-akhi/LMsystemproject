@@ -1,8 +1,8 @@
-import Hero from "../../components/home/Hero";
-import ImpactSection from "../../components/home/ImpactSection";
-import MobilePreviewSection from "../../components/home/MobilePreviewSection";
-import FoodTruckHeroSection from "../../components/home/FoodTruckHeroSection";
-import VideoMessageSection from "../../components/home/VideoMessageSection";
+import Hero from "@/components/Home/Hero";
+import ImpactSection from "@/components/Home/ImpactSection";
+import MobilePreviewSection from "@/components/Home/MobilePreviewSection";
+import FoodTruckHeroSection from "@/components/Home/FoodTruckHeroSection";
+import VideoMessageSection from "@/components/Home/VideoMessageSection";
 
 export default function Home() {
   return (

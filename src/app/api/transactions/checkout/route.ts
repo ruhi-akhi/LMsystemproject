@@ -9,8 +9,8 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-02-24.acacia",
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy", {
+  apiVersion: "2026-02-25.clover" as any,
 });
 
 function getDecoded(req: NextRequest) {

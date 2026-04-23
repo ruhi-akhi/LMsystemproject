@@ -6,10 +6,12 @@ import {
   Smartphone, Plus, X
 } from "lucide-react";
 
-type Role = "staff" | "manager" | "admin";
+type Role = "staff" | "manager" | "admin" | "instructor" | "user";
 
 const normalizeRole = (value: string | null): Role => {
-  if (value === "manager" || value === "admin") return value;
+  if (["staff", "manager", "admin", "instructor", "user"].includes(value as string)) {
+    return value as Role;
+  }
   return "staff";
 };
 
@@ -40,6 +42,8 @@ export default function SettingsPage() {
     staff: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }],
     manager: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }, { id: "Plans", icon: Star }, { id: "Withdraw", icon: CreditCard }],
     admin: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }],
+    instructor: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }, { id: "Plans", icon: Star }, { id: "Withdraw", icon: CreditCard }],
+    user: [{ id: "Profile", icon: User }, { id: "Security", icon: Shield }, { id: "Notifications", icon: Bell }, { id: "Social", icon: Globe }],
   };
   const currentTabs = tabs[role] ?? tabs.staff;
 

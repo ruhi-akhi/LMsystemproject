@@ -7,8 +7,8 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import ChatWidget from "@/components/Home/ChatWidget";
-import MouseFollower from "@/components/layout/MouseFollower";
+import dynamic from "next/dynamic";
+import ClientSideComponents from "@/components/providers/ClientSideComponents";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -141,13 +141,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
 
-        <MouseFollower />
-
+        <ClientSideComponents />
         <Navbar />
         <main>{children}</main>
         <Footer />
-
-        <ChatWidget></ChatWidget>
       </body>
     </html>
   );

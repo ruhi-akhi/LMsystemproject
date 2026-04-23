@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { FaSun, FaMoon } from "react-icons/fa";
 
-type Role = "staff" | "manager" | "admin";
+type Role = "staff" | "manager" | "admin" | "instructor" | "user";
 interface UserData { name: string; email: string; photoURL?: string; role: Role; }
 
 // ✅ Poll interval বাড়ানো হয়েছে — 5s থেকে 60s
@@ -51,18 +51,34 @@ const menus: Record<Role, { label: string; href: string; icon: React.ReactNode }
     { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
     { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
   ],
+  instructor: [
+    { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
+    { label: "Products", href: "/dashboard/products", icon: <Package size={18} /> },
+    { label: "Orders", href: "/dashboard/orders", icon: <ShoppingCart size={18} /> },
+    { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
+    { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
+  ],
+  user: [
+    { label: "Dashboard", href: "/dashboard/inventory", icon: <LayoutDashboard size={18} /> },
+    { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
+    { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
+  ],
 };
 
 const roleDashboard: Record<Role, string> = {
   staff: "/dashboard/inventory",
   manager: "/dashboard/inventory",
   admin: "/dashboard/inventory",
+  instructor: "/dashboard/inventory",
+  user: "/dashboard/inventory",
 };
 
 const roleProtectedPrefixes: Record<Role, string[]> = {
   staff: [],
   manager: [],
   admin: [],
+  instructor: [],
+  user: [],
 };
 
 const sharedPaths = [
@@ -90,6 +106,8 @@ const roleMeta: Record<Role, { color: string; label: string }> = {
   staff: { color: "#FF6B35", label: "Staff" },
   manager: { color: "#FF6B35", label: "Manager" },
   admin: { color: "#FF6B35", label: "Admin" },
+  instructor: { color: "#FF6B35", label: "Instructor" },
+  user: { color: "#FF6B35", label: "User" },
 };
 
 const rootHrefs = ["/dashboard/inventory"];

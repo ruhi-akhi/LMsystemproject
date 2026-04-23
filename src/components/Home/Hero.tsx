@@ -424,7 +424,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .flip-card-container {
           perspective: 1000px;
         }
@@ -455,7 +455,7 @@ const Hero = () => {
         .flip-card-back {
           transform: rotateY(180deg);
         }
-      `}</style>
+      `}} />
     </section>
     </>
   );

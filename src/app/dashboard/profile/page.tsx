@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Check, Pencil, X, Mail, Phone, Clock } from "lucide-react";
 
-type Role = "staff" | "manager" | "admin";
+type Role = "staff" | "manager" | "admin" | "instructor" | "user";
 interface UserData {
   name: string;
   email: string;
@@ -31,6 +31,18 @@ const roleStats: Record<Role, { label: string; value: string; color: string }[]>
     { label: "Revenue", value: "৳4.8L", color: "#F89B29" },
     { label: "Orders", value: "2,450", color: "#00C48C" },
   ],
+  instructor: [
+    { label: "Courses", value: "5", color: "#FF6B35" },
+    { label: "Students", value: "120", color: "#E55A2B" },
+    { label: "Revenue", value: "৳12k", color: "#F89B29" },
+    { label: "Rating", value: "4.9", color: "#00C48C" },
+  ],
+  user: [
+    { label: "Orders", value: "3", color: "#FF6B35" },
+    { label: "Completed", value: "2", color: "#00C48C" },
+    { label: "Pending", value: "1", color: "#F89B29" },
+    { label: "Savings", value: "৳500", color: "#E55A2B" },
+  ],
 };
 
 const roleActivity: Record<Role, { text: string; time: string; color: string }[]> = {
@@ -52,12 +64,26 @@ const roleActivity: Record<Role, { text: string; time: string; color: string }[]
     { text: "Processed bulk order import", time: "2 days ago", color: "#F89B29" },
     { text: "Generated monthly inventory report", time: "3 days ago", color: "#E55A2B" },
   ],
+  instructor: [
+    { text: "Published new course", time: "1 day ago", color: "#00C48C" },
+    { text: "Updated course content", time: "3 days ago", color: "#FF6B35" },
+    { text: "Replied to student comment", time: "5 days ago", color: "#F89B29" },
+    { text: "Withdrew earnings", time: "1 week ago", color: "#E55A2B" },
+  ],
+  user: [
+    { text: "Joined Smart Inventory", time: "1 month ago", color: "#00C48C" },
+    { text: "Purchased first item", time: "3 weeks ago", color: "#FF6B35" },
+    { text: "Updated profile photo", time: "2 weeks ago", color: "#F89B29" },
+    { text: "Logged in from new device", time: "1 day ago", color: "#E55A2B" },
+  ],
 };
 
 const roleCfg: Record<Role, { accent: string; label: string; bg: string }> = {
-  staff: { accent: "#FF6B35", label: "User", bg: "rgba(255,107,53,0.08)" },
+  staff: { accent: "#FF6B35", label: "Staff", bg: "rgba(255,107,53,0.08)" },
   manager: { accent: "#E55A2B", label: "Manager", bg: "rgba(229,90,43,0.08)" },
   admin: { accent: "#F89B29", label: "Admin", bg: "rgba(248,155,41,0.08)" },
+  instructor: { accent: "#832388", label: "Instructor", bg: "rgba(131,35,136,0.08)" },
+  user: { accent: "#00C48C", label: "User", bg: "rgba(0,196,140,0.08)" },
 };
 
 function UserIcon({ size }: { size: number }) {
@@ -94,7 +120,7 @@ export default function ProfilePage() {
         setPhone(parsed.phone || "");
         setBio(parsed.bio || "");
         const r = parsed.role as Role;
-        if (["staff", "manager", "admin"].includes(r)) setRole(r);
+        if (["staff", "manager", "admin", "instructor", "user"].includes(r)) setRole(r);
       } catch { }
     }
 

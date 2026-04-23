@@ -10,6 +10,7 @@ const demoProductSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     emoji: { type: String, default: "📦" },
+    image: { type: String, default: "" }, // ✅ Ekhane 'image' field jog kora holo
     badge: { type: String, default: "" },
     qrCode: { type: String, required: true, unique: true },
     available: { type: Boolean, default: true },
@@ -17,6 +18,7 @@ const demoProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Baki code eki thakbe...
 export const DemoProduct = mongoose.models.DemoProduct || mongoose.model("DemoProduct", demoProductSchema, "demo_products");
 
 // Demo Order Schema

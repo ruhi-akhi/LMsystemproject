@@ -95,6 +95,8 @@ export async function POST(req: Request) {
         photoURL: body.photoURL || "",
         role: "manager",
         provider,
+        isVerified: true,
+        status: "active",
       });
 
       const token = jwt.sign(
@@ -137,6 +139,8 @@ export async function POST(req: Request) {
       password: hashedPassword,
       role: "manager",
       provider: "credentials",
+      isVerified: false,
+      status: "active",
     });
 
     return NextResponse.json({

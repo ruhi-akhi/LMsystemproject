@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
         console.log("✅ Token generated successfully");
 
         console.log("🎉 SUCCESS: Returning existing user data\n");
-        return NextResponse.json({
+        const response = NextResponse.json({
           success: true,
           token,
           user: {
@@ -99,6 +99,16 @@ export async function POST(req: NextRequest) {
             photoURL: user.photoURL,
           },
         }, { status: 200 });
+
+        response.cookies.set("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+        });
+
+        return response;
       }
 
       // Create new social user
@@ -123,7 +133,7 @@ export async function POST(req: NextRequest) {
         console.log("✅ Token generated successfully");
 
         console.log("🎉 SUCCESS: Returning new user data\n");
-        return NextResponse.json({
+        const response = NextResponse.json({
           success: true,
           token,
           user: {
@@ -134,6 +144,16 @@ export async function POST(req: NextRequest) {
             photoURL: newUser.photoURL,
           },
         }, { status: 201 });
+
+        response.cookies.set("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+        });
+
+        return response;
       } catch (createError: any) {
         console.error("❌ Error creating social user:", createError.message);
         console.error("   Stack:", createError.stack);

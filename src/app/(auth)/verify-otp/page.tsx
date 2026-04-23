@@ -73,9 +73,11 @@ export default function VerifyOtpPage() {
         toast.success("Login successful!");
         setTimeout(() => {
           window.location.href = "/dashboard/inventory";
-          setDone(true);
-          toast.success("OTP verified!");
-        }, 500);
+        }, 1000);
+      } else {
+        // Registration mode
+        setDone(true);
+        toast.success("OTP verified!");
       }
     } catch (err: any) {
       toast.error(err.message || "Invalid OTP!");

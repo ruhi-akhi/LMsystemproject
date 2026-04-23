@@ -31,11 +31,12 @@ export async function GET(request: NextRequest) {
 
     if (dateRange) {
       const now = new Date();
-      let startDate: Date;
+      let startDate = new Date();
 
       switch (dateRange) {
         case "today":
           startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          query.createdAt = { $gte: startDate };
           break;
         case "yesterday":
           startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
@@ -52,12 +53,6 @@ export async function GET(request: NextRequest) {
           startDate = new Date(now.getFullYear(), now.getMonth(), 1);
           query.createdAt = { $gte: startDate };
           break;
-        default:
-          break;
-      }
-
-      if (dateRange === "today") {
-        query.createdAt = { $gte: startDate };
       }
     }
 
