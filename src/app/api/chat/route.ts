@@ -2,9 +2,33 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 const GEMINI_URL = GEMINI_API_KEY
-  ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`
+  ? `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`
   : null;
+
+const RETRY_STATUS_CODES = [429, 500, 502, 503, 504];
+const MAX_RETRIES = 2;
+
+async function callGeminiApi(payload: object) {
+  let attempt = 0;
+
+  while (true) {
+    const response = await fetch(GEMINI_URL!, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok || attempt >= MAX_RETRIES || !RETRY_STATUS_CODES.includes(response.status)) {
+      return response;
+    }
+
+    const waitMs = 500 + attempt * 700;
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
+    attempt += 1;
+  }
+}
 
 // ── System Prompt ────────────────────────────────────────
 const SYSTEM_PROMPT = `তুমি Smart Inventory এর একজন বুদ্ধিমান AI সহকারী। তুমি:
@@ -66,25 +90,23 @@ export async function POST(req: NextRequest) {
       },
     ];
 
-    const geminiRes = await fetch(GEMINI_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents,
-        generationConfig: {
-          maxOutputTokens: 1500,
-          temperature: 0.7,
-        },
-      }),
+    const geminiRes = await callGeminiApi({
+      contents,
+      generationConfig: {
+        maxOutputTokens: 1500,
+        temperature: 0.7,
+      },
     });
 
     if (!geminiRes.ok) {
       const err = await geminiRes.text();
-      console.error("Gemini API response error:", err);
-      return NextResponse.json(
-        { error: "Gemini API সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।" },
-        { status: 500 }
-      );
+      console.error("Gemini API response error:", geminiRes.status, err);
+      const errorMessage =
+        geminiRes.status === 503
+          ? "Gemini AI অস্থায়ীভাবে ব্যস্ত। কিছুক্ষণের মধ্যে আবার চেষ্টা করুন।"
+          : "Gemini API সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।";
+
+      return NextResponse.json({ error: errorMessage }, { status: geminiRes.status });
     }
 
     const geminiData = await geminiRes.json();

@@ -75,14 +75,16 @@ export function DashboardPanel({
   subtitle,
   children,
   action,
+  className,
 }: {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
   action?: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-800/80 shadow-sm overflow-hidden">
+    <div className={`rounded-2xl border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-800/80 shadow-sm overflow-hidden ${className ?? ""}`}>
       <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 dark:border-slate-700/80">
         <div>
           <h2 className="text-base font-bold text-slate-900 dark:text-white">{title}</h2>

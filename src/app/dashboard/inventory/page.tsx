@@ -7,12 +7,24 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+} from "recharts";
+import {
   DashboardPageHeader,
   DashboardStatCard,
   DashboardPanel,
   DashboardButton,
   DashboardEmptyState,
 } from "@/components/dashboard/DashboardUI";
+
+interface BreakdownItem {
+  name: string;
+  value: number;
+}
 
 interface DashboardData {
   totalOrdersToday: number;
@@ -76,6 +88,15 @@ const InventoryDashboard = () => {
   useEffect(() => {
     fetchDashboard();
   }, [fetchDashboard]);
+
+  const BREAKDOWN_COLORS = ["#FF6B35", "#FB923C", "#22C55E", "#0EA5E9", "#8B5CF6"];
+
+  const orderBreakdownData: BreakdownItem[] = data
+    ? Object.entries(data.orderStatusBreakdown || {}).map(([status, count]) => ({
+        name: status,
+        value: count,
+      }))
+    : [];
 
   const statCards = [
     {
@@ -180,8 +201,8 @@ const InventoryDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        <div className="xl:col-span-2">
           <DashboardPanel
             title="Product Summary"
             subtitle="Stock levels and alerts"
@@ -255,27 +276,58 @@ const InventoryDashboard = () => {
         </DashboardPanel>
       </div>
 
-      <DashboardPanel title="Quick Actions" subtitle="Common inventory tasks">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { href: "/dashboard/products", icon: Plus, label: "Add Product" },
-            { href: "/dashboard/orders", icon: ShoppingCart, label: "Orders" },
-            { href: "/dashboard/categories", icon: FolderOpen, label: "Categories" },
-            { href: "/dashboard/restock-queue", icon: AlertTriangle, label: "Restock" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center p-5 rounded-xl border border-dashed border-slate-200 dark:border-slate-600 hover:border-[#FF6B35] hover:bg-orange-50/50 dark:hover:bg-orange-950/20 transition-all group"
-            >
-              <item.icon className="w-7 h-7 text-slate-400 group-hover:text-[#FF6B35] mb-2 transition-colors" />
-              <span className="text-sm font-semibold text-slate-600 dark:text-slate-300 group-hover:text-[#FF6B35]">
-                {item.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </DashboardPanel>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <DashboardPanel title="Order Status Breakdown" subtitle="Where orders stand right now">
+          {orderBreakdownData.length > 0 ? (
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={orderBreakdownData}
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {orderBreakdownData.map((entry, index) => (
+                      <Cell key={`cell-${entry.name}`} fill={BREAKDOWN_COLORS[index % BREAKDOWN_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value: number) => [value, "Orders"]} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <DashboardEmptyState
+              icon={ShoppingCart}
+              title="No order breakdown"
+              description="No order status data available yet. Refresh after orders are created."
+            />
+          )}
+        </DashboardPanel>
+
+        <DashboardPanel title="Quick Actions" subtitle="Common inventory tasks">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { href: "/dashboard/products", icon: Plus, label: "Add Product" },
+              { href: "/dashboard/orders", icon: ShoppingCart, label: "Orders" },
+              { href: "/dashboard/categories", icon: FolderOpen, label: "Categories" },
+              { href: "/dashboard/restock-queue", icon: AlertTriangle, label: "Restock" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center p-5 rounded-xl border border-dashed border-slate-200 dark:border-slate-600 hover:border-[#FF6B35] hover:bg-orange-50/50 dark:hover:bg-orange-950/20 transition-all group"
+              >
+                <item.icon className="w-7 h-7 text-slate-400 group-hover:text-[#FF6B35] mb-2 transition-colors" />
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-300 group-hover:text-[#FF6B35]">
+                  {item.label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </DashboardPanel>
+      </div>
     </section>
   );
 };
