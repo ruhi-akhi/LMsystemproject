@@ -32,10 +32,10 @@ const roleStats: Record<Role, { label: string; value: string; color: string }[]>
     { label: "Orders", value: "2,450", color: "#00C48C" },
   ],
   instructor: [
-    { label: "Courses", value: "5", color: "#FF6B35" },
-    { label: "Students", value: "120", color: "#E55A2B" },
-    { label: "Revenue", value: "৳12k", color: "#F89B29" },
-    { label: "Rating", value: "4.9", color: "#00C48C" },
+    { label: "Products", value: "45", color: "#FF6B35" },
+    { label: "Orders", value: "320", color: "#E55A2B" },
+    { label: "Revenue", value: "৳48k", color: "#F89B29" },
+    { label: "Rating", value: "4.8", color: "#00C48C" },
   ],
   user: [
     { label: "Orders", value: "3", color: "#FF6B35" },
@@ -65,10 +65,10 @@ const roleActivity: Record<Role, { text: string; time: string; color: string }[]
     { text: "Generated monthly inventory report", time: "3 days ago", color: "#E55A2B" },
   ],
   instructor: [
-    { text: "Published new course", time: "1 day ago", color: "#00C48C" },
-    { text: "Updated course content", time: "3 days ago", color: "#FF6B35" },
-    { text: "Replied to student comment", time: "5 days ago", color: "#F89B29" },
-    { text: "Withdrew earnings", time: "1 week ago", color: "#E55A2B" },
+    { text: "Added new product: Wireless Mouse", time: "1 day ago", color: "#FF6B35" },
+    { text: "Updated inventory for Keyboards", time: "3 days ago", color: "#F89B29" },
+    { text: "Processed 15 orders", time: "1 week ago", color: "#00C48C" },
+    { text: "Received payment of ৳5,000", time: "2 weeks ago", color: "#E55A2B" },
   ],
   user: [
     { text: "Joined Smart Inventory", time: "1 month ago", color: "#00C48C" },
@@ -82,7 +82,7 @@ const roleCfg: Record<Role, { accent: string; label: string; bg: string }> = {
   staff: { accent: "#FF6B35", label: "Staff", bg: "rgba(255,107,53,0.08)" },
   manager: { accent: "#E55A2B", label: "Manager", bg: "rgba(229,90,43,0.08)" },
   admin: { accent: "#F89B29", label: "Admin", bg: "rgba(248,155,41,0.08)" },
-  instructor: { accent: "#832388", label: "Instructor", bg: "rgba(131,35,136,0.08)" },
+  instructor: { accent: "#FF6B35", label: "Manager", bg: "rgba(255,107,53,0.08)" },
   user: { accent: "#00C48C", label: "User", bg: "rgba(0,196,140,0.08)" },
 };
 

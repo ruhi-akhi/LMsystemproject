@@ -1,12 +1,13 @@
 {
-  "name": "lms-system",
+  "name": "smart-inventory",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "capture:assets": "node scripts/capture-marketplace-assets.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -54,6 +55,8 @@
     "eslint": "^8",
     "eslint-config-next": "^15.5.12",
     "mongodb-memory-server": "^11.0.1",
+    "playwright": "^1.61.1",
+    "sharp": "^0.35.2",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"

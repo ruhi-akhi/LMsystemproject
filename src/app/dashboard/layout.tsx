@@ -523,11 +523,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => window.removeEventListener("focus", onFocus);
   }, [isLoading, fetchUser]);
 
-  // Route change হলে check
-  useEffect(() => {
-    if (!isLoading) fetchUser(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  // Route change — skip extra fetch (poll handles refresh)
+  // useEffect removed to prevent API spam on every navigation
 
   // URL guard - removed since everyone uses same dashboard
   // useEffect(() => {

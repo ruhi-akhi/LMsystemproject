@@ -10,25 +10,25 @@ const PrivacyPolicy = () => {
       title: "Data Collection",
       icon: <Database className="w-6 h-6 text-[#FF0F7B]" />,
       content:
-        "We collect account data (name, email, hashed passwords), profile information, and learning progress. Technical data like IP addresses and usage patterns are gathered to optimize your experience.",
+        "We collect account data (name, email, hashed passwords), business profile information, and inventory activity. Technical data like IP addresses and usage patterns are gathered to optimize your experience.",
     },
     {
       title: "How We Use Data",
       icon: <Eye className="w-6 h-6 text-[#E3436B]" />,
       content:
-        "Information is used for AI-driven personalization, adaptive learning paths, tracking gamification streaks, and providing instructors with student performance analytics.",
+        "Information is used for inventory analytics, stock alerts, order processing, and providing managers with operational insights across warehouses and sales channels.",
     },
     {
       title: "AI Processing",
       icon: <Lock className="w-6 h-6 text-[#832388]" />,
       content:
-        "Our AI features (summarization, grading) process data through secure APIs. We ensure that third-party AI models are never trained on your personally identifiable information.",
+        "Our AI assistant helps with inventory questions and operational guidance. We ensure that third-party AI models are never trained on your personally identifiable information.",
     },
     {
       title: "Your Rights",
       icon: <UserCheck className="w-6 h-6 text-[#F89B29]" />,
       content:
-        "You have the right to access, correct, or request the permanent deletion of your data (the 'Right to be Forgotten') directly through your Student or Instructor dashboard.",
+        "You have the right to access, correct, or request the permanent deletion of your data directly through your dashboard settings.",
     },
   ];
 
@@ -66,9 +66,9 @@ const PrivacyPolicy = () => {
             <h2 className="text-2xl font-semibold">Our Commitment</h2>
           </div>
           <p className="leading-relaxed opacity-90">
-            At <strong>CareerCanvas</strong>, we believe education and privacy
-            go hand-in-hand. This policy outlines our transparent approach to
-            data handling within our AI-powered ecosystem.
+            At <strong>Smart Inventory</strong>, we believe operational transparency
+            and privacy go hand-in-hand. This policy outlines our approach to
+            data handling within our inventory management platform.
           </p>
         </motion.div>
 
@@ -110,8 +110,8 @@ const PrivacyPolicy = () => {
             </div>
             <ul className="space-y-3 list-disc list-inside opacity-90">
               <li>End-to-end encryption for all data in transit.</li>
-              <li>JWT-based authentication to secure student records.</li>
-              <li>Strict adherence to GDPR and FERPA principles.</li>
+              <li>JWT-based authentication to secure account and inventory records.</li>
+              <li>Strict adherence to GDPR principles for personal data.</li>
               <li>
                 Regular security audits of our MongoDB and AWS infrastructure.
               </li>

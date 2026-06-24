@@ -45,7 +45,15 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
   const [checking, setChecking] = useState(true); // checking existing session
+
+  const completeLogin = (token: string, user: { role: string }) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    toast.success("Login successful!");
+    setTimeout(() => doRedirect(user.role), 500);
+  };
 
   // ── If already logged in → redirect immediately ──────
   useEffect(() => {
@@ -135,6 +143,11 @@ const LoginPage = () => {
         return;
       }
 
+      if (result.token && result.user) {
+        completeLogin(result.token, result.user);
+        return;
+      }
+
       if (result.requireOtp) {
         toast.success("📧 OTP পাঠানো হয়েছে! Email চেক করুন।");
         setTimeout(() => {
@@ -143,6 +156,7 @@ const LoginPage = () => {
         return;
       }
 
+      toast.error("❌ " + (result.error || "Login failed"));
     } catch (err: any) {
       toast.error("⚠️ " + (err.message || "Something went wrong"));
     } finally {
@@ -278,24 +292,51 @@ const LoginPage = () => {
 
               <div className="grid grid-cols-1 gap-2">
                 <button
-                  onClick={() => {
-                    // Fill demo admin credentials
-                    const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-                    const passwordInput = document.querySelector('input[type="password"]') as HTMLInputElement;
-                    if (emailInput && passwordInput) {
-                      emailInput.value = "admin@inventory.com";
-                      passwordInput.value = "admin123";
-                      // Trigger form validation
-                      emailInput.dispatchEvent(new Event('input', { bubbles: true }));
-                      passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+                  onClick={async () => {
+                    setDemoLoading(true);
+                    try {
+                      const seedRes = await fetch("/api/demo-data", { method: "POST" });
+                      const seedData = await seedRes.json();
+                      if (!seedRes.ok) {
+                        throw new Error(seedData.error || "Failed to load demo data");
+                      }
+
+                      const loginRes = await fetch("/api/auth/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          email: "admin@inventory.com",
+                          password: "admin123",
+                        }),
+                      });
+                      const loginData = await loginRes.json();
+                      if (!loginRes.ok) {
+                        throw new Error(loginData.error || "Demo login failed");
+                      }
+
+                      if (loginData.token && loginData.user) {
+                        toast.success("Demo data loaded! Opening dashboard...");
+                        completeLogin(loginData.token, loginData.user);
+                        return;
+                      }
+
+                      throw new Error("Demo login did not return a session");
+                    } catch (err: any) {
+                      toast.error(err.message || "Demo setup failed");
+                    } finally {
+                      setDemoLoading(false);
                     }
                   }}
                   type="button"
-                  className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-[#FF6B35] text-white hover:bg-[#E55A2B] transition text-sm font-medium"
+                  disabled={demoLoading || loading}
+                  className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-[#FF6B35] text-white hover:bg-[#E55A2B] transition text-sm font-medium disabled:opacity-60"
                 >
                   <Package className="w-4 h-4" />
-                  Demo Admin Login
+                  {demoLoading ? "Loading Demo..." : "Load Demo Data & Login"}
                 </button>
+                <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+                  Seeds sample products, categories, and admin account (admin@inventory.com / admin123)
+                </p>
               </div>
             </div>
 

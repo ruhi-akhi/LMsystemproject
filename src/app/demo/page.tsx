@@ -78,19 +78,22 @@ export default function DemoPage() {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/dashboard/inventory"
+                  href="/login"
                   className="px-8 py-4 bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-[#FF6B35]/25 transition-all duration-300 hover:scale-105 text-center"
                 >
-                  লাইভ ড্যাশবোর্ড দেখুন
+                  Try Live Demo (Login)
                 </Link>
                 
                 <Link
-                  href="/register"
+                  href="/qr-demo"
                   className="px-8 py-4 border-2 border-[#FF6B35] text-[#FF6B35] font-bold rounded-xl hover:bg-[#FF6B35] hover:text-white transition-all duration-300 hover:scale-105 text-center"
                 >
-                  ফ্রি ট্রায়াল শুরু করুন
+                  QR Ordering Demo
                 </Link>
               </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
+                Use &quot;Load Demo Data &amp; Login&quot; on the login page for instant access.
+              </p>
             </div>
           </div>
         </div>

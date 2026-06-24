@@ -267,9 +267,9 @@ export default function SettingsPage() {
       {activeTab === "Plans" && role === "instructor" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { name: "Free", price: "$0", features: ["3 courses", "Basic analytics"], current: false },
-            { name: "Pro", price: "$19/mo", features: ["Unlimited courses", "Advanced analytics", "Priority support"], current: true },
-            { name: "Enterprise", price: "$49/mo", features: ["Everything in Pro", "White labeling", "API access"], current: false },
+            { name: "Starter", price: "$0", features: ["Up to 50 products", "Basic analytics"], current: false },
+            { name: "Pro", price: "$19/mo", features: ["Unlimited products", "Advanced analytics", "Priority support"], current: true },
+            { name: "Enterprise", price: "$49/mo", features: ["Everything in Pro", "Multi-warehouse", "API access"], current: false },
           ].map(p => (
             <div key={p.name} className={`rounded-2xl bg-base-100 p-6 border-2 ${p.current ? "" : "border-base-300"}`}
               style={p.current ? { borderColor: "#FF6B35" } : {}}>

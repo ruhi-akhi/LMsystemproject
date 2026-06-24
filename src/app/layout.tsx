@@ -34,9 +34,44 @@ const inter = Inter({
   display: "swap",
 });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "Smart Inventory - Intelligent Inventory Management System",
-  description: "Smart Inventory management system designed to deliver smart, efficient, and organized product and order management experiences.",
+  metadataBase: new URL(appUrl),
+  title: {
+    default: "Smart Inventory - Intelligent Inventory Management System",
+    template: "%s | Smart Inventory",
+  },
+  description:
+    "Smart Inventory management system designed to deliver smart, efficient, and organized product and order management experiences.",
+  keywords: [
+    "inventory management",
+    "warehouse management",
+    "QR ordering",
+    "stock tracking",
+    "Next.js dashboard",
+    "admin template",
+  ],
+  authors: [{ name: "Smart Inventory" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: appUrl,
+    siteName: "Smart Inventory",
+    title: "Smart Inventory - Intelligent Inventory Management System",
+    description:
+      "Modern inventory management with dashboards, QR ordering, analytics, and real-time updates.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Smart Inventory - Intelligent Inventory Management System",
+    description:
+      "Modern inventory management with dashboards, QR ordering, analytics, and real-time updates.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.ico", sizes: "32x32" }],
   },

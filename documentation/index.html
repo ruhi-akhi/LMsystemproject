@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Inventory - Documentation</title>
+  <style>
+    :root {
+      --brand: #ff6b35;
+      --brand-dark: #e55a2b;
+      --bg: #0f1117;
+      --panel: #171b24;
+      --text: #e8ecf3;
+      --muted: #9aa4b2;
+      --border: #2a3140;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+    aside {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      background: linear-gradient(90deg, var(--brand), #f89b29);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .version { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
+    nav a {
+      display: block;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 0.92rem;
+    }
+    nav a:hover { background: #222836; color: var(--text); text-decoration: none; }
+    main { padding: 40px 48px 80px; max-width: 960px; }
+    h1, h2, h3 { line-height: 1.25; }
+    h1 { font-size: 2.2rem; margin-top: 0; }
+    h2 {
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 1.5rem;
+    }
+    h3 { font-size: 1.1rem; margin-top: 24px; }
+    p, li { color: #c7d0dc; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+    pre {
+      background: #0b0e14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin: 16px 0;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(255, 107, 53, 0.15);
+      color: var(--brand);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+    th { background: #1d2330; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 24px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <div class="logo">Smart Inventory</div>
+      <div class="version">Documentation v1.0.0</div>
+      <nav>
+        <a href="#introduction">Introduction</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#installation">Installation</a>
+        <a href="#environment">Environment Variables</a>
+        <a href="#demo-data">Demo Data</a>
+        <a href="#deployment">Deployment</a>
+        <a href="#structure">File Structure</a>
+        <a href="#features">Features</a>
+        <a href="#credits">Credits &amp; License</a>
+        <a href="#changelog">Changelog</a>
+        <a href="#support">Support</a>
+      </nav>
+    </aside>
+
+    <main>
+      <section id="introduction">
+        <h1>Smart Inventory Documentation</h1>
+        <p>
+          Thank you for purchasing <strong>Smart Inventory</strong> — a modern Next.js 15
+          inventory management template with dashboards, QR ordering, analytics, and
+          role-based access control.
+        </p>
+        <div class="card">
+          <span class="badge">Stack</span>
+          Next.js 15 · React 18 · TypeScript · Tailwind CSS v4 · DaisyUI · MongoDB · Socket.IO
+        </div>
+      </section>
+
+      <section id="requirements">
+        <h2>Requirements</h2>
+        <ul>
+          <li>Node.js 18.x or 20.x</li>
+          <li>npm 9+ or yarn</li>
+          <li>MongoDB (local or MongoDB Atlas)</li>
+          <li>Optional: Stripe, Cloudinary, Firebase, Gmail SMTP, Gemini API</li>
+        </ul>
+      </section>
+
+      <section id="installation">
+        <h2>Installation</h2>
+        <h3>1. Install frontend dependencies</h3>
+        <pre>npm install</pre>
+
+        <h3>2. Configure environment</h3>
+        <p>Copy <code>.env.example</code> to <code>.env.local</code> and fill in your values.</p>
+        <pre>cp .env.example .env.local</pre>
+
+        <h3>3. Install socket server (optional, for real-time chat)</h3>
+        <pre>cd bacanked/server
+npm install</pre>
+
+        <h3>4. Run locally</h3>
+        <p>Terminal 1 — Socket server:</p>
+        <pre>cd bacanked/server
+npm run dev</pre>
+        <p>Terminal 2 — Next.js app:</p>
+        <pre>npm run dev</pre>
+        <p>Open <a href="http://localhost:3000">http://localhost:3000</a></p>
+
+        <h3>5. Production build</h3>
+        <pre>npm run build
+npm run start</pre>
+      </section>
+
+      <section id="environment">
+        <h2>Environment Variables</h2>
+        <table>
+          <thead>
+            <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MONGODB_URI</td><td>Yes</td><td>MongoDB connection string</td></tr>
+            <tr><td>JWT_SECRET</td><td>Yes</td><td>Secret for JWT signing</td></tr>
+            <tr><td>NEXT_PUBLIC_APP_URL</td><td>Yes (prod)</td><td>Public site URL for metadata and redirects</td></tr>
+            <tr><td>STRIPE_SECRET_KEY</td><td>No</td><td>Stripe payments</td></tr>
+            <tr><td>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</td><td>No</td><td>Stripe client key</td></tr>
+            <tr><td>GMAIL_USER / GMAIL_PASS</td><td>No</td><td>OTP email for non-demo logins</td></tr>
+            <tr><td>NEXT_PUBLIC_SOCKET_URL</td><td>No</td><td>Socket.IO server URL</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="demo-data">
+        <h2>Demo Data (One-Click Setup)</h2>
+        <p>
+          On the login page, click <strong>Load Demo Data &amp; Login</strong>. This will:
+        </p>
+        <ul>
+          <li>Seed demo admin user: <code>admin@inventory.com</code> / <code>admin123</code></li>
+          <li>Create sample categories and products</li>
+          <li>Log you into the dashboard automatically</li>
+        </ul>
+        <p>API endpoints:</p>
+        <pre>POST /api/demo-data   # Create demo data
+GET  /api/demo-data   # Check demo data status</pre>
+      </section>
+
+      <section id="deployment">
+        <h2>Deployment (Live Demo)</h2>
+        <h3>Vercel (recommended for Next.js)</h3>
+        <ol>
+          <li>Push project to GitHub</li>
+          <li>Import repository in Vercel</li>
+          <li>Add environment variables from <code>.env.example</code></li>
+          <li>Set <code>NEXT_PUBLIC_APP_URL</code> to your Vercel domain</li>
+          <li>Deploy and test demo login flow</li>
+        </ol>
+        <h3>Socket server</h3>
+        <p>Deploy <code>bacanked/server</code> to Railway or Render and set <code>NEXT_PUBLIC_SOCKET_URL</code> to the live socket URL.</p>
+        <h3>MongoDB Atlas</h3>
+        <p>Create a free cluster, whitelist Vercel IPs (or allow from anywhere for demo), and use the connection string in <code>MONGODB_URI</code>.</p>
+      </section>
+
+      <section id="structure">
+        <h2>File Structure</h2>
+        <pre>smart-inventory/
+├── documentation/          # This HTML documentation
+├── docs/                   # Markdown guides
+├── marketplace-assets/     # ThemeForest screenshots
+├── src/
+│   ├── app/                # Next.js App Router pages & API
+│   ├── components/         # UI components
+│   ├── lib/                # Services (auth, demo-data, stripe)
+│   ├── models/             # Mongoose schemas
+│   └── middleware.ts       # JWT route protection
+├── bacanked/server/        # Socket.IO backend
+├── public/                 # Static assets
+├── .env.example
+└── LICENSE</pre>
+      </section>
+
+      <section id="features">
+        <h2>Main Features</h2>
+        <ul>
+          <li>Inventory dashboard with stock alerts</li>
+          <li>Product &amp; category management</li>
+          <li>Order management &amp; restock queue</li>
+          <li>QR scan-to-checkout demo flow</li>
+          <li>Role-based access: staff, manager, admin</li>
+          <li>Dark/light theme, responsive layout</li>
+          <li>Stripe checkout integration</li>
+          <li>AI chat assistant (Gemini)</li>
+        </ul>
+      </section>
+
+      <section id="credits">
+        <h2>Credits &amp; License</h2>
+        <p>See <code>docs/LICENSING.md</code> for fonts, icons, and third-party libraries.</p>
+        <p>Your use of this template is governed by your Envato Market license. See <code>LICENSE</code> in the project root.</p>
+      </section>
+
+      <section id="changelog">
+        <h2>Changelog</h2>
+        <div class="card">
+          <strong>v1.0.0 — June 24, 2026</strong>
+          <ul>
+            <li>ThemeForest submission package</li>
+            <li>One-click demo data &amp; login</li>
+            <li>LMS legacy cleanup</li>
+            <li>SEO &amp; documentation improvements</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="support">
+        <h2>Support</h2>
+        <p>
+          For support, contact us through the ThemeForest item support channel.
+          Please include your purchase code and a clear description of the issue.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

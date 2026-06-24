@@ -56,10 +56,16 @@ export default function NotFound() {
           </h3>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link 
-              href="/courses" 
+              href="/shop" 
               className="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors font-semibold"
             >
-              কোর্স সমূহ
+              Shop
+            </Link>
+            <Link 
+              href="/dashboard/inventory" 
+              className="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors font-semibold"
+            >
+              Dashboard
             </Link>
             <Link 
               href="/about" 

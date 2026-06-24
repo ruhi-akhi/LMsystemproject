@@ -1,10 +1,18 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  Package, ShoppingCart, AlertTriangle, TrendingUp, 
+  Package, ShoppingCart, AlertTriangle,
   DollarSign, Clock, CheckCircle, XCircle, RefreshCw,
-  Eye, Plus, Search, Filter
+  Plus, FolderOpen
 } from "lucide-react";
+import Link from "next/link";
+import {
+  DashboardPageHeader,
+  DashboardStatCard,
+  DashboardPanel,
+  DashboardButton,
+  DashboardEmptyState,
+} from "@/components/dashboard/DashboardUI";
 
 interface DashboardData {
   totalOrdersToday: number;
@@ -122,206 +130,153 @@ const InventoryDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="loading loading-spinner loading-lg" style={{ color: "#FF6B35" }}></div>
-          <p className="mt-4 text-lg font-semibold">Loading dashboard...</p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[420px] gap-4">
+        <div className="w-10 h-10 border-4 border-[#FF6B35]/20 border-t-[#FF6B35] rounded-full animate-spin" />
+        <p className="text-sm text-slate-500 font-medium">Loading dashboard...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Error Loading Dashboard</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={fetchDashboard}
-            className="btn bg-[#FF6B35] text-white border-0 hover:bg-[#E55A2B]"
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Try Again
-          </button>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[420px] gap-4">
+        <XCircle className="w-14 h-14 text-red-500" />
+        <h2 className="text-xl font-bold text-slate-800 dark:text-white">Error Loading Dashboard</h2>
+        <p className="text-slate-500 text-sm">{error}</p>
+        <DashboardButton onClick={fetchDashboard}>
+          <RefreshCw size={16} /> Try Again
+        </DashboardButton>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Inventory Dashboard</h1>
-            <p className="text-gray-600 mt-1">Smart Inventory & Order Management System</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={fetchDashboard}
-              disabled={loading}
-              className="btn btn-ghost btn-sm"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-              Refresh
-            </button>
-            <button className="btn bg-[#FF6B35] text-white border-0 hover:bg-[#E55A2B]">
-              <Plus className="w-4 h-4 mr-2" />
-              Quick Actions
-            </button>
-          </div>
+    <section className="min-h-screen space-y-6">
+      <DashboardPageHeader
+        title="Inventory Overview"
+        description="Real-time snapshot of orders, revenue, stock health, and recent activity."
+        actions={
+          <>
+            <DashboardButton variant="secondary" onClick={fetchDashboard}>
+              <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> Refresh
+            </DashboardButton>
+            <Link href="/dashboard/products">
+              <DashboardButton><Plus size={16} /> Add Product</DashboardButton>
+            </Link>
+          </>
+        }
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        {statCards.map((stat, index) => (
+          <DashboardStatCard
+            key={index}
+            label={stat.title}
+            value={stat.value}
+            hint={stat.change}
+            icon={stat.icon}
+            accent={stat.color}
+          />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <DashboardPanel
+            title="Product Summary"
+            subtitle="Stock levels and alerts"
+            action={
+              <Link href="/dashboard/products" className="text-xs font-semibold text-[#FF6B35] hover:underline">
+                View all →
+              </Link>
+            }
+          >
+            {data?.productSummary && data.productSummary.length > 0 ? (
+              <div className="space-y-3">
+                {data.productSummary.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center justify-between p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-slate-900 dark:text-white truncate">{product.name}</h4>
+                      <p className="text-sm text-slate-500">{product.category}</p>
+                    </div>
+                    <div className="text-center mx-4">
+                      <p className="text-lg font-bold text-slate-900 dark:text-white">{product.stock}</p>
+                      <p className="text-xs text-slate-400">in stock</p>
+                    </div>
+                    <span
+                      className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
+                        product.status === "Low Stock"
+                          ? "bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300"
+                          : product.status === "Out of Stock"
+                          ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300"
+                          : "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300"
+                      }`}
+                    >
+                      {product.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <DashboardEmptyState
+                icon={Package}
+                title="No products yet"
+                description="Add products or load demo data to populate this dashboard."
+                actionLabel="Go to Products"
+                actionHref="/dashboard/products"
+              />
+            )}
+          </DashboardPanel>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {statCards.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600 mb-2">{stat.title}</p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{stat.value}</h3>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3 text-green-500" />
-                    <span className="text-xs text-gray-500 font-medium">{stat.change}</span>
+        <DashboardPanel title="Recent Activities" subtitle="Latest system actions">
+          {data?.recentActivities && data.recentActivities.length > 0 ? (
+            <div className="space-y-4">
+              {data.recentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-[#FF6B35] mt-2 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-slate-900 dark:text-white">{activity.description}</p>
+                    <p className="text-xs text-slate-400 mt-1">{activity.time} · {activity.userName}</p>
                   </div>
                 </div>
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: stat.bgColor }}
-                >
-                  <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-                </div>
-              </div>
+              ))}
             </div>
+          ) : (
+            <DashboardEmptyState
+              icon={Clock}
+              title="No activity yet"
+              description="Actions will appear here as you manage inventory."
+            />
+          )}
+        </DashboardPanel>
+      </div>
+
+      <DashboardPanel title="Quick Actions" subtitle="Common inventory tasks">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { href: "/dashboard/products", icon: Plus, label: "Add Product" },
+            { href: "/dashboard/orders", icon: ShoppingCart, label: "Orders" },
+            { href: "/dashboard/categories", icon: FolderOpen, label: "Categories" },
+            { href: "/dashboard/restock-queue", icon: AlertTriangle, label: "Restock" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex flex-col items-center p-5 rounded-xl border border-dashed border-slate-200 dark:border-slate-600 hover:border-[#FF6B35] hover:bg-orange-50/50 dark:hover:bg-orange-950/20 transition-all group"
+            >
+              <item.icon className="w-7 h-7 text-slate-400 group-hover:text-[#FF6B35] mb-2 transition-colors" />
+              <span className="text-sm font-semibold text-slate-600 dark:text-slate-300 group-hover:text-[#FF6B35]">
+                {item.label}
+              </span>
+            </Link>
           ))}
         </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Product Summary */}
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900">Product Summary</h2>
-                  <p className="text-sm text-gray-600">Stock levels and alerts</p>
-                </div>
-                <button className="btn btn-sm bg-[#FF6B35] text-white border-0 hover:bg-[#E55A2B]">
-                  <Eye className="w-4 h-4 mr-2" />
-                  View All
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6">
-              {data?.productSummary && data.productSummary.length > 0 ? (
-                <div className="space-y-4">
-                  {data.productSummary.map((product) => (
-                    <div
-                      key={product.id}
-                      className="flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">{product.name}</h4>
-                        <p className="text-sm text-gray-600">{product.category}</p>
-                      </div>
-                      <div className="text-center mx-4">
-                        <p className="text-lg font-bold text-gray-900">{product.stock}</p>
-                        <p className="text-xs text-gray-500">in stock</p>
-                      </div>
-                      <div className="text-right">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                            product.status === "Low Stock"
-                              ? "bg-orange-100 text-orange-800"
-                              : product.status === "Out of Stock"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-green-100 text-green-800"
-                          }`}
-                        >
-                          {product.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Package className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-600">No products to display</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Recent Activities */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900">Recent Activities</h2>
-              <p className="text-sm text-gray-600">Latest system actions</p>
-            </div>
-            
-            <div className="p-6">
-              {data?.recentActivities && data.recentActivities.length > 0 ? (
-                <div className="space-y-4">
-                  {data.recentActivities.map((activity) => (
-                    <div key={activity.id} className="flex items-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-[#FF6B35] mt-2 flex-shrink-0"></div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900 font-medium">
-                          {activity.description}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-gray-500">{activity.time}</span>
-                          <span className="text-xs text-gray-400">•</span>
-                          <span className="text-xs text-gray-500">{activity.userName}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Clock className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-600">No recent activities</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button className="flex flex-col items-center p-4 rounded-xl border-2 border-dashed border-gray-300 hover:border-[#FF6B35] hover:bg-orange-50 transition-all">
-              <Plus className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-sm font-medium text-gray-600">Add Product</span>
-            </button>
-            <button className="flex flex-col items-center p-4 rounded-xl border-2 border-dashed border-gray-300 hover:border-[#FF6B35] hover:bg-orange-50 transition-all">
-              <ShoppingCart className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-sm font-medium text-gray-600">Create Order</span>
-            </button>
-            <button className="flex flex-col items-center p-4 rounded-xl border-2 border-dashed border-gray-300 hover:border-[#FF6B35] hover:bg-orange-50 transition-all">
-              <AlertTriangle className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-sm font-medium text-gray-600">Restock Queue</span>
-            </button>
-            <button className="flex flex-col items-center p-4 rounded-xl border-2 border-dashed border-gray-300 hover:border-[#FF6B35] hover:bg-orange-50 transition-all">
-              <Package className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-sm font-medium text-gray-600">Manage Stock</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+      </DashboardPanel>
+    </section>
   );
 };
 

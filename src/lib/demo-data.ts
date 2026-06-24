@@ -23,27 +23,16 @@ export async function createDemoData() {
     }
     
     // Create demo categories
-    const categories = [
-      { name: "Electronics", description: "Electronic devices and gadgets" },
-      { name: "Clothing", description: "Apparel and fashion items" },
-      { name: "Books", description: "Books and educational materials" },
-      { name: "Home & Garden", description: "Home improvement and garden supplies" },
-    ];
+    const { ensureDefaultCategories, DEFAULT_CATEGORIES } = await import("@/lib/default-categories");
+    await ensureDefaultCategories();
     
-    for (const categoryData of categories) {
-      const existing = await Category.findOne({ name: categoryData.name });
-      if (!existing) {
-        await Category.create(categoryData);
-        console.log(`✅ Demo category created: ${categoryData.name}`);
-      }
-    }
-    
-    // Create demo products
-    const electronicsCategory = await Category.findOne({ name: "Electronics" });
-    const clothingCategory = await Category.findOne({ name: "Clothing" });
-    const booksCategory = await Category.findOne({ name: "Books" });
-    
-    if (electronicsCategory && clothingCategory && booksCategory) {
+    const categories = await Category.find({
+      name: { $in: DEFAULT_CATEGORIES.map((c) => c.name) },
+    });
+    const electronicsCategory = categories.find((c) => c.name === "Electronics");
+    const clothingCategory = categories.find((c) => c.name === "Clothing");
+    const generalCategory = categories.find((c) => c.name === "General");
+    if (electronicsCategory && clothingCategory && generalCategory) {
       const products = [
         {
           name: "iPhone 13",
@@ -92,7 +81,7 @@ export async function createDemoData() {
         },
         {
           name: "JavaScript Guide",
-          categoryId: booksCategory._id,
+          categoryId: generalCategory._id,
           price: 800,
           stockQuantity: 0,
           minimumStockThreshold: 5,
@@ -101,7 +90,7 @@ export async function createDemoData() {
         },
         {
           name: "React Handbook",
-          categoryId: booksCategory._id,
+          categoryId: generalCategory._id,
           price: 1200,
           stockQuantity: 12,
           minimumStockThreshold: 5,

@@ -3,9 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
-  User, Info, MapPin, GraduationCap, Link as LinkIcon, 
-  CheckCircle2, Lightbulb, Briefcase, Info as InfoCircle 
+  User, MapPin, Link as LinkIcon, 
+  CheckCircle2, Package, ShoppingBag
 } from "lucide-react";
+
+const PROFILE_AVATAR =
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face";
 
 const Myprofilenavbar = () => {
   const pathname = usePathname();
@@ -13,11 +16,9 @@ const Myprofilenavbar = () => {
   const menuItems = [
     { name: "My Profile", href: "/viewprofile/myprofile", icon: User },
     { name: "Address", href: "/viewprofile/address", icon: MapPin },
-    { name: "Education", href: "/viewprofile/education", icon: GraduationCap },
     { name: "Important Links", href: "/viewprofile/links", icon: LinkIcon },
-    { name: "Skill Set", href: "/viewprofile/skillset", icon: Lightbulb },
-    { name: "order-history", href: "/viewprofile/", icon: Lightbulb },
-    { name: "certification", href: "/viewprofile/", icon: Lightbulb },
+    { name: "Order History", href: "/dashboard/orders", icon: ShoppingBag },
+    { name: "Inventory", href: "/dashboard/inventory", icon: Package },
   ];
 
   return (
@@ -25,29 +26,27 @@ const Myprofilenavbar = () => {
       {/* Profile Info Section */}
       <div className="flex flex-col items-center text-center pb-8 border-b border-gray-800 border-dashed relative">
         {/* Top Right Info Icon */}
-        <div className="absolute top-0 right-0 text-purple-500 cursor-pointer">
-          <InfoCircle size={20} />
+        <div className="absolute top-0 right-0 text-[#FF6B35] cursor-pointer">
+          <Package size={20} />
         </div>
 
-        {/* Profile Image with Arc */}
-        <div className="relative w-28 h-28 rounded-full border-4 border-blue-500/20 p-1 mb-4">
+        <div className="relative w-28 h-28 rounded-full border-4 border-[#FF6B35]/20 p-1 mb-4">
           <div className="w-full h-full rounded-full overflow-hidden relative">
             <Image 
-              src="/profile.jpg"
-              alt="Sakib Al Hasan" 
+              src={PROFILE_AVATAR}
+              alt="Profile" 
               fill 
-              className="object-cover" 
+              className="object-cover"
+              sizes="112px"
             />
           </div>
-          {/* Blue decorative arc */}
-          <div className="absolute inset-0 border-t-4 border-blue-500 rounded-full -m-1"></div>
+          <div className="absolute inset-0 border-t-4 border-[#FF6B35] rounded-full -m-1"></div>
         </div>
         
-        <h2 className="text-xl font-bold tracking-tight text-gray-100">Sakib Al Hasan</h2>
+        <h2 className="text-xl font-bold tracking-tight text-gray-100">Demo User</h2>
         <div className="text-[13px] text-gray-400 space-y-1 mt-2 font-light">
-          <p>WEB12-5243</p>
-          <p className="break-all">sadmansakib8530@gmail.com</p>
-          <p>+8801937636760</p>
+          <p>INV-1001</p>
+          <p className="break-all">admin@inventory.com</p>
         </div>
       </div>
 

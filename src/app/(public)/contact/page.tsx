@@ -1,4 +1,10 @@
 import React from 'react';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us - Smart Inventory System",
+  description: "Get in touch with the Smart Inventory support team for sales, questions, or troubleshooting assistance.",
+};
 
 const Contact = () => {
     return (

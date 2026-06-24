@@ -22,7 +22,7 @@ const TermsAndConditions = () => {
       title: "Content & Licensing",
       icon: <BookOpen className="w-6 h-6 text-[#F89B29]" />,
       content:
-        "All course materials are the intellectual property of CareerCanvas or its instructors. You are granted a limited, personal, non-exclusive license to view content for educational purposes.",
+        "All template code, dashboard designs, and bundled assets are the intellectual property of the Smart Inventory template author. You are granted a license according to your Envato purchase (Regular or Extended License).",
     },
     {
       title: "Prohibited Conduct",
@@ -34,7 +34,7 @@ const TermsAndConditions = () => {
       title: "AI Usage",
       icon: <Zap className="w-6 h-6 text-[#FDE047]" />,
       content:
-        "Our AI-powered features are tools to assist learning. While we strive for accuracy, CareerCanvas is not responsible for errors in AI-generated summaries or automated grading.",
+        "Our AI-powered features assist with inventory operations and customer support. While we strive for accuracy, Smart Inventory is not responsible for business decisions made solely based on AI-generated suggestions.",
     },
   ];
 
@@ -75,7 +75,7 @@ const TermsAndConditions = () => {
             Terms & Conditions
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
-            Please read these terms carefully before using the CareerCanvas
+            Please read these terms carefully before using the Smart Inventory
             platform.
           </p>
         </motion.div>
@@ -112,7 +112,7 @@ const TermsAndConditions = () => {
               <ShieldCheck className="text-[#00C48C]" /> 1. Acceptance of Terms
             </h2>
             <p className="text-sm leading-7 opacity-80">
-              By accessing or using CareerCanvas, you agree to be bound by these
+              By accessing or using Smart Inventory, you agree to be bound by these
               Terms and Conditions and our Privacy Policy. If you do not agree
               with any part of these terms, you must not use our services. We
               reserve the right to update these terms at any time, and continued
@@ -125,19 +125,18 @@ const TermsAndConditions = () => {
             variants={itemVariants}
           >
             <h2 className="text-2xl font-bold mb-4">
-              2. Instructor & Student Roles
+              2. Staff, Manager & Admin Roles
             </h2>
             <div className="space-y-4 text-sm leading-7 opacity-80">
               <p>
-                <strong>Instructors:</strong> Are responsible for the accuracy
-                and legality of the courses they upload. CareerCanvas takes a
-                commission on course sales as defined in the Instructor
-                Agreement.
+                <strong>Managers:</strong> Are responsible for product listings,
+                stock levels, order fulfillment, and team coordination within
+                their assigned inventory scope.
               </p>
               <p>
-                <strong>Students:</strong> Are granted a lifetime access license
-                to purchased courses (unless otherwise stated) but are
-                prohibited from reproducing or redistributing course content.
+                <strong>Staff:</strong> Can process orders, update stock, and
+                access assigned dashboard modules according to role permissions
+                defined by administrators.
               </p>
             </div>
           </motion.section>

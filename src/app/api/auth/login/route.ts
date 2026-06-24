@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { connectDB } from "@/db/connect";
 import User from "@/models/User";
 import nodemailer from "nodemailer";
+
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
+const DEMO_ACCOUNTS = ["admin@inventory.com"];
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -46,6 +50,43 @@ export async function POST(req: NextRequest) {
     // ✅ Reset login attempts
     user.loginAttempts = 0;
     user.lockUntil = undefined;
+
+    const isDemoAccount = DEMO_ACCOUNTS.includes(email.toLowerCase().trim());
+    if (isDemoAccount) {
+      user.isVerified = true;
+      user.status = "active";
+      await user.save();
+
+      const token = jwt.sign(
+        { userId: user._id, email: user.email, role: user.role, name: user.name },
+        JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      const response = NextResponse.json({
+        success: true,
+        requireOtp: false,
+        message: "Demo login successful",
+        token,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          photoURL: user.photoURL || "",
+          role: user.role,
+        },
+      });
+
+      response.cookies.set("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+      });
+
+      return response;
+    }
 
     // ✅ OTP তৈরি করো এবং save করো
     const otp = Math.floor(100000 + Math.random() * 900000).toString();

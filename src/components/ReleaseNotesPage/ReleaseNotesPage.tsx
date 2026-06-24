@@ -13,120 +13,67 @@ const ReleaseNotesPage = () => {
   const notes: ReleaseNote[] = [
     {
       id: "1",
-      date: "NOV 9, 2025",
-      title: "Fixed Leader board assignment filtering issue",
-      version: "v2083",
-      tag: "Hotfix for Website",
+      date: "JUN 24, 2026",
+      title: "ThemeForest Submission Ready Update",
+      version: "v1.0.0",
+      tag: "Major Release",
       description:
-        "Leaderboard services - updated aggregation logic for serial number and leaderboard retrieval",
+        "Demo data one-click setup, LMS legacy cleanup, SEO improvements, HTML documentation package, and deployment guides added.",
     },
     {
       id: "2",
-      date: "OCT 30, 2025",
-      title: "Updated Course Content and UI Enhancements",
-      version: "v2082",
-      tag: "Website Update",
+      date: "JUN 20, 2026",
+      title: "Inventory Dashboard & QR Ordering",
+      version: "v0.9.0",
+      tag: "Feature Update",
       description:
-        "Updated course content and improved UI for better user experience.",
+        "Inventory overview, product management, order tracking, restock queue, and QR scan-to-checkout flow.",
     },
     {
-      id: "2",
-      date: "OCT 30, 2025",
-      title: "Updated Course Content and UI Enhancements",
-      version: "v2082",
-      tag: "Website Update",
+      id: "3",
+      date: "JUN 15, 2026",
+      title: "Authentication & Role-Based Access",
+      version: "v0.8.0",
+      tag: "Security",
       description:
-        "Updated course content and improved UI for better user experience.",
+        "JWT middleware, staff/manager/admin roles, Google OAuth, and secure dashboard route protection.",
     },
-    {
-      id: "2",
-      date: "OCT 30, 2025",
-      title: "Updated Course Content and UI Enhancements",
-      version: "v2082",
-      tag: "Website Update",
-      description:
-        "Updated course content and improved UI for better user experience.",
-    },
-  ];
-  const stats = [
-    { label: "Courses Topics", count: 36, icon: "🎯", color: "text-red-500" },
-    { label: "Bugs", count: 2, icon: "🪲", color: "text-orange-500" },
-    { label: "Feature Requests", count: 1, icon: "📊", color: "text-pink-500" },
-    { label: "Others", count: 12, icon: "📂", color: "text-purple-500" },
-    { label: "Announcements", count: 114, icon: "📢", color: "text-blue-500" },
-    { label: "Resolved", count: 54, icon: "✅", color: "text-green-500" },
   ];
 
   return (
-    <div className="h-screen bg-slate-50 p-8 font-sans overflow-hidden">
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 h-full">
-        {/* Main Content: Release Notes */}
-        <div className="flex-1 space-y-12 lg:overflow-y-auto lg:h-full pr-2">
+    <div className="min-h-screen bg-white dark:bg-[#05010D] text-gray-800 dark:text-gray-200 py-16 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] bg-clip-text text-transparent">
+            Release Notes
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Smart Inventory template version history
+          </p>
+        </div>
+
+        <div className="space-y-6">
           {notes.map((note) => (
             <div
               key={note.id}
-              className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100"
+              className="rounded-2xl border border-gray-100 dark:border-[#2D2438] bg-gray-50 dark:bg-[#120B1E] p-6"
             >
-              <div className="bg-slate-50 py-6 text-center">
-                <h2 className="text-xl font-bold text-secondary uppercase tracking-wider">
-                  RELEASE NOTE : {note.date}
-                </h2>
+              <div className="flex flex-wrap items-center gap-3 mb-3">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B35]">
+                  {note.version}
+                </span>
+                <span className="text-xs px-2 py-1 rounded-full bg-[#FF6B35]/10 text-[#FF6B35] font-semibold">
+                  {note.tag}
+                </span>
+                <span className="text-xs text-gray-500 ml-auto">{note.date}</span>
               </div>
-
-              <div className="p-8 space-y-4">
-                <div className="border-b border-slate-100 pb-4">
-                  <h3 className="text-xl font-bold text-slate-800">
-                    {note.title} -{" "}
-                    <span className="text-slate-500">{note.version}</span>
-                  </h3>
-                  <p className="text-sm text-slate-400 mt-1">
-                    Web Course • {note.date}
-                  </p>
-                </div>
-
-                <div className="py-2">
-                  <p className="text-sm font-semibold text-slate-700 italic">
-                    {note.tag}
-                  </p>
-                </div>
-
-                <div className="border-t border-slate-100 pt-4">
-                  <div className="badge badge-secondary badge-lg rounded-md font-semibold px-4">
-                    Published
-                  </div>
-
-                  <div className="pt-4">
-                    <p className="text-slate-600 leading-relaxed">
-                      {note.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <h2 className="text-xl font-bold mb-2">{note.title}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {note.description}
+              </p>
             </div>
           ))}
         </div>
-
-        {/* Sidebar: Stats */}
-        <aside className="hidden lg:block w-80 sticky top-8 self-start">
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <ul className="space-y-6">
-              {stats.map((stat, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-center justify-between group cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{stat.icon}</span>
-                    <span className="text-slate-600 font-medium group-hover:text-primary transition-colors">
-                      {stat.label}
-                    </span>
-                  </div>
-                  <span className="font-bold text-slate-700">{stat.count}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
       </div>
     </div>
   );

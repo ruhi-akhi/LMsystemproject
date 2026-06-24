@@ -109,7 +109,7 @@ const MyProfile = () => {
                   <LuUpload size={16} /> Change Profile Image
                 </button>
                 <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-purple-500/50">
-                  <Image src="/profile.jpg" alt="profile" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="profile" fill className="object-cover" sizes="80px" />
                 </div>
              </div>
           </div>

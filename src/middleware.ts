@@ -49,7 +49,7 @@ export async function middleware(req: NextRequest) {
         const { payload } = await jwtVerify(token, secret);
         const role = payload.role as string;
         return NextResponse.redirect(
-          new URL(roleDashboard[role] || "/dashboard/student", req.url)
+          new URL(roleDashboard[role] || "/dashboard/inventory", req.url)
         );
       } catch {
         return NextResponse.next();
@@ -76,7 +76,7 @@ export async function middleware(req: NextRequest) {
       if (!isAllowed) {
 
         return NextResponse.redirect(
-          new URL(roleDashboard[role] || "/dashboard/student", req.url)
+          new URL(roleDashboard[role] || "/dashboard/inventory", req.url)
         );
       }
 

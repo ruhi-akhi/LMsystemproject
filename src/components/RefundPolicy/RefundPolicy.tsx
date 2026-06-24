@@ -16,17 +16,17 @@ const RefundPolicy = () => {
     {
       title: "7-Day Full Refund",
       icon: <Clock className="w-6 h-6 text-[#FF0F7B]" />,
-      desc: "Full refund if requested within 7 days of purchase, provided less than 20% of the course content has been consumed.",
+      desc: "Full refund if requested within 7 days of ThemeForest purchase, provided the item has not been used in a published end product beyond evaluation.",
     },
     {
       title: "Partial Credit",
       icon: <RefreshCcw className="w-6 h-6 text-[#E3436B]" />,
-      desc: "Between 8-14 days, we offer 50% credit back to your SmartLMS wallet for future course enrollments.",
+      desc: "Refund requests after 7 days are handled according to Envato Market refund policies and item support terms.",
     },
     {
       title: "No Refunds",
       icon: <Ban className="w-6 h-6 text-[#832388]" />,
-      desc: "After 14 days or if a certificate of completion has already been issued, no refunds or credits will be granted.",
+      desc: "After the Envato refund window or once the license has been used in a live production deployment, standard refunds may not apply.",
     },
   ];
 
@@ -47,8 +47,8 @@ const RefundPolicy = () => {
             Refund Policy
           </h1>
           <p className="text-gray-500 dark:text-gray-400 max-w-lg mx-auto">
-            We want you to love learning on CareerCanvas. If a course is not the
-            right fit, here is how we handle returns.
+            We want you to be confident with Smart Inventory. If the template is not
+            the right fit, here is how returns and support are handled.
           </p>
         </motion.div>
 

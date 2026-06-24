@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Search, Package, RefreshCw, X } from "lucide-react";
+import {
+  DashboardPageHeader,
+  DashboardPanel,
+  DashboardButton,
+  DashboardEmptyState,
+} from "@/components/dashboard/DashboardUI";
 
 interface Product {
   _id: string;
@@ -28,6 +34,9 @@ export default function ProductsPage() {
   const [showForm, setShowForm] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [quickCategoryName, setQuickCategoryName] = useState("");
+  const [creatingCategory, setCreatingCategory] = useState(false);
 
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -38,6 +47,28 @@ export default function ProductsPage() {
     description: "",
     sku: "",
   });
+
+  const normalizeCategories = (items: Category[] = []) =>
+    items.map((cat) => ({
+      _id: String(cat._id),
+      name: cat.name,
+    }));
+
+  const loadCategories = async () => {
+    setLoadingCategories(true);
+    try {
+      const catRes = await fetch("/api/categories", { cache: "no-store" });
+      const catData = await catRes.json();
+      if (!catRes.ok || !catData.success) {
+        throw new Error(catData.error || "Failed to load categories");
+      }
+      setCategories(normalizeCategories(catData.categories || []));
+    } catch (err: any) {
+      setFormError(err.message || "Failed to load categories");
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
 
   const loadProducts = async () => {
     setLoading(true);
@@ -59,7 +90,7 @@ export default function ProductsPage() {
       if (!catRes.ok || !catData.success) throw new Error(catData.error || "Failed category list");
 
       setProducts(prodData.products || []);
-      setCategories(catData.categories || []);
+      setCategories(normalizeCategories(catData.categories || []));
     } catch (err: any) {
       setError(err.message || "Failed to load products");
     } finally {
@@ -70,6 +101,72 @@ export default function ProductsPage() {
   useEffect(() => {
     loadProducts();
   }, [searchTerm, categoryFilter]);
+
+  useEffect(() => {
+    if (showForm) {
+      setFormError(null);
+      loadCategories();
+    }
+  }, [showForm]);
+
+  const getAuthHeaders = (): HeadersInit => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
+  const handleQuickCreateCategory = async () => {
+    const name = quickCategoryName.trim();
+    if (!name) {
+      setFormError("Enter a category name first");
+      return;
+    }
+
+    setCreatingCategory(true);
+    setFormError(null);
+    try {
+      const res = await fetch("/api/categories", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ name, description: "" }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to create category");
+      }
+
+      const created = {
+        _id: String(data.category._id),
+        name: data.category.name,
+      };
+      setCategories((prev) => [...prev, created].sort((a, b) => a.name.localeCompare(b.name)));
+      setNewProduct((prev) => ({ ...prev, categoryId: created._id }));
+      setQuickCategoryName("");
+    } catch (err: any) {
+      setFormError(err.message || "Failed to create category");
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
+
+  const handleLoadDemoData = async () => {
+    setCreatingCategory(true);
+    setFormError(null);
+    try {
+      const res = await fetch("/api/demo-data", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to load demo data");
+      }
+      await loadCategories();
+    } catch (err: any) {
+      setFormError(err.message || "Failed to load demo data");
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
 
   const handleAddProduct = async () => {
     setFormError(null);
@@ -126,36 +223,23 @@ export default function ProductsPage() {
   });
 
   return (
-    <section className="min-h-screen p-6 bg-slate-50 dark:bg-slate-900">
-      <div className="max-w-7xl mx-auto space-y-6">
-
-        {/* Header */}
-        <div className="flex flex-wrap gap-3 justify-between items-start">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Package size={24} /> Products
-            </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Smart Inventory & Order Management System - product management panel
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={loadProducts}
-              className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-slate-700 bg-white hover:bg-slate-100 transition"
-            >
+    <section className="min-h-screen">
+      <DashboardPageHeader
+        title="Products"
+        description="Manage inventory items, pricing, stock levels, and categories."
+        actions={
+          <>
+            <DashboardButton variant="secondary" onClick={loadProducts}>
               <RefreshCw size={16} /> Refresh
-            </button>
-            <button
-              onClick={() => { setShowForm(true); setFormError(null); }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition"
-            >
+            </DashboardButton>
+            <DashboardButton onClick={() => { setShowForm(true); setFormError(null); setQuickCategoryName(""); }}>
               <Plus size={16} /> Add Product
-            </button>
-          </div>
-        </div>
+            </DashboardButton>
+          </>
+        }
+      />
 
-        {/* Add Product Modal */}
+      {/* Add Product Modal */}
         {showForm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-full max-w-md shadow-xl">
@@ -174,16 +258,54 @@ export default function ProductsPage() {
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
                 />
 
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
+                  Category *
+                </label>
                 <select
                   value={newProduct.categoryId}
                   onChange={(e) => setNewProduct({ ...newProduct, categoryId: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
+                  disabled={loadingCategories}
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white disabled:opacity-60"
                 >
-                  <option value="">-- Select Category *</option>
+                  <option value="">
+                    {loadingCategories ? "Loading categories..." : "-- Select Category --"}
+                  </option>
                   {categories.map((cat) => (
                     <option key={cat._id} value={cat._id}>{cat.name}</option>
                   ))}
                 </select>
+
+                {categories.length === 0 && !loadingCategories && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-3 space-y-3">
+                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                      No categories found. Create one below or load demo data.
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        value={quickCategoryName}
+                        onChange={(e) => setQuickCategoryName(e.target.value)}
+                        placeholder="New category name"
+                        className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleQuickCreateCategory}
+                        disabled={creatingCategory}
+                        className="px-3 py-2 rounded-lg bg-orange-600 text-white text-sm hover:bg-orange-700 disabled:opacity-50"
+                      >
+                        {creatingCategory ? "..." : "Add"}
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleLoadDemoData}
+                      disabled={creatingCategory}
+                      className="text-sm text-orange-600 hover:text-orange-700 font-medium disabled:opacity-50"
+                    >
+                      Load demo categories & products
+                    </button>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-2">
                   <input
@@ -251,7 +373,7 @@ export default function ProductsPage() {
         )}
 
         {/* Product Table */}
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
+        <DashboardPanel title="Product List" subtitle={`${filtered.length} of ${products.length} items`}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div className="relative">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -284,9 +406,13 @@ export default function ProductsPage() {
           ) : error ? (
             <div className="py-14 text-center text-red-500">{error}</div>
           ) : filtered.length === 0 ? (
-            <div className="py-14 text-center text-slate-500">
-              No products found. Click <strong>Add Product</strong> to get started.
-            </div>
+            <DashboardEmptyState
+              icon={Package}
+              title="No products yet"
+              description="Add your first product using the button above."
+              actionLabel="Add Product"
+              onAction={() => setShowForm(true)}
+            />
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full border-separate border-spacing-0 text-sm">
@@ -324,8 +450,7 @@ export default function ProductsPage() {
               </table>
             </div>
           )}
-        </div>
-      </div>
+        </DashboardPanel>
     </section>
   );
 }
