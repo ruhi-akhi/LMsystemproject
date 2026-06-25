@@ -73,8 +73,12 @@ export async function POST(req: NextRequest) {
     console.log('🎉 SUCCESS: All steps completed\n');
     
     return NextResponse.json({ 
-      message: "Demo products created successfully", 
-      count: products.length 
+      message: "Demo products created successfully",
+      products: products.map(p => ({
+        ...p.toObject(),
+        scanUrl: `/scan?product=${p.qrCode}`,
+      })),
+      count: products.length,
     }, { status: 200 });
 
   } catch (error: any) {
@@ -92,7 +96,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ 
       products: products.map(p => ({
         ...p.toObject(),
-        scanUrl: `${process.env.NEXT_PUBLIC_APP_URL}/scan?product=${p.qrCode}`
+        scanUrl: `/scan?product=${p.qrCode}`,
       }))
     });
   } catch (error: any) {

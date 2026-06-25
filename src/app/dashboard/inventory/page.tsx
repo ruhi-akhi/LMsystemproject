@@ -293,7 +293,7 @@ const InventoryDashboard = () => {
                       <Cell key={`cell-${entry.name}`} fill={BREAKDOWN_COLORS[index % BREAKDOWN_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => [value, "Orders"]} />
+                  <Tooltip formatter={(value: any) => [Number(value ?? 0), "Orders"]} />
                 </PieChart>
               </ResponsiveContainer>
             </div>

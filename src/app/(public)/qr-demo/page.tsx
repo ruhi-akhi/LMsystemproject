@@ -40,6 +40,7 @@ export default function QRDemoPage() {
         
         // Step 1: Prothome check korun data ache kina
         const checkRes = await fetch("/api/demo-products");
+        if (!checkRes.ok) throw new Error(`Demo products fetch failed: ${checkRes.status}`);
         let data = await checkRes.json();
         let productList: Product[] = Array.isArray(data?.products) ? data.products : [];
 
