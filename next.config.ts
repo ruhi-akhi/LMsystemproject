@@ -35,8 +35,10 @@ const nextConfig = {
   async redirects() {
     return [
       { source: "/courses", destination: "/shop", permanent: true },
-      { source: "/viewprofile/education", destination: "/viewprofile/myprofile", permanent: true },
-      { source: "/viewprofile/skillset", destination: "/viewprofile/myprofile", permanent: true },
+      { source: "/refound", destination: "/refund", permanent: true },
+      { source: "/become-manager", destination: "/register", permanent: true },
+      { source: "/help/:path*", destination: "/", permanent: true },
+      { source: "/viewprofile/:path*", destination: "/dashboard/profile", permanent: true },
     ];
   },
   async headers() {

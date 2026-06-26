@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   LayoutDashboard, User, Settings, Bell, ChevronLeft, ChevronRight,
-  Menu, X, LogOut, Users, Package, ShoppingCart, FolderOpen,
+  Menu, X, LogOut, Package, ShoppingCart, FolderOpen,
   AlertTriangle, Activity, BarChart2
 } from "lucide-react";
 import { FaSun, FaMoon } from "react-icons/fa";
@@ -46,7 +46,6 @@ const menus: Record<Role, { label: string; href: string; icon: React.ReactNode }
     { label: "Orders", href: "/dashboard/orders", icon: <ShoppingCart size={18} /> },
     { label: "Restock Queue", href: "/dashboard/restock-queue", icon: <AlertTriangle size={18} /> },
     { label: "Activity Log", href: "/dashboard/activity-log", icon: <Activity size={18} /> },
-    { label: "Users", href: "/dashboard/admin/users", icon: <Users size={18} /> },
     { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart2 size={18} /> },
     { label: "Profile", href: "/dashboard/profile", icon: <User size={18} /> },
     { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },

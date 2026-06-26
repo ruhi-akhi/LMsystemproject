@@ -18,8 +18,6 @@ export async function GET(req: NextRequest) {
       cookieStore.get("token")?.value || 
       req.headers.get("authorization")?.replace("Bearer ", "");
 
-    console.log("🔐 Dashboard API - Token exists:", !!token);
-
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
@@ -28,9 +26,7 @@ export async function GET(req: NextRequest) {
     let decoded;
     try {
       decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-      console.log("✅ Token verified, userId:", decoded.userId);
     } catch (error) {
-      console.error("❌ Token verification failed:", error);
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 

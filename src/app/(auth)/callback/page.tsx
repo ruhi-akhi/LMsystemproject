@@ -19,14 +19,7 @@ export default function AuthCallback() {
       // Parse user to get role
       const userData = JSON.parse(decodeURIComponent(user));
 
-      // Redirect based on role
-      if (userData.role === "admin") {
-        router.replace("/dashboard/admin");
-      } else if (userData.role === "instructor") {
-        router.replace("/dashboard/instructor");
-      } else {
-        router.replace("/dashboard/admin");
-      }
+      router.replace("/dashboard/inventory");
     } else {
       router.replace("/login?error=auth_failed");
     }

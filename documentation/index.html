@@ -113,6 +113,8 @@
       <div class="logo">Smart Inventory</div>
       <div class="version">Documentation v1.0.0</div>
       <nav>
+        <a href="#video">Video Guide</a>
+        <a href="#checklist">Submission Checklist</a>
         <a href="#introduction">Introduction</a>
         <a href="#requirements">Requirements</a>
         <a href="#installation">Installation</a>
@@ -128,6 +130,48 @@
     </aside>
 
     <main>
+      <section id="video">
+        <h1>Video Documentation</h1>
+        <p>
+          Record a short walkthrough (5–8 minutes) covering installation, demo login, dashboard tour,
+          and QR ordering. Upload to YouTube (unlisted) and add the link to your ThemeForest item page.
+        </p>
+        <div class="card">
+          <strong>Suggested video chapters</strong>
+          <ol>
+            <li>Introduction &amp; feature overview (homepage)</li>
+            <li>Installation: <code>npm install</code> → <code>.env.local</code> → <code>npm run dev</code></li>
+            <li>Demo login: <code>admin@inventory.com</code> / <code>admin123</code> or one-click button</li>
+            <li>Dashboard: inventory, products, categories, orders</li>
+            <li>QR demo flow: <code>/qr-demo</code> → scan → checkout</li>
+            <li>Deployment on Vercel + MongoDB Atlas</li>
+          </ol>
+        </div>
+        <p>
+          <strong>Placeholder:</strong> Replace the URL below with your YouTube link before submission.
+        </p>
+        <pre>https://www.youtube.com/watch?v=YOUR_VIDEO_ID</pre>
+      </section>
+
+      <section id="checklist">
+        <h2>ThemeForest Submission Checklist</h2>
+        <table>
+          <thead>
+            <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Live Demo</td><td>Deploy required</td><td>Vercel + MongoDB Atlas — set <code>NEXT_PUBLIC_APP_URL</code></td></tr>
+            <tr><td>Installation Docs</td><td>✅ Ready</td><td>This file + <code>docs/DEPLOYMENT.md</code></td></tr>
+            <tr><td>Demo Credentials</td><td>✅ Ready</td><td><code>admin@inventory.com</code> / <code>admin123</code></td></tr>
+            <tr><td>Screenshots</td><td>✅ Ready</td><td>Run <code>npm run capture:assets</code> → <code>marketplace-assets/</code></td></tr>
+            <tr><td>Build Error Free</td><td>✅ Ready</td><td><code>npm install</code> → <code>npm run build</code></td></tr>
+            <tr><td>SEO Files</td><td>✅ Ready</td><td><code>/robots.txt</code>, <code>/sitemap.xml</code>, page metadata</td></tr>
+            <tr><td>Mobile Responsive</td><td>✅ Ready</td><td>Run <code>npm run audit:responsive</code> at 320–1440px</td></tr>
+            <tr><td>Video Documentation</td><td>Record &amp; upload</td><td>See Video Guide section above</td></tr>
+          </tbody>
+        </table>
+      </section>
+
       <section id="introduction">
         <h1>Smart Inventory Documentation</h1>
         <p>
@@ -161,12 +205,12 @@
         <pre>cp .env.example .env.local</pre>
 
         <h3>3. Install socket server (optional, for real-time chat)</h3>
-        <pre>cd bacanked/server
+        <pre>cd backend/server
 npm install</pre>
 
         <h3>4. Run locally</h3>
         <p>Terminal 1 — Socket server:</p>
-        <pre>cd bacanked/server
+        <pre>cd backend/server
 npm run dev</pre>
         <p>Terminal 2 — Next.js app:</p>
         <pre>npm run dev</pre>
@@ -221,7 +265,7 @@ GET  /api/demo-data   # Check demo data status</pre>
           <li>Deploy and test demo login flow</li>
         </ol>
         <h3>Socket server</h3>
-        <p>Deploy <code>bacanked/server</code> to Railway or Render and set <code>NEXT_PUBLIC_SOCKET_URL</code> to the live socket URL.</p>
+        <p>Deploy <code>backend/server</code> to Railway or Render and set <code>NEXT_PUBLIC_SOCKET_URL</code> to the live socket URL.</p>
         <h3>MongoDB Atlas</h3>
         <p>Create a free cluster, whitelist Vercel IPs (or allow from anywhere for demo), and use the connection string in <code>MONGODB_URI</code>.</p>
       </section>
@@ -238,7 +282,7 @@ GET  /api/demo-data   # Check demo data status</pre>
 │   ├── lib/                # Services (auth, demo-data, stripe)
 │   ├── models/             # Mongoose schemas
 │   └── middleware.ts       # JWT route protection
-├── bacanked/server/        # Socket.IO backend
+├── backend/server/        # Socket.IO backend
 ├── public/                 # Static assets
 ├── .env.example
 └── LICENSE</pre>

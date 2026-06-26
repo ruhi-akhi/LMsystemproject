@@ -70,13 +70,13 @@ npm install
 ```
 
 ### 2. Set Up Socket.IO Backend Server
-The real-time messaging engine resides in the `bacanked/server` folder. Navigate to it and install dependencies:
+The real-time messaging engine resides in the `backend/server` folder. Navigate to it and install dependencies:
 ```bash
-cd bacanked/server
+cd backend/server
 npm install
 ```
 
-Create a `.env.local` inside `bacanked/server` with the shared DB connection:
+Create a `.env.local` inside `backend/server` with the shared DB connection:
 ```env
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/smart-inventory
 SOCKET_PORT=4000
@@ -91,7 +91,7 @@ To run the application locally, you will need to start two processes: the Backen
 
 ### Start the WebSocket Server
 ```bash
-cd bacanked/server
+cd backend/server
 npm run dev
 ```
 *(Runs on http://localhost:4000)*

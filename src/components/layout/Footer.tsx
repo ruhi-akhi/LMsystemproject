@@ -2,6 +2,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   FaFacebook,
   FaInstagram,
@@ -20,18 +21,18 @@ const footerLinks = [
   { name: "About Us", path: "/about" },
   { name: "Success Page", path: "/" },
   { name: "Blog", path: "/blog" },
-  { name: "Refund policy", path: "/refound" },
+  { name: "Refund policy", path: "/refund" },
   { name: "Privacy Policy", path: "/privacy-policy" },
   { name: "Terms and condition", path: "/terms" },
-  { name: "Newsletter", path: "/privacy" },
-
-  // New Link
-  { name: "Become a Manager", path: "/become-manager" },
+  { name: "Demo", path: "/login" },
 ];
 const Footer = () => {
+  const pathname = usePathname();
+  const isDashboard = pathname?.startsWith("/dashboard") ?? false;
+
   return (
     // Important: We use !important styles via Tailwind for background to override any conflicts
-    <footer className="w-full bg-[#F9F5FF] dark:bg-[#0b1120] pt-16 pb-6 transition-colors duration-300 border-t border-gray-100 dark:border-gray-800">
+    <footer className={`w-full bg-[#F9F5FF] dark:bg-[#0b1120] pt-16 pb-6 transition-colors duration-300 border-t border-gray-100 dark:border-gray-800 ${isDashboard ? "md:pl-[68px] lg:pl-60" : ""}`}>
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">

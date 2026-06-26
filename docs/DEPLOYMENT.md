@@ -31,7 +31,7 @@ Set these environment variables in Vercel dashboard:
 
 ### 4. Socket Server (Optional)
 ```bash
-cd bacanked/server
+cd backend/server
 # Deploy to Railway/Render with MONGODB_URI and SOCKET_PORT
 ```
 Set `NEXT_PUBLIC_SOCKET_URL` on Vercel to the socket server URL.

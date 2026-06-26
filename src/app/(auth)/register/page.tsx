@@ -83,11 +83,7 @@ const Register = () => {
       });
       const result = await res.json();
 
-      console.log("Register response:", { status: res.status, result });
-
       if (!res.ok) {
-        console.log("Register failed:", result.error);
-
         if (result.error === "Email already exists") {
           toast.error("এই email দিয়ে আগেই account আছে! Login করুন।");
           setTimeout(() => { window.location.href = "/login"; }, 2000);
@@ -100,9 +96,9 @@ const Register = () => {
 
       setRegistered(true);
       toast.success("Registration successful!");
-    } catch (err: any) {
-      console.error("Register error:", err);
-      toast.error(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Something went wrong";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

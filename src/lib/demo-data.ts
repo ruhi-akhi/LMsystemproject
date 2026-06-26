@@ -19,7 +19,6 @@ export async function createDemoData() {
         isVerified: true,
         status: "active",
       });
-      console.log("✅ Demo admin user created");
     }
     
     // Create demo categories
@@ -103,12 +102,10 @@ export async function createDemoData() {
         const existing = await Product.findOne({ sku: productData.sku });
         if (!existing) {
           await Product.create(productData);
-          console.log(`✅ Demo product created: ${productData.name}`);
         }
       }
     }
     
-    console.log("✅ Demo data creation completed");
     return { success: true, message: "Demo data created successfully" };
   } catch (error: any) {
     console.error("❌ Demo data creation failed:", error.message);

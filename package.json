@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "capture:assets": "node scripts/capture-marketplace-assets.mjs"
+    "capture:assets": "node scripts/capture-marketplace-assets.mjs",
+    "audit:responsive": "node scripts/responsive-audit.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

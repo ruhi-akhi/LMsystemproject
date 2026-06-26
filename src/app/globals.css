@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 /* Dark mode strategy for Tailwind */
 @custom-variant dark (&:where(.dark, [data-theme="dark"], .dark *));
 

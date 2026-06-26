@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Hind_Siliguri, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
-import FloatingChat from "@/components/chat/FloatingChat";
-import { cookies } from "next/headers";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import dynamic from "next/dynamic";
 import ClientSideComponents from "@/components/providers/ClientSideComponents";
 
 const geistSans = Geist({
@@ -77,38 +74,14 @@ export const metadata: Metadata = {
   },
 };
 
-// ─────────────────────────────────────────────────────────
-// Cookie থেকে user বের করা
-// আপনার login route এ যে cookie নামে token save হয়
-// সেই নাম দিয়ে replace করুন
-// ─────────────────────────────────────────────────────────
-async function getUser() {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value; // ← আপনার cookie নাম
-    if (!token) return null;
-
-    const base64Payload = token.split(".")[1];
-    if (!base64Payload) return null;
-
-    const payload = JSON.parse(
-      Buffer.from(base64Payload, "base64url").toString("utf-8")
-    );
-
-    return {
-      id: payload.id ?? payload.userId ?? payload.sub ?? "user",
-      name: payload.name ?? payload.username ?? "User",
-      role: payload.role ?? "staff",   // ← JWT এ role থাকলে
-      image: payload.image ?? payload.avatar ?? undefined,
-    };
-  } catch {
-    return null;
-  }
-}
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#FF6B35",
+};
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await getUser();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -178,7 +151,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <ClientSideComponents />
         <Navbar />
-        <main>{children}</main>
+        <main className="min-h-screen pb-28">{children}</main>
         <Footer />
       </body>
     </html>

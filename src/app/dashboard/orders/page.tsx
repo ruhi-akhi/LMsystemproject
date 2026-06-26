@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, Filter, Eye, Edit, Trash2, ShoppingCart, Package } from "lucide-react";
+import toast from "react-hot-toast";
+import { Plus, Search, Filter, Eye, Edit, Trash2, ShoppingCart } from "lucide-react";
 
 interface Order {
+  source: "dashboard" | "qr";
   _id: string;
   orderNumber: string;
   customerName: string;
@@ -31,6 +33,8 @@ export default function OrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [editingOrderId, setEditingOrderId] = useState<string | null>(null);
+  const [updatedStatus, setUpdatedStatus] = useState<"pending" | "confirmed" | "shipped" | "delivered" | "cancelled">("pending");
 
   useEffect(() => {
     fetchOrders();
@@ -41,9 +45,16 @@ export default function OrdersPage() {
       setLoading(true);
       
       // Fetch both dashboard orders and QR scan orders
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const authHeader = token ? { Authorization: `Bearer ${token}` } : undefined;
+
       const [dashboardResponse, qrResponse] = await Promise.all([
-        fetch(`/api/orders?page=${currentPage}&limit=10${searchTerm ? `&search=${searchTerm}` : ''}${selectedStatus ? `&status=${selectedStatus}` : ''}`),
-        fetch(`/api/scan-orders?page=${currentPage}&limit=10${searchTerm ? `&search=${searchTerm}` : ''}${selectedStatus ? `&status=${selectedStatus}` : ''}`)
+        fetch(`/api/orders?page=${currentPage}&limit=10${searchTerm ? `&search=${searchTerm}` : ''}${selectedStatus ? `&status=${selectedStatus}` : ''}`, {
+          headers: authHeader,
+        }),
+        fetch(`/api/scan-orders?page=${currentPage}&limit=10${searchTerm ? `&search=${searchTerm}` : ''}${selectedStatus ? `&status=${selectedStatus}` : ''}`, {
+          headers: authHeader,
+        })
       ]);
 
       const dashboardData = await dashboardResponse.json();
@@ -53,7 +64,7 @@ export default function OrdersPage() {
 
       // Add dashboard orders if available
       if (dashboardData.success && dashboardData.orders) {
-        allOrders = [...allOrders, ...dashboardData.orders];
+        allOrders = [...allOrders, ...dashboardData.orders.map((order: any) => ({ ...order, source: "dashboard" }))];
       }
 
       // Add QR scan orders if available
@@ -73,7 +84,8 @@ export default function OrdersPage() {
           status: order.paymentStatus === "paid" ? "confirmed" : order.paymentStatus === "pending" ? "pending" : "cancelled",
           createdAt: order.createdAt,
           paymentMethod: order.paymentMethod,
-          bkashTrxID: order.bkashTrxID
+          bkashTrxID: order.bkashTrxID,
+          source: "qr"
         }));
         allOrders = [...allOrders, ...qrOrders];
       }
@@ -90,6 +102,66 @@ export default function OrdersPage() {
       console.error("Error fetching orders:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string, source: "dashboard" | "qr") => {
+    if (!confirm("Are you sure you want to delete this order?")) return;
+
+    if (source !== "dashboard") {
+      toast.error("QR orders cannot be deleted from this dashboard.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`/api/orders?id=${orderId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete order");
+      toast.success("Order deleted successfully");
+      setOrders((prev) => prev.filter((order) => order._id !== orderId));
+    } catch (error: any) {
+      toast.error(error.message || "Could not delete order");
+    }
+  };
+
+  const handleStartEdit = (order: Order) => {
+    setEditingOrderId(order._id);
+    setUpdatedStatus(order.status);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingOrderId(null);
+  };
+
+  const handleSaveStatus = async (orderId: string, source: "dashboard" | "qr") => {
+    if (source !== "dashboard") {
+      toast.error("QR orders cannot be updated from this dashboard.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/orders", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: JSON.stringify({ orderId, status: updatedStatus }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update order");
+      toast.success("Order status updated");
+      setOrders((prev) => prev.map((order) => order._id === orderId ? { ...order, status: updatedStatus } : order));
+      setEditingOrderId(null);
+    } catch (error: any) {
+      toast.error(error.message || "Could not update order status");
     }
   };
 
@@ -254,12 +326,48 @@ export default function OrdersPage() {
                       <button className="text-blue-600 hover:text-blue-900">
                         <Eye size={16} />
                       </button>
-                      <button className="text-orange-600 hover:text-orange-900">
-                        <Edit size={16} />
-                      </button>
-                      <button className="text-red-600 hover:text-red-900">
-                        <Trash2 size={16} />
-                      </button>
+                      {editingOrderId === order._id ? (
+                        <>
+                          <select
+                            value={updatedStatus}
+                            onChange={(e) => setUpdatedStatus(e.target.value as any)}
+                            className="text-sm border border-gray-300 rounded-md px-2 py-1 mr-2"
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                          <button
+                            onClick={() => handleSaveStatus(order._id, order.source)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            className="text-gray-600 hover:text-gray-900 ml-2"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleStartEdit(order)}
+                            className="text-orange-600 hover:text-orange-900"
+                          >
+                            <Edit size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteOrder(order._id, order.source)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

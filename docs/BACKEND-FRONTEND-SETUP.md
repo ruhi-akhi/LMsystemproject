@@ -14,7 +14,7 @@ npm run dev
 ### 2. Backend (Socket Server) - Port 4000
 ```bash
 # Go to backend folder
-cd bacanked/server
+cd backend/server
 
 # Install dependencies (if not done)
 npm install
@@ -31,7 +31,7 @@ npm run dev
 │   ├── components/        # React components
 │   ├── models/           # MongoDB models (shared)
 │   └── lib/              # Utilities
-├── bacanked/server/       # Backend socket server
+├── backend/server/       # Backend socket server
 │   ├── socket-server.ts  # Main socket server
 │   ├── package.json      # Backend dependencies
 │   └── .env.local        # Backend environment
@@ -45,7 +45,7 @@ npm run dev
 - `MONGODB_URI` - MongoDB connection string
 - `JWT_SECRET` - JWT secret key
 
-### Backend (bacanked/server/.env.local)
+### Backend (backend/server/.env.local)
 - `SOCKET_PORT=4000`
 - `MONGODB_URI` - Same MongoDB connection
 - `NEXT_PUBLIC_APP_URL=http://localhost:3000`
@@ -69,7 +69,7 @@ npm run dev
 
 ## 🔄 Development Workflow
 
-1. Start backend socket server: `cd bacanked/server && npm run dev`
+1. Start backend socket server: `cd backend/server && npm run dev`
 2. Start frontend: `npm run dev`
 3. Both servers run simultaneously
 4. Messages are saved to database and broadcast in real-time

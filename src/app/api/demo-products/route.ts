@@ -59,8 +59,6 @@ const DEMO_PRODUCTS = [
 ];
 
 export async function POST(req: NextRequest) {
-  console.log('\n🔥 === DEMO PRODUCTS API CALLED ===');
-  
   try {
     await connectDB();
     
@@ -70,8 +68,7 @@ export async function POST(req: NextRequest) {
     });
     
     const products = await DemoProduct.insertMany(DEMO_PRODUCTS);
-    console.log('🎉 SUCCESS: All steps completed\n');
-    
+
     return NextResponse.json({ 
       message: "Demo products created successfully",
       products: products.map(p => ({

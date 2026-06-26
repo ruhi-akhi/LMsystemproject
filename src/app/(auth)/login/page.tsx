@@ -83,7 +83,6 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const u = result.user;
       
-      console.log("🔵 Calling Google login API...");
       const res = await fetch("/api/auth/google-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,13 +92,9 @@ const LoginPage = () => {
           photoURL: u.photoURL 
         }),
       });
-      
-      console.log("📡 Response status:", res.status);
       const data = await res.json();
-      console.log("📦 Response data:", data);
-      
+
       if (!res.ok) {
-        console.error("❌ API error:", data);
         throw new Error(data.error || "Login failed");
       }
       
@@ -108,7 +103,6 @@ const LoginPage = () => {
       toast.success("🎉 Google login successful!");
       setTimeout(() => doRedirect(data.user.role), 500);
     } catch (err: any) {
-      console.error("💥 Google login error:", err);
       toast.error("🚫 " + (err.message || "Google login failed"));
     } finally {
       setGoogleLoading(false);

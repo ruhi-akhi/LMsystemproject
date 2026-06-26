@@ -37,20 +37,28 @@
 ## 📂 Project Structure
 
 ```text
-smartlms-project/
-├── docs/                     # Documentation & guides
-├── bacanked/                 # Backend Socket.IO server
+smart-inventory/
+├── documentation/            # Buyer HTML docs + folder structure guide
+├── docs/                     # Installation, deployment, licensing
+├── marketplace-assets/       # ThemeForest screenshots
+├── backend/                  # Socket.IO server (optional)
 │   └── server/
-│       ├── socket-server.ts  # WebSocket logic and messages API
-│       └── package.json
-└── src/                      # Frontend Next.js app
-    ├── app/                  # App Router pages and API routes
-    ├── components/           # Reusable UI & Layout components
-    ├── db/                   # Database connection helper
-    ├── firebase/             # Firebase configuration
-    ├── lib/                  # Services & API client libraries
-    ├── models/               # MongoDB / Mongoose models
-    └── utils/                # Helper utilities
+├── public/                   # Static assets
+├── scripts/
+└── src/
+    ├── app/                  # Next.js App Router (pages + API)
+    ├── components/
+    │   ├── marketing/        # Homepage sections
+    │   ├── blog/             # Blog sections
+    │   ├── dashboard/        # Dashboard UI kit
+    │   ├── chat/
+    │   └── layout/
+    ├── configs/              # site.ts
+    ├── db/
+    ├── firebase/
+    ├── lib/
+    ├── models/
+    └── utils/
 ```
 
 ---

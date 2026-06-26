@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import QRCode from "qrcode";
 import { 
   QrCode, 
   ShoppingCart, 
@@ -41,7 +40,7 @@ export default function QRDemoPage() {
         // Step 1: Prothome check korun data ache kina
         const checkRes = await fetch("/api/demo-products");
         if (!checkRes.ok) throw new Error(`Demo products fetch failed: ${checkRes.status}`);
-        let data = await checkRes.json();
+        const data = await checkRes.json();
         let productList: Product[] = Array.isArray(data?.products) ? data.products : [];
 
         // Step 2: Jodi data na thake (length === 0), tokhon seed (POST) korun
@@ -62,15 +61,19 @@ export default function QRDemoPage() {
         setProducts(productList);
 
         // Step 3: QR Code generate korun
+        // Lazy-load qrcode only when needed to reduce bundle size
+        const { toDataURL } = await import("qrcode");
+
         const qrPromises = productList.map(async (product: Product) => {
           try {
-            const qrDataURL = await QRCode.toDataURL(product.scanUrl, {
+            const qrDataURL = await toDataURL(product.scanUrl, {
               width: 250,
               margin: 2,
               color: { dark: "#1a1a1a", light: "#ffffff" },
             });
             return { qrCode: product.qrCode, qrDataURL };
-          } catch {
+          } catch (err) {
+            console.error('QR generation failed for', product.qrCode, err);
             return { qrCode: product.qrCode, qrDataURL: "" };
           }
         });
@@ -94,9 +97,27 @@ export default function QRDemoPage() {
   }, []);
 
   const handleCopy = (product: Product) => {
-    navigator.clipboard.writeText(product.scanUrl);
-    setCopiedId(product.qrCode);
-    setTimeout(() => setCopiedId(null), 2000);
+    (async () => {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(product.scanUrl);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = product.scanUrl;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+        setCopiedId(product.qrCode);
+        setTimeout(() => setCopiedId(null), 2000);
+      } catch (err) {
+        console.error('Copy failed', err);
+        setError('Unable to copy link to clipboard.');
+      }
+    })();
   };
 
   if (loading) {
@@ -279,12 +300,12 @@ export default function QRDemoPage() {
                </div>
                <div className="space-y-6 font-mono">
                   <div className="pb-4 border-b border-white/10">
-                    <p className="text-[#FF6B35] font-black text-xs uppercase mb-2 tracking-widest">// Sandbox Credentials</p>
+                    <p className="text-[#FF6B35] font-black text-xs uppercase mb-2 tracking-widest">Sandbox Credentials</p>
                     <p className="text-white text-lg">User: <span className="text-orange-200">sandboxTokenizedUser02</span></p>
                     <p className="text-white text-lg">Pass: <span className="text-orange-200">sandboxTokenizedUser02@12345</span></p>
                   </div>
                   <div>
-                    <p className="text-green-400 font-black text-xs uppercase mb-2 tracking-widest">// Quick Success Code</p>
+                    <p className="text-green-400 font-black text-xs uppercase mb-2 tracking-widest">Quick Success Code</p>
                     <p className="text-white text-lg">OTP: <span className="text-green-200">123456</span></p>
                     <p className="text-white text-lg">PIN: <span className="text-green-200">12121</span></p>
                   </div>

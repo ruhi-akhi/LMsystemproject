@@ -5,89 +5,60 @@ import { connectDB } from "@/db/connect";
 import User from "@/models/User";
 import nodemailer from "nodemailer";
 
-// Helper function to generate JWT token
-function generateToken(userId: any, email: string, role: string): string {
+function generateToken(userId: string, email: string, role: string): string {
   const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
-  return jwt.sign(
-    { userId, email, role },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
+  return jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: "7d" });
+}
+
+function setAuthCookie(response: NextResponse, token: string) {
+  response.cookies.set("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
 }
 
 export async function POST(req: NextRequest) {
-  console.log("\n🔵 ========== REGISTER API CALLED ==========");
-  
   try {
-    console.log("📦 Step 1: Parsing request body...");
     const body = await req.json();
-    console.log("✅ Body parsed:", { 
-      email: body.email, 
-      provider: body.provider,
-      hasPassword: !!body.password,
-      hasName: !!body.name
-    });
-
     const { email, password, name, phone, photoURL, provider } = body;
 
-    console.log("🔌 Step 2: Connecting to database...");
-    console.log("   MONGODB_URI exists:", !!process.env.MONGODB_URI);
-    
     try {
       await connectDB();
-      console.log("✅ Database connected successfully");
-    } catch (dbError: any) {
-      console.error("❌ Database connection failed:", dbError.message);
-      return NextResponse.json({ 
-        error: "Database connection failed", 
-        details: dbError.message 
-      }, { status: 500 });
+    } catch (dbError: unknown) {
+      const message = dbError instanceof Error ? dbError.message : "Connection failed";
+      console.error("Database connection failed:", message);
+      return NextResponse.json({ error: "Database connection failed", details: message }, { status: 500 });
     }
 
-    // ═══════════════════════════════════════════════════════
-    // 🔥 GOOGLE/GITHUB LOGIN (Social OAuth)
-    // ═══════════════════════════════════════════════════════
     if (provider === "google" || provider === "github") {
-      console.log(`🔐 Step 3: Social login detected - ${provider}`);
-      
       if (!email) {
-        console.log("❌ Email missing for social login");
         return NextResponse.json({ error: "Email required" }, { status: 400 });
       }
 
-      console.log("🔍 Step 4: Checking if user exists...");
       let user;
       try {
         user = await User.findOne({ email });
-        console.log("   User found:", !!user);
-      } catch (findError: any) {
-        console.error("❌ Error finding user:", findError.message);
-        return NextResponse.json({ 
-          error: "Database query failed", 
-          details: findError.message 
-        }, { status: 500 });
+      } catch (findError: unknown) {
+        const message = findError instanceof Error ? findError.message : "Query failed";
+        console.error("Error finding user:", message);
+        return NextResponse.json({ error: "Database query failed", details: message }, { status: 500 });
       }
 
       if (user) {
-        console.log("👤 Existing user - updating and returning token");
-        
-        // Update photoURL if provided
         if (photoURL && user.photoURL !== photoURL) {
           user.photoURL = photoURL;
           try {
             await user.save();
-            console.log("📸 Photo URL updated");
-          } catch (saveError: any) {
-            console.error("⚠️ Photo update failed (non-critical):", saveError.message);
+          } catch (saveError: unknown) {
+            const message = saveError instanceof Error ? saveError.message : "Save failed";
+            console.error("Photo update failed:", message);
           }
         }
 
-        // Generate JWT token
-        console.log("🔑 Generating JWT token...");
-        const token = generateToken(user._id, user.email, user.role);
-        console.log("✅ Token generated successfully");
-
-        console.log("🎉 SUCCESS: Returning existing user data\n");
+        const token = generateToken(user._id.toString(), user.email, user.role);
         const response = NextResponse.json({
           success: true,
           token,
@@ -99,40 +70,23 @@ export async function POST(req: NextRequest) {
             photoURL: user.photoURL,
           },
         }, { status: 200 });
-
-        response.cookies.set("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7,
-          path: "/",
-        });
-
+        setAuthCookie(response, token);
         return response;
       }
 
-      // Create new social user
-      console.log("🆕 Creating new social user...");
       try {
         const newUser = new User({
           email,
-          name: name || email.split('@')[0],
-          photoURL: photoURL || '',
-          provider: provider,
-          role: 'staff',
+          name: name || email.split("@")[0],
+          photoURL: photoURL || "",
+          provider,
+          role: "staff",
           isVerified: true,
-          status: 'active',
+          status: "active",
         });
 
         await newUser.save();
-        console.log("✅ New social user created");
-
-        // Generate JWT token
-        console.log("🔑 Generating JWT token...");
-        const token = generateToken(newUser._id, newUser.email, newUser.role);
-        console.log("✅ Token generated successfully");
-
-        console.log("🎉 SUCCESS: Returning new user data\n");
+        const token = generateToken(newUser._id.toString(), newUser.email, newUser.role);
         const response = NextResponse.json({
           success: true,
           token,
@@ -144,76 +98,47 @@ export async function POST(req: NextRequest) {
             photoURL: newUser.photoURL,
           },
         }, { status: 201 });
-
-        response.cookies.set("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7,
-          path: "/",
-        });
-
+        setAuthCookie(response, token);
         return response;
-      } catch (createError: any) {
-        console.error("❌ Error creating social user:", createError.message);
-        console.error("   Stack:", createError.stack);
-        return NextResponse.json({ 
-          error: "Failed to create user", 
-          details: createError.message 
-        }, { status: 500 });
+      } catch (createError: unknown) {
+        const message = createError instanceof Error ? createError.message : "Create failed";
+        console.error("Error creating social user:", message);
+        return NextResponse.json({ error: "Failed to create user", details: message }, { status: 500 });
       }
     }
 
-    // ═══════════════════════════════════════════════════════
-    // 📧 EMAIL/PASSWORD REGISTRATION
-    // ═══════════════════════════════════════════════════════
-    console.log("📧 Email/password registration");
-
-    // Validation
     if (!email || !password) {
-      console.log("❌ Email or password missing");
       return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("❌ Email already exists");
       return NextResponse.json({ error: "Email already exists" }, { status: 400 });
     }
 
-    // Check phone number if provided
     if (phone) {
       const phoneExists = await User.findOne({ phone });
       if (phoneExists) {
-        console.log("❌ Phone already registered");
         return NextResponse.json({ error: "Phone number already registered" }, { status: 400 });
       }
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("🔒 Password hashed");
-
-    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Create new user
     const newUser = new User({
       email,
       password: hashedPassword,
-      name: name || email.split('@')[0],
-      phone: phone || '',
-      role: 'staff',
+      name: name || email.split("@")[0],
+      phone: phone || "",
+      role: "staff",
       isVerified: false,
       resetToken: otp,
       resetTokenExpiry: new Date(Date.now() + 10 * 60 * 1000),
     });
 
     await newUser.save();
-    console.log("✅ User created successfully");
 
-    // Send verification email
     try {
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -226,13 +151,13 @@ export async function POST(req: NextRequest) {
       await transporter.sendMail({
         from: `"Smart Inventory" <${process.env.GMAIL_USER}>`,
         to: email,
-        subject: "🎉 Welcome to Smart Inventory - Verify Your Email",
+        subject: "Welcome to Smart Inventory - Verify Your Email",
         html: `
           <!DOCTYPE html>
           <html>
           <body style="font-family: Arial, sans-serif; padding: 20px; background: #f3f4f6;">
             <div style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
-              <h1 style="color: #E3436B; text-align: center;">Welcome! 🎉</h1>
+              <h1 style="color: #E3436B; text-align: center;">Welcome!</h1>
               <p style="font-size: 16px; color: #333;">Your verification code is:</p>
               <div style="background: linear-gradient(135deg, #832388, #F0772F); padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
                 <h2 style="color: white; font-size: 36px; letter-spacing: 8px; margin: 0;">${otp}</h2>
@@ -243,10 +168,9 @@ export async function POST(req: NextRequest) {
           </html>
         `,
       });
-      console.log("📧 Verification email sent");
-    } catch (mailError: any) {
-      console.error("❌ Email sending failed:", mailError.message);
-      // Don't block registration if email fails
+    } catch (mailError: unknown) {
+      const message = mailError instanceof Error ? mailError.message : "Email failed";
+      console.error("Email sending failed:", message);
       return NextResponse.json({
         success: true,
         requireOtp: true,
@@ -259,21 +183,12 @@ export async function POST(req: NextRequest) {
       success: true,
       requireOtp: true,
       message: "Registration successful! Check your email.",
-      email: email,
+      email,
       userId: newUser._id,
     }, { status: 201 });
-
-  } catch (err: any) {
-    console.error("\n💥 ========== FATAL ERROR ==========");
-    console.error("Error name:", err.name);
-    console.error("Error message:", err.message);
-    console.error("Error stack:", err.stack);
-    console.error("=====================================\n");
-    
-    return NextResponse.json({ 
-      error: err.message || "Registration failed",
-      errorType: err.name,
-      details: err.toString()
-    }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Registration failed";
+    console.error("Registration error:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
