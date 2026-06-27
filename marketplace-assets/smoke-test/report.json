@@ -1,0 +1,135 @@
+{
+  "generatedAt": "2026-06-27T06:03:58.529Z",
+  "baseUrl": "http://localhost:3001",
+  "passed": 19,
+  "total": 19,
+  "results": [
+    {
+      "page": "/",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/about",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/shop",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/blog",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/contact",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/login",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/register",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/demo",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/qr-demo",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/faq",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/terms",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/privacy-policy",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/refund",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/robots.txt",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/sitemap.xml",
+      "status": 200,
+      "ok": true,
+      "errors": [],
+      "hydrationError": false
+    },
+    {
+      "page": "/dashboard/orders",
+      "ok": true,
+      "hydrationIssues": [],
+      "footerVisible": false,
+      "publicNavVisible": false
+    },
+    {
+      "page": "/api/demo-data",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "page": "/api/demo-products",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "page": "/api/categories",
+      "ok": true,
+      "status": 200
+    }
+  ]
+}

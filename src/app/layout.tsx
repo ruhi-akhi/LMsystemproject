@@ -3,8 +3,7 @@ import { Geist, Geist_Mono, Hind_Siliguri, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import SiteChrome from "@/components/layout/SiteChrome";
 import ClientSideComponents from "@/components/providers/ClientSideComponents";
 
 const geistSans = Geist({
@@ -150,9 +149,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
 
         <ClientSideComponents />
-        <Navbar />
-        <main className="min-h-screen pb-28">{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );
